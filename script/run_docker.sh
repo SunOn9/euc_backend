@@ -1,6 +1,0 @@
-#!/usr/bin/bash
-SCRIPT=$(pwd $0)
-
-docker pull ...
-
-docker run -d --name ...
