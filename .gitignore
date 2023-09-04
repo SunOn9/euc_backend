@@ -1,0 +1,36 @@
+# dependencies
+/node_modules
+
+# IDE
+/.idea
+/.awcache
+/.vscode
+
+# misc
+npm-debug.log
+
+# example
+/quick-start
+
+# tests
+/test
+/coverage
+/.nyc_output
+
+# dist
+/dist
+backend/src/generated
+.idea
+.env
+client
+api/src/generated/*
+!api/src/generated/.gitkeep
+src/generated/*
+!src/generated/.gitkeep
+data/fadovn_store.sql
+upload/*
+!upload/.gitkeep
+
+bull/index-elastic/src/generated/*
+!bull/index-elastic/src/generated/.gitkeep
+
