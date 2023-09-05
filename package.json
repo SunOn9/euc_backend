@@ -43,6 +43,8 @@
     "bull": "^4.11.3",
     "cache-manager": "^4.1.0",
     "cache-manager-redis-store": "^2.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
     "eslint-plugin-neverthrow": "^1.1.4",
     "mysql2": "^3.6.0",
     "neverthrow": "^6.0.0",

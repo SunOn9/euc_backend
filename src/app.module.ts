@@ -28,7 +28,7 @@ import * as redisStore from 'cache-manager-redis-store';
         database: configService.get('MYSQL_DATABASE'),
         entities: [__dirname + '/**/entities/*.entity{.ts,.js}'],
         autoLoadEntities: true,
-        synchronize: false,
+        synchronize: true,
       }),
       inject: [ConfigService],
     }),
@@ -68,8 +68,8 @@ import * as redisStore from 'cache-manager-redis-store';
       }),
       inject: [ConfigService],
     }),
-    HttpModule,
     // Module
+    HttpModule,
   ],
   providers: [],
 })

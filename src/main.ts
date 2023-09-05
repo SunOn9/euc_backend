@@ -16,14 +16,14 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        package: ['euc_backend'],
+        package: [],
         loader: {
           longs: String,
           enums: String,
           json: true,
           defaults: true,
         },
-        protoPath: [join(__dirname, '../../proto/api.proto')],
+        protoPath: [join(__dirname, '../proto/api.proto')],
       },
       logger: ['error', 'warn', 'debug', 'verbose'],
     },
@@ -37,7 +37,6 @@ async function bootstrap() {
   await grpcApp.listen();
 
   //http service
-
   const httpApp = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'debug', 'verbose'],
   });
