@@ -5,6 +5,14 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { HttpModule } from '@nestjs/axios';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { BullModule } from '@nestjs/bull';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { ReceiptModule } from './receipt/receipt.module';
+import { PaymentModule } from './payment/payment.module';
+import { EventModule } from './event/event.module';
+import { GuestModule } from './guest/guest.module';
+import { MemberModule } from './member/member.module';
+import { UserModule } from './user/user.module';
 import * as redisStore from 'cache-manager-redis-store';
 
 // const cwd = process.cwd();
@@ -70,6 +78,13 @@ import * as redisStore from 'cache-manager-redis-store';
     }),
     // Module
     HttpModule,
+    UserModule,
+    MemberModule,
+    GuestModule,
+    EventModule,
+    PaymentModule,
+    ReceiptModule,
+    AuthModule,
   ],
   providers: [],
 })
