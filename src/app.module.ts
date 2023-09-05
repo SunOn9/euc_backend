@@ -5,6 +5,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { HttpModule } from '@nestjs/axios';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { BullModule } from '@nestjs/bull';
+import * as redisStore from 'cache-manager-redis-store';
 
 // const cwd = process.cwd();
 
@@ -35,7 +36,7 @@ import { BullModule } from '@nestjs/bull';
     CacheModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        store: 'redis',
+        store: redisStore,
         ttl: configService.get('REDIS_CACHE_TTL'),
         host: configService.get('REDIS_HOST'),
         port: configService.get('REDIS_PORT'),
