@@ -1,4 +1,5 @@
 syntax = "proto3";
+package euc_backend;
 
 
 import "auth/auth.proto";

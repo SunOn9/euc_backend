@@ -16,7 +16,7 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        package: [],
+        package: ['euc_backend'],
         loader: {
           longs: String,
           enums: String,
