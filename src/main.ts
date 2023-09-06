@@ -16,7 +16,7 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        package: ['fadovn_store'],
+        package: [],
         loader: {
           longs: String,
           enums: String,
