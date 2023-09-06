@@ -12,8 +12,13 @@ import { PaymentModule } from './payment/payment.module';
 import { EventModule } from './event/event.module';
 import { GuestModule } from './guest/guest.module';
 import { MemberModule } from './member/member.module';
-import { UserModule } from './user/user.module';
 import * as redisStore from 'cache-manager-redis-store';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { ClubModule } from './club/club.module';
+import { PermissionModule } from './permission/permission.module';
+import { RoleModule } from './role/role.module';
+import { AreaModule } from './area/area.module';
+import { UtilsModule } from 'lib/utils';
 
 // const cwd = process.cwd();
 
@@ -37,6 +42,7 @@ import * as redisStore from 'cache-manager-redis-store';
         entities: [__dirname + '/**/entities/*.entity{.ts,.js}'],
         autoLoadEntities: true,
         synchronize: true,
+        namingStrategy: new SnakeNamingStrategy(),
       }),
       inject: [ConfigService],
     }),
@@ -77,6 +83,7 @@ import * as redisStore from 'cache-manager-redis-store';
       inject: [ConfigService],
     }),
     // Module
+    UtilsModule,
     HttpModule,
     UserModule,
     MemberModule,
@@ -85,6 +92,10 @@ import * as redisStore from 'cache-manager-redis-store';
     PaymentModule,
     ReceiptModule,
     AuthModule,
+    ClubModule,
+    PermissionModule,
+    RoleModule,
+    AreaModule,
   ],
   providers: [],
 })

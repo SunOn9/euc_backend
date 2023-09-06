@@ -1,2 +1,14 @@
 syntax = "proto3";
  
+package euc_backend;
+
+import "auth/auth.proto";
+import "auth/auth.request.proto";
+import "auth/auth.reply.proto";
+// import "common.proto";
+
+service AuthService {
+  rpc CreateAuth (CreateAuthRequest) returns (AuthReply) {}
+  rpc GetAuth (GetAuthConditionRequest) returns (AuthReply) {}
+  // rpc GetListAuth (GetAuthConditionRequest) returns (AuthListReply) {}
+}

@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { CreateAuthRequestDto } from './dto/create-auth.dto';
+import { Result } from 'neverthrow';
+import { Auth } from 'src/generated/auth/auth';
+import { AuthEntity } from './entities/auth.entity';
+import { AuthRepository } from './provider/auth.repository';
+import { AuthReflect } from './provider/auth.proto';
+import { GetAuthConditionRequestDto } from './dto/get-condition-auth.dto';
+import { UserEntity } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(
+    private readonly repo: AuthRepository,
+    private readonly protoService: AuthReflect,
+  ) {}
+
+  async create(createData: CreateAuthRequestDto): Promise<Result<Auth, Error>> {
+    const { userId, ...other } = createData;
+    const partialUser: Partial<UserEntity> = {
+      id: userId,
+    };
+    const createAuthData = {
+      user: partialUser,
+      ...other,
+    } as AuthEntity;
+
+    return await this.repo.createAuth(createAuthData);
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+  async getDetail(
+    condition: GetAuthConditionRequestDto,
+  ): Promise<Result<Auth, Error>> {
+    return await this.repo.getDetail(condition);
   }
 }

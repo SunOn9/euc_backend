@@ -1,29 +1,26 @@
 import { ClubEntity } from 'src/club/entities/club.entity';
-import { EventEntity } from 'src/event/entities/event.entity';
 import {
+  Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'member' })
-export class MemberEntity {
-  static tableName = 'member';
+@Entity({ name: 'area' })
+export class AreaEntity {
+  static tableName = 'area';
 
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
   name: string;
 
-  birthday: Date;
-
-  age: number;
-
-  club: ClubEntity;
-
-  event?: EventEntity[];
+  @OneToMany(() => ClubEntity, (club) => club.area)
+  club: ClubEntity[];
 
   @CreateDateColumn()
   createdAt: Date;
@@ -33,4 +30,8 @@ export class MemberEntity {
 
   @DeleteDateColumn()
   deletedAt?: Date;
+
+  constructor(partial: Partial<AreaEntity>) {
+    Object.assign(this, partial);
+  }
 }

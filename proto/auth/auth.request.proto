@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package euc_backend;
+
+message GetAuthConditionRequest {
+  optional int32 id = 1;
+  optional int32 user_id = 2;
+  optional string ip_address = 3;
+  optional string authToken = 4;
+  optional string session_id =5;
+  optional string user_agent =6;
+  optional string platform =7;
+  optional int32 longtitude =8;
+  optional int32 latitude =9;
+}
+
+message CreateAuthRequest {
+  int32 user_id = 1;
+  optional string ip_address = 2;
+  optional string authToken = 3;
+  optional string session_id =4;
+  optional string user_agent =5;
+  optional string platform =6;
+  optional int32 longtitude =7;
+  optional int32 latitude =8;
+}

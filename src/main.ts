@@ -16,19 +16,19 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        package: [],
+        package: ['fadovn_store'],
         loader: {
           longs: String,
           enums: String,
           json: true,
           defaults: true,
         },
-        protoPath: [join(__dirname, '../proto/api.proto')],
+        protoPath: [join(__dirname, '../../proto/api.proto')],
       },
       logger: ['error', 'warn', 'debug', 'verbose'],
     },
   );
-  grpcApp.useGlobalPipes(
+  await grpcApp.useGlobalPipes(
     new ValidationPipe({ whitelist: true, transform: true }),
   );
 
