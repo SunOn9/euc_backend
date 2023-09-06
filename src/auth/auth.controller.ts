@@ -3,8 +3,8 @@ import { AuthService } from './auth.service';
 import { GrpcMethod } from '@nestjs/microservices';
 import { CreateAuthRequestDto } from './dto/create-auth.dto';
 import { AuthReply } from 'src/generated/auth/auth.reply';
-import CustomException from 'lib/utils/custom.exception';
 import { GetAuthConditionRequestDto } from './dto/get-condition-auth.dto';
+import CustomException from 'lib/utils/custom.exception';
 
 @Controller({ path: 'auth' })
 export class AuthController {
