@@ -48,12 +48,24 @@ export class AuthRepository extends Repository<AuthEntity> {
       const queryBuilder = this.setupQueryCondition(conditions);
       const data = await queryBuilder.getOne();
 
+      // const data = await this.findOne({
+      //   where: {
+      //     ...conditions,
+      //   },
+      //   relations: ['user'],
+      // });
+
       if (!data) {
         const errorMessage = this.utilService.generateErrorMessage(conditions);
         return err(
           new Error(`Cannot find auth by condition [ ${errorMessage} ]`),
         );
       }
+
+      console.log(
+        '🚀 ~ file: auth.repository.ts:26 ~ AuthRepository ~ getAuth ~ data:',
+        data,
+      );
 
       return ok(this.proto.reflect(data));
     } catch (e) {
@@ -116,6 +128,10 @@ export class AuthRepository extends Repository<AuthEntity> {
       queryBuilder.andWhere(`latitude = :latitude`, {
         latitude: `${conditions.latitude}`,
       });
+    }
+
+    if (conditions.isExtra) {
+      queryBuilder.leftJoinAndSelect('auth.user', 'user');
     }
 
     return queryBuilder;

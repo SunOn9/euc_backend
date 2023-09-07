@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 import { GetAuthConditionRequest } from 'src/generated/auth/auth.request';
 
 export class GetAuthConditionRequestDto implements GetAuthConditionRequest {
@@ -42,4 +42,9 @@ export class GetAuthConditionRequestDto implements GetAuthConditionRequest {
   @IsNumber()
   @Type(() => Number)
   public latitude?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  isExtra?: boolean;
 }

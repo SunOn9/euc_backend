@@ -5,10 +5,21 @@ package euc_backend;
 import "auth/auth.proto";
 import "auth/auth.request.proto";
 import "auth/auth.reply.proto";
-// import "common.proto";
+import "user/user.proto";
+import "user/user.request.proto";
+import "user/user.reply.proto";
+import "common.proto";
 
 service AuthService {
-  rpc CreateAuth (CreateAuthRequest) returns (AuthReply) {}
+  // rpc CreateAuth (CreateAuthRequest) returns (AuthReply) {}
   rpc GetAuth (GetAuthConditionRequest) returns (AuthReply) {}
   // rpc GetListAuth (GetAuthConditionRequest) returns (AuthListReply) {}
+}
+
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (UserReply) {}
+  rpc GetUser (GetUserConditionRequest) returns (UserReply) {}
+  rpc GetListUser (GetUserConditionRequest) returns (UserListReply) {}
+  rpc UpdateUser (UpdateUserRequest) returns (UserReply) {}
+  rpc DeleteUser (DeleteUserRequest) returns (SimpleReply) {}
 }

@@ -1,6 +1,5 @@
 import { AuthEntity } from 'src/auth/entities/auth.entity';
 import { ClubEntity } from 'src/club/entities/club.entity';
-import { RoleEntity } from 'src/role/entities/role.entity';
 import {
   BeforeInsert,
   Column,
@@ -13,7 +12,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
 import * as bcrypt from 'bcrypt';
 
 @Entity({ name: 'user' })
@@ -35,21 +33,13 @@ export class UserEntity {
   @Column({ nullable: true })
   phone?: string | null;
 
-  // @ManyToMany(() => ClubEntity, { cascade: true })
-  // @JoinTable({
-  //   name: 'user_in_club',
-  //   joinColumn: { name: 'user_id', referencedColumnName: 'id' },
-  //   inverseJoinColumn: { name: 'club_id', referencedColumnName: 'id' },
-  // })
-  // club: ClubEntity[];
-
-  // @ManyToMany(() => RoleEntity, { cascade: true })
-  // @JoinTable({
-  //   name: 'user_with_role',
-  //   joinColumn: { name: 'user_id', referencedColumnName: 'id' },
-  //   inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
-  // })
-  // role: RoleEntity[];
+  @ManyToMany(() => ClubEntity, { cascade: true })
+  @JoinTable({
+    name: 'user_in_club',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'club_id', referencedColumnName: 'id' },
+  })
+  club: ClubEntity[];
 
   @OneToMany(() => AuthEntity, (auth) => auth.user)
   auth: AuthEntity[];

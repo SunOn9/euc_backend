@@ -16,7 +16,6 @@ import * as redisStore from 'cache-manager-redis-store';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { ClubModule } from './club/club.module';
 import { PermissionModule } from './permission/permission.module';
-import { RoleModule } from './role/role.module';
 import { AreaModule } from './area/area.module';
 import { UtilsModule } from 'lib/utils';
 
@@ -94,7 +93,6 @@ import { UtilsModule } from 'lib/utils';
     AuthModule,
     ClubModule,
     PermissionModule,
-    RoleModule,
     AreaModule,
   ],
   providers: [],

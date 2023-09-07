@@ -1,1 +1,28 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
 package euc_backend;
+
+
+message File {
+  string url = 1;
+}
+
+message UploadCommonRequest {
+  google.protobuf.Any file = 1;
+}
+
+message UploadCommonReply {
+  int32 status_code = 1;
+  string message = 2;
+  optional string error_code = 3;
+  optional File payload = 4;
+}
+
+message SimpleReply{
+  int32 status_code = 1;
+  string message = 2;
+  optional string error_code = 3;
+  optional string payload = 4;
+}

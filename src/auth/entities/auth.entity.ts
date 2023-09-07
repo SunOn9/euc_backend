@@ -3,7 +3,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -16,7 +15,6 @@ export class AuthEntity {
   id: number;
 
   @ManyToOne(() => UserEntity, (user) => user.auth)
-  @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
   @Column({ nullable: true })
