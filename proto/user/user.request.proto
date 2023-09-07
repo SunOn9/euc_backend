@@ -2,26 +2,23 @@ syntax = "proto3";
 package euc_backend;
 
 
-message GetAuthConditionRequest {
+message GetUserConditionRequest {
   optional int32 id = 1;
-  optional int32 user_id = 2;
-  optional string ip_address = 3;
-  optional string authToken = 4;
-  optional string session_id =5;
-  optional string user_agent =6;
-  optional string platform =7;
-  optional int32 longtitude =8;
-  optional int32 latitude =9;
-  optional bool isExtra = 10;
+  optional int32 name = 2;
+  optional string email = 3;
+  optional string password = 4;
+  optional string phone = 5;
+  optional string create_at = 6;
+  optional string update_at = 7;
+  optional int32 delete_at = 8;
 }
 
-message CreateAuthRequest {
-  optional int32 user_id = 1;
-  optional string ip_address = 2;
-  optional string authToken = 3;
-  optional string session_id =4;
-  optional string user_agent =5;
-  optional string platform =6;
-  optional int32 longtitude =7;
-  optional int32 latitude =8;
+message CreateUserRequest {
+  optional int32 name = 1;
+  optional string email = 2;
+  optional string password = 3;
+  optional string phone = 4;
+  optional string create_at = 5;
+  optional string update_at = 6;
+  optional int32 delete_at = 7;
 }

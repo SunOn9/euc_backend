@@ -13,6 +13,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { PermissionEntity } from '/permission/entities/permission.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -24,13 +25,13 @@ export class UserEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
   password: string;
 
-  @Column({ nullable: true })
+  @Column({ unique: true, nullable: true })
   phone?: string | null;
 
   @ManyToMany(() => ClubEntity, { cascade: true })
@@ -40,6 +41,14 @@ export class UserEntity {
     inverseJoinColumn: { name: 'club_id', referencedColumnName: 'id' },
   })
   club: ClubEntity[];
+
+  @ManyToMany(() => PermissionEntity, { cascade: true })
+  @JoinTable({
+    name: 'user_with_permission',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'permission_id', referencedColumnName: 'id' },
+  })
+  permission: PermissionEntity[];
 
   @OneToMany(() => AuthEntity, (auth) => auth.user)
   auth: AuthEntity[];
@@ -51,7 +60,7 @@ export class UserEntity {
   updatedAt: Date;
 
   @DeleteDateColumn()
-  deletedAt?: Date;
+  deletedAt?: Date | null;
 
   @BeforeInsert()
   async hashPassword() {

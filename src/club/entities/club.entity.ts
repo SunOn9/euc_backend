@@ -22,8 +22,8 @@ export class ClubEntity {
   @Column()
   name: string;
 
-  // @ManyToMany(() => UserEntity, (user) => user.club)
-  // user: UserEntity[];
+  @ManyToMany(() => UserEntity, (user) => user.club)
+  user: UserEntity[];
 
   @ManyToOne(() => AreaEntity, (area) => area.club)
   @JoinColumn({ name: 'area_id' })

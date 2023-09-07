@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package euc_backend;
 
-import "auth/auth.proto";
 
 message User {
   int32 id = 1;
@@ -13,5 +12,4 @@ message User {
   string create_at = 6;
   string update_at = 7;
   int32 delete_at = 8;
-  repeated Auth auth_list = 9;
 }

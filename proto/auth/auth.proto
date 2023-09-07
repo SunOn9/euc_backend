@@ -2,11 +2,9 @@ syntax = "proto3";
 
 package euc_backend;
 
-import "user/user.proto";
-
 message Auth {
   int32 id = 1;
-  optional int32 user_id = 2;
+  int32 user_id = 2;
   string ip_address = 3;
   string auth_token = 4;
   string user_agent = 5;
@@ -15,5 +13,4 @@ message Auth {
   int32 longtitude = 8;
   int32 latitude = 9;
   int32 create_at = 10;
-  optional User user = 11;
 }
