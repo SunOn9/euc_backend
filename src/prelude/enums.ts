@@ -18,3 +18,17 @@ export enum EnumEventType {
   PLUS_TRAINING = 2,
   TOURNAMENT = 3,
 }
+
+export enum EnumReceiptSessionStatus {
+  JUST_CREATE = 0,
+  CONFIRMED = 1,
+  DONE = 2,
+  CANCEL = 3,
+}
+
+export enum EunumReceiptMethod {
+  OTHER = 0,
+  CASH = 1,
+  AMT_TRANSFER = 2,
+  MOMO_TRANSFER = 3,
+}
