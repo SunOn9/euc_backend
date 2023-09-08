@@ -1,36 +1,47 @@
-## Description
+# Backend EUC
 
-## Installation
+### Run docker ENV
 
-```bash
-$ yarn install
-```
+`bash script/setup_docker.sh`
 
-## Running the app
+### Create Database
 
-```bash
-# development
-$ yarn run start
+`echo "CREATE DATABASE euc CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" | docker exec -i mysql /usr/bin/mysql -u root --password=190501
+`
 
-# watch mode
-$ yarn run start:dev
+### Install yarn & nestjs
 
-# production mode
-$ yarn run start:prod
-```
+`google.com`
 
-## Test
+### Install package
 
-```bash
-# unit tests
-$ yarn run test
+`yarn`
 
-# e2e tests
-$ yarn run test:e2e
+### Install protoc
 
-# test coverage
-$ yarn run test:cov
-```
+#### Linux, using apt or apt-get, for example:
+
+`apt install -y protobuf-compiler`
+
+`protoc --version # Ensure compiler version is 3+`
+
+#### MacOS, using Homebrew:
+
+`brew install protobuf`
+
+`protoc --version # Ensure compiler version is 3+`
+
+### Build Proto
+
+`yarn gen-proto`
+
+### Env
+
+`Copy file 'env.example' to new file name '.env'`
+
+### RUN
+
+`yarn start:dev`
 
 ## License
 

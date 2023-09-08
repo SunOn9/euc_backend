@@ -4,9 +4,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { AreaEntity } from '/area/entities/area.entity';
+import { EnumMemberStatus } from '/prelude/enums';
 
 @Entity({ name: 'member' })
 export class MemberEntity {
@@ -21,6 +25,12 @@ export class MemberEntity {
 
   age: number;
 
+  status: EnumMemberStatus;
+
+  @ManyToOne(() => AreaEntity, (area) => area.member)
+  hometown: AreaEntity;
+
+  @ManyToMany(() => ClubEntity, (club) => club.member)
   club: ClubEntity;
 
   event?: EventEntity[];

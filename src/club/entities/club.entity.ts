@@ -1,16 +1,17 @@
 import { AreaEntity } from 'src/area/entities/area.entity';
-import { UserEntity } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { MemberEntity } from '/member/entities/member.entity';
+import { GuestEntity } from '/guest/entities/guest.entity';
 
 @Entity({ name: 'club' })
 export class ClubEntity {
@@ -22,8 +23,11 @@ export class ClubEntity {
   @Column()
   name: string;
 
-  @ManyToMany(() => UserEntity, (user) => user.club)
-  user: UserEntity[];
+  @OneToMany(() => MemberEntity, (member) => member.club)
+  member: MemberEntity[];
+
+  @OneToMany(() => GuestEntity, (guest) => guest.club)
+  guest: GuestEntity[];
 
   @ManyToOne(() => AreaEntity, (area) => area.club)
   @JoinColumn({ name: 'area_id' })

@@ -4,10 +4,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { MemberEntity } from '/member/entities/member.entity';
 
 @Entity({ name: 'area' })
 export class AreaEntity {
@@ -21,6 +23,9 @@ export class AreaEntity {
 
   @OneToMany(() => ClubEntity, (club) => club.area)
   club: ClubEntity[];
+
+  @ManyToOne(() => MemberEntity, (member) => member.hometown)
+  member: MemberEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

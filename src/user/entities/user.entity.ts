@@ -1,5 +1,4 @@
 import { AuthEntity } from 'src/auth/entities/auth.entity';
-import { ClubEntity } from 'src/club/entities/club.entity';
 import {
   BeforeInsert,
   Column,
@@ -14,6 +13,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { PermissionEntity } from '/permission/entities/permission.entity';
+import { EnumUserRole } from '/prelude/enums';
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -34,13 +34,8 @@ export class UserEntity {
   @Column({ unique: true, nullable: true })
   phone?: string | null;
 
-  @ManyToMany(() => ClubEntity, { cascade: true })
-  @JoinTable({
-    name: 'user_in_club',
-    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'club_id', referencedColumnName: 'id' },
-  })
-  club: ClubEntity[];
+  @Column()
+  role: EnumUserRole;
 
   @ManyToMany(() => PermissionEntity, { cascade: true })
   @JoinTable({

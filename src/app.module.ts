@@ -18,6 +18,8 @@ import { ClubModule } from './club/club.module';
 import { PermissionModule } from './permission/permission.module';
 import { AreaModule } from './area/area.module';
 import { UtilsModule } from 'lib/utils';
+import { PaymentSessionModule } from './payment-session/payment-session.module';
+import { ReceiptSessionModule } from './receipt-session/receipt-session.module';
 
 // const cwd = process.cwd();
 
@@ -94,6 +96,8 @@ import { UtilsModule } from 'lib/utils';
     ClubModule,
     PermissionModule,
     AreaModule,
+    PaymentSessionModule,
+    ReceiptSessionModule,
   ],
   providers: [],
 })
