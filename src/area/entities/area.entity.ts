@@ -4,7 +4,6 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -24,7 +23,7 @@ export class AreaEntity {
   @OneToMany(() => ClubEntity, (club) => club.area)
   club: ClubEntity[];
 
-  @ManyToOne(() => MemberEntity, (member) => member.hometown)
+  @OneToMany(() => MemberEntity, (member) => member.hometown)
   member: MemberEntity[];
 
   @CreateDateColumn()
@@ -33,7 +32,7 @@ export class AreaEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ nullable: true })
   deletedAt?: Date;
 
   constructor(partial: Partial<AreaEntity>) {

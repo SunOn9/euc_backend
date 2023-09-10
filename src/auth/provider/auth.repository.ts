@@ -26,11 +26,6 @@ export class AuthRepository extends Repository<AuthEntity> {
         return err(new Error('Cannot create Auth'));
       }
 
-      console.log(
-        '🚀 ~ file: auth.repository.ts:26 ~ AuthRepository ~ createAuth ~ data:',
-        data,
-      );
-
       return ok(this.proto.reflect(data));
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST);
@@ -61,11 +56,6 @@ export class AuthRepository extends Repository<AuthEntity> {
           new Error(`Cannot find auth by condition [ ${errorMessage} ]`),
         );
       }
-
-      console.log(
-        '🚀 ~ file: auth.repository.ts:26 ~ AuthRepository ~ getAuth ~ data:',
-        data,
-      );
 
       return ok(this.proto.reflect(data));
     } catch (e) {

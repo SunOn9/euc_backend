@@ -4,14 +4,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { MemberEntity } from '/member/entities/member.entity';
 import { GuestEntity } from '/guest/entities/guest.entity';
+import { MemberInClubEntity } from '/member-in-club/entities/member-in-club.entity';
 
 @Entity({ name: 'club' })
 export class ClubEntity {
@@ -23,14 +22,13 @@ export class ClubEntity {
   @Column()
   name: string;
 
-  @OneToMany(() => MemberEntity, (member) => member.club)
-  member: MemberEntity[];
+  @OneToMany(() => MemberInClubEntity, (memberInClub) => memberInClub.club)
+  memberInClub: MemberInClubEntity[];
 
   @OneToMany(() => GuestEntity, (guest) => guest.club)
   guest: GuestEntity[];
 
   @ManyToOne(() => AreaEntity, (area) => area.club)
-  @JoinColumn({ name: 'area_id' })
   area: AreaEntity;
 
   @CreateDateColumn()
@@ -39,7 +37,7 @@ export class ClubEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({ nullable: true })
   deletedAt?: Date;
 
   constructor(partial: Partial<ClubEntity>) {

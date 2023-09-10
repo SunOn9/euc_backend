@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { CacheModule } from '@nestjs/cache-manager';
 import { HttpModule } from '@nestjs/axios';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { BullModule } from '@nestjs/bull';
+import { CacheModule } from '@nestjs/cache-manager';
+import * as redisStore from 'cache-manager-redis-store';
+
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ReceiptModule } from './receipt/receipt.module';
@@ -12,14 +15,14 @@ import { PaymentModule } from './payment/payment.module';
 import { EventModule } from './event/event.module';
 import { GuestModule } from './guest/guest.module';
 import { MemberModule } from './member/member.module';
-import * as redisStore from 'cache-manager-redis-store';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { ClubModule } from './club/club.module';
 import { PermissionModule } from './permission/permission.module';
 import { AreaModule } from './area/area.module';
 import { UtilsModule } from 'lib/utils';
 import { PaymentSessionModule } from './payment-session/payment-session.module';
 import { ReceiptSessionModule } from './receipt-session/receipt-session.module';
+import { MemberInClubModule } from './member-in-club/member-in-club.module';
+import { MemberFeeModule } from './member-fee/member-fee.module';
 
 // const cwd = process.cwd();
 
@@ -47,42 +50,42 @@ import { ReceiptSessionModule } from './receipt-session/receipt-session.module';
       }),
       inject: [ConfigService],
     }),
-    // Redis
-    CacheModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        store: redisStore,
-        ttl: configService.get('REDIS_CACHE_TTL'),
-        host: configService.get('REDIS_HOST'),
-        port: configService.get('REDIS_PORT'),
-        isGlobal: true,
-      }),
-      isGlobal: true,
-      inject: [ConfigService],
-    }),
-    // ElasticSearch
-    ElasticsearchModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        node: configService.get('ELASTICSEARCH_NODE'),
-        auth: {
-          username: configService.get('ELASTICSEARCH_USERNAME'),
-          password: configService.get('ELASTICSEARCH_PASSWORD'),
-        },
-      }),
-      inject: [ConfigService],
-    }),
-    // Bull Queues
-    BullModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        redis: {
-          host: configService.get('REDIS_HOST'),
-          port: configService.get('REDIS_PORT'),
-        },
-      }),
-      inject: [ConfigService],
-    }),
+    // // Redis
+    // CacheModule.registerAsync({
+    //   imports: [ConfigModule],
+    //   useFactory: async (configService: ConfigService) => ({
+    //     store: redisStore,
+    //     ttl: configService.get('REDIS_CACHE_TTL'),
+    //     host: configService.get('REDIS_HOST'),
+    //     port: configService.get('REDIS_PORT'),
+    //     isGlobal: true,
+    //   }),
+    //   isGlobal: true,
+    //   inject: [ConfigService],
+    // }),
+    // // ElasticSearch
+    // ElasticsearchModule.registerAsync({
+    //   imports: [ConfigModule],
+    //   useFactory: async (configService: ConfigService) => ({
+    //     node: configService.get('ELASTICSEARCH_NODE'),
+    //     auth: {
+    //       username: configService.get('ELASTICSEARCH_USERNAME'),
+    //       password: configService.get('ELASTICSEARCH_PASSWORD'),
+    //     },
+    //   }),
+    //   inject: [ConfigService],
+    // }),
+    // // Bull Queues
+    // BullModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   useFactory: async (configService: ConfigService) => ({
+    //     redis: {
+    //       host: configService.get('REDIS_HOST'),
+    //       port: configService.get('REDIS_PORT'),
+    //     },
+    //   }),
+    //   inject: [ConfigService],
+    // }),
     // Module
     UtilsModule,
     HttpModule,
@@ -98,6 +101,8 @@ import { ReceiptSessionModule } from './receipt-session/receipt-session.module';
     AreaModule,
     PaymentSessionModule,
     ReceiptSessionModule,
+    MemberInClubModule,
+    MemberFeeModule,
   ],
   providers: [],
 })

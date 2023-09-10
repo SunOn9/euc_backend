@@ -32,3 +32,9 @@ export enum EunumReceiptMethod {
   AMT_TRANSFER = 2,
   MOMO_TRANSFER = 3,
 }
+
+export enum EnumMemberType {
+  OTHER = 0,
+  STUDENT = 1,
+  WORKER = 2,
+}

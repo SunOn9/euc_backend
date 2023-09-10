@@ -14,6 +14,9 @@ import {
 import * as bcrypt from 'bcrypt';
 import { PermissionEntity } from '/permission/entities/permission.entity';
 import { EnumUserRole } from '/prelude/enums';
+import { EventEntity } from '/event/entities/event.entity';
+import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity';
+import { ClubEntity } from '/club/entities/club.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -44,6 +47,23 @@ export class UserEntity {
     inverseJoinColumn: { name: 'permission_id', referencedColumnName: 'id' },
   })
   permission: PermissionEntity[];
+
+  // @OneToMany()
+  // event: EventEntity[];
+
+  club: ClubEntity;
+
+  @OneToMany(
+    () => ReceiptSessionEntity,
+    (receiptSession) => receiptSession.userConfirm,
+  )
+  receiptSessionConfirm: ReceiptSessionEntity[];
+
+  @OneToMany(
+    () => ReceiptSessionEntity,
+    (receiptSession) => receiptSession.userDone,
+  )
+  receiptSessionDone: ReceiptSessionEntity[];
 
   @OneToMany(() => AuthEntity, (auth) => auth.user)
   auth: AuthEntity[];

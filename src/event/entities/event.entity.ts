@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { EnumEventType } from '/prelude/enums';
 import { MemberEntity } from '/member/entities/member.entity';
 import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity';
@@ -13,11 +13,20 @@ export class EventEntity {
 
   name: string;
 
-  member: MemberEntity;
+  @ManyToMany(() => MemberEntity, (member) => member.event)
+  member: MemberEntity[];
 
-  paymentSession?: PaymentSessionEntity | null;
+  @OneToMany(
+    () => PaymentSessionEntity,
+    (paymentSession) => paymentSession.event,
+  )
+  paymentSession?: PaymentSessionEntity[];
 
-  receiptSession?: ReceiptSessionEntity | null;
+  @OneToMany(
+    () => ReceiptSessionEntity,
+    (receiptSession) => receiptSession.event,
+  )
+  receiptSession?: ReceiptSessionEntity[];
 
   type: EnumEventType;
 
