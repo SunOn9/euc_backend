@@ -1,6 +1,6 @@
-import { Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ClubEntity } from '/club/entities/club.entity';
-import { MemberFeeEntity } from '/member-fee/entities/member-fee.entity';
+import { EnumMemberType } from '/prelude/enums';
 
 @Entity({ name: 'guest' })
 export class GuestEntity {
@@ -9,8 +9,10 @@ export class GuestEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => MemberFeeEntity, (fee) => fee.guest)
-  fee: MemberFeeEntity;
+  name: string;
+
+  @Column()
+  type: EnumMemberType;
 
   @ManyToOne(() => ClubEntity, (club) => club.guest)
   club: ClubEntity;

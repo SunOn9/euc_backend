@@ -25,5 +25,5 @@ export class MemberInClubEntity {
   createdAt: Date;
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt: Date;
+  deletedAt?: Date | null;
 }

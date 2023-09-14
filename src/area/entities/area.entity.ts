@@ -33,7 +33,7 @@ export class AreaEntity {
   updatedAt: Date;
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date;
+  deletedAt?: Date | null;
 
   constructor(partial: Partial<AreaEntity>) {
     Object.assign(this, partial);

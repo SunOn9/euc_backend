@@ -1,12 +1,12 @@
-import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common/decorators/modules/module.decorator';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { ElasticsearchModule } from '@nestjs/elasticsearch';
-import { BullModule } from '@nestjs/bull';
-import { CacheModule } from '@nestjs/cache-manager';
-import * as redisStore from 'cache-manager-redis-store';
+// import { ElasticsearchModule } from '@nestjs/elasticsearch';
+// import { BullModule } from '@nestjs/bull';
+// import { CacheModule } from '@nestjs/cache-manager';
+// import * as redisStore from 'cache-manager-redis-store';
 
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
@@ -22,7 +22,8 @@ import { UtilsModule } from 'lib/utils';
 import { PaymentSessionModule } from './payment-session/payment-session.module';
 import { ReceiptSessionModule } from './receipt-session/receipt-session.module';
 import { MemberInClubModule } from './member-in-club/member-in-club.module';
-import { MemberFeeModule } from './member-fee/member-fee.module';
+import { ClubFeeModule } from './club-fee/club-fee.module';
+import { LogModule } from './log/log.module';
 
 // const cwd = process.cwd();
 
@@ -102,7 +103,8 @@ import { MemberFeeModule } from './member-fee/member-fee.module';
     PaymentSessionModule,
     ReceiptSessionModule,
     MemberInClubModule,
-    MemberFeeModule,
+    ClubFeeModule,
+    LogModule,
   ],
   providers: [],
 })

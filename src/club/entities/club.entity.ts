@@ -11,6 +11,8 @@ import {
 } from 'typeorm';
 import { GuestEntity } from '/guest/entities/guest.entity';
 import { MemberInClubEntity } from '/member-in-club/entities/member-in-club.entity';
+import { ClubFeeEntity } from '/club-fee/entities/club-fee.entity';
+import { UserEntity } from '/user/entities/user.entity';
 
 @Entity({ name: 'club' })
 export class ClubEntity {
@@ -25,11 +27,17 @@ export class ClubEntity {
   @OneToMany(() => MemberInClubEntity, (memberInClub) => memberInClub.club)
   memberInClub: MemberInClubEntity[];
 
+  @OneToMany(() => ClubFeeEntity, (fee) => fee.club)
+  fee: ClubFeeEntity[];
+
   @OneToMany(() => GuestEntity, (guest) => guest.club)
   guest: GuestEntity[];
 
   @ManyToOne(() => AreaEntity, (area) => area.club)
   area: AreaEntity;
+
+  @OneToMany(() => UserEntity, (user) => user.club)
+  user: UserEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

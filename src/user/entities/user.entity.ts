@@ -7,7 +7,9 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -17,6 +19,7 @@ import { EnumUserRole } from '/prelude/enums';
 import { EventEntity } from '/event/entities/event.entity';
 import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity';
 import { ClubEntity } from '/club/entities/club.entity';
+import { LogEntity } from '/log/entities/log.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -48,9 +51,10 @@ export class UserEntity {
   })
   permission: PermissionEntity[];
 
-  // @OneToMany()
-  // event: EventEntity[];
+  @OneToMany(() => LogEntity, (log) => log.user)
+  log: LogEntity[];
 
+  @ManyToOne(() => ClubEntity, (club) => club.user)
   club: ClubEntity;
 
   @OneToMany(

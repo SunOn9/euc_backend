@@ -6,6 +6,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -14,7 +15,6 @@ import { EventEntity } from 'src/event/entities/event.entity';
 import { AreaEntity } from '/area/entities/area.entity';
 import { EnumMemberStatus, EnumMemberType } from '/prelude/enums';
 import { MemberInClubEntity } from '/member-in-club/entities/member-in-club.entity';
-import { MemberFeeEntity } from '/member-fee/entities/member-fee.entity';
 
 @Entity({ name: 'member' })
 export class MemberEntity {
@@ -38,18 +38,15 @@ export class MemberEntity {
   @Column()
   type: EnumMemberType;
 
-  @OneToOne(() => MemberFeeEntity, (fee) => fee.member)
-  fee: MemberFeeEntity;
-
   @ManyToOne(() => AreaEntity, (area) => area.member)
   hometown: AreaEntity;
 
-  @ManyToMany(() => MemberInClubEntity, (memberInClub) => memberInClub.member)
+  @OneToMany(() => MemberInClubEntity, (memberInClub) => memberInClub.member)
   memberInClub: MemberInClubEntity[];
 
   @ManyToMany(() => EventEntity)
   @JoinTable({
-    name: 'user_in_event',
+    name: 'member_in_event',
     joinColumn: { name: 'user_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'event_id', referencedColumnName: 'id' },
   })
