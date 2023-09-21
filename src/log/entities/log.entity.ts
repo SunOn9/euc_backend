@@ -29,4 +29,8 @@ export class LogEntity {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  constructor(partial: Partial<LogEntity>) {
+    Object.assign(this, partial);
+  }
 }

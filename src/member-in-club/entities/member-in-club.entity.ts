@@ -26,4 +26,8 @@ export class MemberInClubEntity {
 
   @DeleteDateColumn({ nullable: true })
   deletedAt?: Date | null;
+
+  constructor(partial: Partial<MemberInClubEntity>) {
+    Object.assign(this, partial);
+  }
 }

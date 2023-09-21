@@ -9,4 +9,8 @@ export class PermissionEntity {
 
   @ManyToMany(() => UserEntity, (user) => user.permission)
   user: UserEntity[];
+
+  constructor(partial: Partial<PermissionEntity>) {
+    Object.assign(this, partial);
+  }
 }

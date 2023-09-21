@@ -24,6 +24,7 @@ import { ReceiptSessionModule } from './receipt-session/receipt-session.module';
 import { MemberInClubModule } from './member-in-club/member-in-club.module';
 import { ClubFeeModule } from './club-fee/club-fee.module';
 import { LogModule } from './log/log.module';
+import { PlaceModule } from './place/place.module';
 
 // const cwd = process.cwd();
 
@@ -105,6 +106,7 @@ import { LogModule } from './log/log.module';
     MemberInClubModule,
     ClubFeeModule,
     LogModule,
+    PlaceModule,
   ],
   providers: [],
 })

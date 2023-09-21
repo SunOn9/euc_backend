@@ -9,17 +9,16 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { PermissionEntity } from '/permission/entities/permission.entity';
-import { EnumUserRole } from '/prelude/enums';
-import { EventEntity } from '/event/entities/event.entity';
 import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity';
 import { ClubEntity } from '/club/entities/club.entity';
 import { LogEntity } from '/log/entities/log.entity';
+import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity';
+import { Enum_EnumUserRole } from '/generated/enum';
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -34,14 +33,14 @@ export class UserEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ length: 32 })
   password: string;
 
-  @Column({ unique: true, nullable: true })
+  @Column({ unique: true, nullable: true, length: 10 })
   phone?: string | null;
 
   @Column()
-  role: EnumUserRole;
+  role: Enum_EnumUserRole;
 
   @ManyToMany(() => PermissionEntity, { cascade: true })
   @JoinTable({
@@ -68,6 +67,18 @@ export class UserEntity {
     (receiptSession) => receiptSession.userDone,
   )
   receiptSessionDone: ReceiptSessionEntity[];
+
+  @OneToMany(
+    () => PaymentSessionEntity,
+    (paymentSession) => paymentSession.userConfirm,
+  )
+  paymentSessionConfirm: PaymentSessionEntity[];
+
+  @OneToMany(
+    () => PaymentSessionEntity,
+    (paymentSession) => paymentSession.userDone,
+  )
+  paymentSessionDone: PaymentSessionEntity[];
 
   @OneToMany(() => AuthEntity, (auth) => auth.user)
   auth: AuthEntity[];

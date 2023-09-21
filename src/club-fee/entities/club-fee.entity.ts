@@ -34,4 +34,8 @@ export class ClubFeeEntity {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  constructor(partial: Partial<ClubFeeEntity>) {
+    Object.assign(this, partial);
+  }
 }

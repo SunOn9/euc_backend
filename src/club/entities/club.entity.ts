@@ -24,6 +24,12 @@ export class ClubEntity {
   @Column()
   name: string;
 
+  @Column()
+  fund: number;
+
+  @Column()
+  totalMember: number;
+
   @OneToMany(() => MemberInClubEntity, (memberInClub) => memberInClub.club)
   memberInClub: MemberInClubEntity[];
 

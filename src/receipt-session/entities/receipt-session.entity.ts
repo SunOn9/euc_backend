@@ -9,9 +9,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ReceiptEntity } from '/receipt/entities/receipt.entity';
-import { EnumReceiptSessionStatus } from '/prelude/enums';
 import { UserEntity } from '/user/entities/user.entity';
 import { EventEntity } from '/event/entities/event.entity';
+import { Enum_EnumSessionStatus } from '/generated/enum';
 
 @Entity({ name: 'receipt_session' })
 export class ReceiptSessionEntity {
@@ -36,11 +36,11 @@ export class ReceiptSessionEntity {
 
   @Column({
     type: 'enum',
-    enum: EnumReceiptSessionStatus,
+    enum: Enum_EnumSessionStatus,
     enumName: 'enum_receipt_session_status',
-    default: EnumReceiptSessionStatus.JUST_CREATE,
+    default: Enum_EnumSessionStatus.JUST_CREATE,
   })
-  status: EnumReceiptSessionStatus;
+  status: Enum_EnumSessionStatus;
 
   @Column({ nullable: true })
   dateConfirm?: Date | null;
@@ -66,4 +66,8 @@ export class ReceiptSessionEntity {
 
   @DeleteDateColumn({ nullable: true })
   deletedAt?: Date | null;
+
+  constructor(partial: Partial<ReceiptSessionEntity>) {
+    Object.assign(this, partial);
+  }
 }

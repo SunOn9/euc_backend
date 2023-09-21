@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package euc_backend;
+
+message Enum {
+
+  enum EnumUserRole {
+    ADMIN = 0;
+    LEADER = 1;
+    CORE_MEMBER = 2;
+    TREASURER = 3;
+    STAFF = 4;
+  }
+
+  enum EnumMemberStatus {
+    BELIEVER = 0;
+    SEEKER = 1;
+    POTENTIAL_SEEKER = 2;
+  }
+
+  enum EnumEventType {
+    WEEKLY_TRAINING = 0;
+    PLUS_TRAINING = 1;
+    TOURNAMENT = 2;
+  }
+
+  enum EnumSessionStatus {
+    JUST_CREATE = 0;
+    CONFIRMED = 1;
+    DONE = 2;
+    CANCEL = 3;
+  }
+  
+  enum EunumMoneyMethod {
+    CASH = 0;
+    ATM_TRANSFER = 1;
+    MOMO_TRANSFER = 2;
+  }
+
+  enum EnumMemberType {
+    STUDENT = 0;
+    WORKER = 1;
+  }
+}

@@ -4,14 +4,17 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { EnumEventType } from '/prelude/enums';
 import { MemberEntity } from '/member/entities/member.entity';
 import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity';
 import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity';
+import { Enum_EnumEventType } from '/generated/enum';
+import { GuestEntity } from '/guest/entities/guest.entity';
+import { PlaceEntity } from '/place/entities/place.entity';
 
 @Entity({ name: 'event' })
 export class EventEntity {
@@ -25,6 +28,12 @@ export class EventEntity {
 
   @ManyToMany(() => MemberEntity, (member) => member.event)
   member: MemberEntity[];
+
+  @ManyToMany(() => GuestEntity, (guest) => guest.event)
+  guest: GuestEntity[];
+
+  @ManyToOne(() => PlaceEntity, (place) => place.event)
+  place?: PlaceEntity | null;
 
   @OneToMany(
     () => PaymentSessionEntity,
@@ -45,7 +54,7 @@ export class EventEntity {
   endEventDate: Date;
 
   @Column()
-  type: EnumEventType;
+  type: Enum_EnumEventType;
 
   @CreateDateColumn()
   createdAt: Date;

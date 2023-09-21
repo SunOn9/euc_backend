@@ -8,6 +8,7 @@ import "auth/auth.reply.proto";
 import "user/user.proto";
 import "user/user.request.proto";
 import "user/user.reply.proto";
+import "enum.proto";
 import "common.proto";
 
 service AuthService {
