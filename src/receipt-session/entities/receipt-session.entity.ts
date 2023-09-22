@@ -11,7 +11,7 @@ import {
 import { ReceiptEntity } from '/receipt/entities/receipt.entity';
 import { UserEntity } from '/user/entities/user.entity';
 import { EventEntity } from '/event/entities/event.entity';
-import { Enum_EnumSessionStatus } from '/generated/enum';
+import { EnumProto_SessionStatus } from '/generated/enumps';
 
 @Entity({ name: 'receipt_session' })
 export class ReceiptSessionEntity {
@@ -36,11 +36,11 @@ export class ReceiptSessionEntity {
 
   @Column({
     type: 'enum',
-    enum: Enum_EnumSessionStatus,
+    enum: EnumProto_SessionStatus,
     enumName: 'enum_receipt_session_status',
-    default: Enum_EnumSessionStatus.JUST_CREATE,
+    default: EnumProto_SessionStatus.JUST_CREATE,
   })
-  status: Enum_EnumSessionStatus;
+  status: EnumProto_SessionStatus;
 
   @Column({ nullable: true })
   dateConfirm?: Date | null;

@@ -1,24 +1,40 @@
 syntax = "proto3";
 package euc_backend;
 
+import "google/protobuf/timestamp.proto";
+import "enumps.proto";
 
 message GetUserConditionRequest {
   optional int32 id = 1;
-  optional int32 name = 2;
+  optional string name = 2;
   optional string email = 3;
-  optional string password = 4;
+  // optional string password = 4;
   optional string phone = 5;
-  optional string create_at = 6;
-  optional string update_at = 7;
-  optional int32 delete_at = 8;
+  optional EnumProto.UserRole role =6;
+  optional google.protobuf.Timestamp created_at = 7;
+  optional google.protobuf.Timestamp updated_at = 8;
+  optional google.protobuf.Timestamp deleted_at = 9;
+  optional int32 page =10;
+  optional int32 limit =11;
 }
 
 message CreateUserRequest {
-  optional int32 name = 1;
-  optional string email = 2;
-  optional string password = 3;
+  string name = 1;
+  string email = 2;
+  string password = 3;
   optional string phone = 4;
-  optional string create_at = 5;
-  optional string update_at = 6;
-  optional int32 delete_at = 7;
+  EnumProto.UserRole role =5;
+}
+
+message UpdateUserDataRequest {
+  string name = 1;
+  string email = 2;
+  string password = 3;
+  optional string phone = 4;
+  EnumProto.UserRole role =5;
+}
+
+message UpdateUserRequest {
+  GetUserConditionRequest conditions =1;
+  UpdateUserDataRequest data =2;
 }

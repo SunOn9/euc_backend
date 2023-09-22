@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package euc_backend;
+
+import "enumps.proto";
+import "google/protobuf/timestamp.proto";
+
+
+message PaymentSession {
+  int32 id = 1;
+  // repeated Payment payment = 2;
+  // EventEntity event = 3;
+  EnumProto.SessionStatus status = 4;
+  google.protobuf.Timestamp date_confirm = 5;
+  // UserEntity user_confirm = 6;
+  google.protobuf.Timestamp date_done = 7;
+  // UserEntity user_done = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+  google.protobuf.Timestamp deleted_at = 11;
+}

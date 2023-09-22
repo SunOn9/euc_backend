@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package euc_backend;
+
+import "enumps.proto";
+import "google/protobuf/timestamp.proto";
+
+message ReceiptSession {
+  int32 id = 1;
+  string title = 2;
+  string description = 3;
+  // EventEntity event = 4;
+  // repeated Receipt receipt = 5;
+  EnumProto.SessionStatus status = 6;
+  google.protobuf.Timestamp date_confirm = 7;
+  // UserEntity user_confirm = 8;
+  google.protobuf.Timestamp date_done = 9;
+  // UserEntity user_done = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+  google.protobuf.Timestamp deleted_at = 13;
+}

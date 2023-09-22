@@ -11,7 +11,7 @@ import {
 import { PaymentEntity } from '/payment/entities/payment.entity';
 import { EventEntity } from '/event/entities/event.entity';
 import { UserEntity } from '/user/entities/user.entity';
-import { Enum_EnumSessionStatus } from '/generated/enum';
+import { EnumProto_SessionStatus } from '/generated/enumps';
 
 @Entity({ name: 'payment_session' })
 export class PaymentSessionEntity {
@@ -28,11 +28,11 @@ export class PaymentSessionEntity {
 
   @Column({
     type: 'enum',
-    enum: Enum_EnumSessionStatus,
+    enum: EnumProto_SessionStatus,
     enumName: 'enum_payment_session_status',
-    default: Enum_EnumSessionStatus.JUST_CREATE,
+    default: EnumProto_SessionStatus.JUST_CREATE,
   })
-  status: Enum_EnumSessionStatus;
+  status: EnumProto_SessionStatus;
 
   @Column({ nullable: true })
   dateConfirm?: Date | null;

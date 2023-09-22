@@ -1,6 +1,14 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity';
-import { Enum_EunumMoneyMethod } from '/generated/enum';
+import { EnumProto_MoneyMethod } from '/generated/enumps';
 
 @Entity('receipt')
 export class ReceiptEntity {
@@ -19,13 +27,22 @@ export class ReceiptEntity {
   amount: number;
 
   @Column()
-  method: Enum_EunumMoneyMethod;
+  method: EnumProto_MoneyMethod;
 
   @ManyToOne(
     () => ReceiptSessionEntity,
     (receiptSession) => receiptSession.receipt,
   )
   receiptSession: ReceiptSessionEntity;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date;
 
   constructor(partial: Partial<ReceiptEntity>) {
     Object.assign(this, partial);

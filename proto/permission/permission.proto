@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package euc_backend;
+
+import "google/protobuf/timestamp.proto";
+
+message Permission {
+  int32 id = 1;
+  // repeated UserEntity user = 2;
+}

@@ -11,30 +11,30 @@ import {
 
 async function bootstrap() {
   //grpc service
-  const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    {
-      transport: Transport.GRPC,
-      options: {
-        package: ['euc_backend'],
-        loader: {
-          longs: String,
-          enums: String,
-          json: true,
-          defaults: true,
-        },
-        protoPath: [join(__dirname, '../../proto/api.proto')],
-      },
-      logger: ['error', 'warn', 'debug', 'verbose'],
-    },
-  );
-  await grpcApp.useGlobalPipes(
-    new ValidationPipe({ whitelist: true, transform: true }),
-  );
+  // const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(
+  //   AppModule,
+  //   {
+  //     transport: Transport.GRPC,
+  //     options: {
+  //       package: ['euc_backend'],
+  //       loader: {
+  //         longs: String,
+  //         enums: String,
+  //         json: true,
+  //         defaults: true,
+  //       },
+  //       protoPath: [join(__dirname, '../../proto/api.proto')],
+  //     },
+  //     logger: ['error', 'warn', 'debug', 'verbose'],
+  //   },
+  // );
+  // await grpcApp.useGlobalPipes(
+  //   new ValidationPipe({ whitelist: true, transform: true }),
+  // );
 
-  grpcApp.useGlobalFilters(new CustomRpcExceptionFilter());
+  // grpcApp.useGlobalFilters(new CustomRpcExceptionFilter());
 
-  await grpcApp.listen();
+  // await grpcApp.listen();
 
   //http service
   const httpApp = await NestFactory.create(AppModule, {

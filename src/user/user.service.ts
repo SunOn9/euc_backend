@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserRequestDto } from './dto/create-user.dto';
+import { UserRepository } from './provider/user.repository';
+import * as bcrypt from 'bcrypt';
+import { GetUserConditionRequestDto } from './dto/get-user-condition-request.dto';
+import { UpdateUserRequestDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(private readonly repo: UserRepository) {}
+
+  async create(createData: CreateUserRequestDto) {
+    createData.password = await bcrypt.hash(createData.password, 10);
+
+    return await this.repo.createUser(createData);
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async getDetail(requestData: GetUserConditionRequestDto) {
+    return await this.repo.getDetail(requestData);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async getList(requestData: GetUserConditionRequestDto) {
+    return await this.repo.getList(requestData);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(requestData: UpdateUserRequestDto) {
+    return await this.repo.updateUser(requestData);
   }
 }

@@ -12,13 +12,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import { PermissionEntity } from '/permission/entities/permission.entity';
 import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity';
 import { ClubEntity } from '/club/entities/club.entity';
 import { LogEntity } from '/log/entities/log.entity';
 import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity';
-import { Enum_EnumUserRole } from '/generated/enum';
+import { EnumProto_UserRole } from '/generated/enumps';
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -33,14 +32,14 @@ export class UserEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column({ length: 32 })
+  @Column({ length: 60 })
   password: string;
 
   @Column({ unique: true, nullable: true, length: 10 })
   phone?: string | null;
 
   @Column()
-  role: Enum_EnumUserRole;
+  role: EnumProto_UserRole;
 
   @ManyToMany(() => PermissionEntity, { cascade: true })
   @JoinTable({
@@ -91,11 +90,6 @@ export class UserEntity {
 
   @DeleteDateColumn()
   deletedAt?: Date | null;
-
-  @BeforeInsert()
-  async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
 
   constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial);

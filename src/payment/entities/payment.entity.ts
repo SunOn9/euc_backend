@@ -1,6 +1,14 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity';
-import { Enum_EunumMoneyMethod } from '/generated/enum';
+import { EnumProto_MoneyMethod } from '/generated/enumps';
 
 @Entity('payment')
 export class PaymentEntity {
@@ -19,13 +27,22 @@ export class PaymentEntity {
   amount: number;
 
   @Column()
-  method: Enum_EunumMoneyMethod;
+  method: EnumProto_MoneyMethod;
 
   @ManyToOne(
     () => PaymentSessionEntity,
     (paymentSession) => paymentSession.payment,
   )
   paymentSession: PaymentSessionEntity;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date;
 
   constructor(partial: Partial<PaymentEntity>) {
     Object.assign(this, partial);

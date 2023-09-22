@@ -12,9 +12,9 @@ import {
 import { MemberEntity } from '/member/entities/member.entity';
 import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity';
 import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity';
-import { Enum_EnumEventType } from '/generated/enum';
 import { GuestEntity } from '/guest/entities/guest.entity';
 import { PlaceEntity } from '/place/entities/place.entity';
+import { EnumProto_EventType } from '/generated/enumps';
 
 @Entity({ name: 'event' })
 export class EventEntity {
@@ -54,7 +54,7 @@ export class EventEntity {
   endEventDate: Date;
 
   @Column()
-  type: Enum_EnumEventType;
+  type: EnumProto_EventType;
 
   @CreateDateColumn()
   createdAt: Date;

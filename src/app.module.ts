@@ -49,6 +49,7 @@ import { PlaceModule } from './place/place.module';
         autoLoadEntities: true,
         synchronize: true,
         namingStrategy: new SnakeNamingStrategy(),
+        timezone: 'local',
       }),
       inject: [ConfigService],
     }),

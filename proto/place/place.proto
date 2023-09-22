@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package euc_backend;
+
+import "google/protobuf/timestamp.proto";
+
+message Place {
+  int32 id = 1;
+  string name = 2;
+  int32 fee = 3;
+  // repeated EventEntity event = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp deleted_at = 7;
+}

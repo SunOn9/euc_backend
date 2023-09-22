@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package euc_backend;
+
+import "google/protobuf/timestamp.proto";
+
+message Log {
+  int32 id = 1;
+  int32 user_id = 2;
+  int32 auth_id = 3;
+  string target = 4;
+  string action = 5;
+  google.protobuf.Timestamp created_at = 6;
+}

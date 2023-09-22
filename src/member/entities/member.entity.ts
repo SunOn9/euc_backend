@@ -13,7 +13,10 @@ import {
 import { EventEntity } from 'src/event/entities/event.entity';
 import { AreaEntity } from '/area/entities/area.entity';
 import { MemberInClubEntity } from '/member-in-club/entities/member-in-club.entity';
-import { Enum_EnumMemberStatus, Enum_EnumMemberType } from '/generated/enum';
+import {
+  EnumProto_MemberStatus,
+  EnumProto_MemberType,
+} from '/generated/enumps';
 
 @Entity({ name: 'member' })
 export class MemberEntity {
@@ -32,10 +35,10 @@ export class MemberEntity {
   birthday: Date;
 
   @Column()
-  status: Enum_EnumMemberStatus;
+  status: EnumProto_MemberStatus;
 
   @Column()
-  type: Enum_EnumMemberType;
+  type: EnumProto_MemberType;
 
   @Column({ nullable: true })
   monthlyFee?: string | null;

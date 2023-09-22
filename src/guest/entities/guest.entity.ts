@@ -10,8 +10,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ClubEntity } from '/club/entities/club.entity';
-import { Enum_EnumMemberType } from '/generated/enum';
 import { EventEntity } from '/event/entities/event.entity';
+import { EnumProto_MemberType } from '/generated/enumps';
 
 @Entity({ name: 'guest' })
 export class GuestEntity {
@@ -27,7 +27,7 @@ export class GuestEntity {
   nickName: string;
 
   @Column()
-  type: Enum_EnumMemberType;
+  type: EnumProto_MemberType;
 
   @ManyToOne(() => ClubEntity, (club) => club.guest)
   club: ClubEntity;

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package uec_backend;
+
+message ClubFeeEntity {
+  int32 id = 1;
+  int32 club_id = 2;
+  int32 student_fee = 3;
+  int32 worker_fee = 4;
+  int32 monthly_fee = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp deleted_at = 7;
+}

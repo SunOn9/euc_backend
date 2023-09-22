@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package uec_backend;
+
+import "google/protobuf/timestamp.proto";
+
+message ClubFee {
+  int32 id = 1;
+  string name = 2;
+  // repeated Club club = 3;
+  // repeated Member member = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp deleted_at = 7;
+}

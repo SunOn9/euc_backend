@@ -2,14 +2,26 @@ syntax = "proto3";
 
 package euc_backend;
 
+import "common.proto";
+import "enumps.proto";
 import "auth/auth.proto";
 import "auth/auth.request.proto";
 import "auth/auth.reply.proto";
 import "user/user.proto";
 import "user/user.request.proto";
 import "user/user.reply.proto";
-import "enum.proto";
-import "common.proto";
+import "event/event.proto";
+import "club-fee/club-fee.proto";
+import "guest/guest.proto";
+import "log/log.proto";
+import "member/member.proto";
+import "payment/payment.proto";
+import "payment-session/payment-session.proto";
+import "permission/permission.proto";
+import "place/place.proto";
+import "receipt/receipt.proto";
+import "receipt-session/receipt-session.proto";
+
 
 service AuthService {
   // rpc CreateAuth (CreateAuthRequest) returns (AuthReply) {}
