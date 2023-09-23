@@ -1,34 +1,44 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { CreateUserRequest } from '/generated/user/user.request';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator'
+import { CreateUserRequest } from '/generated/user/user.request'
 import {
   ApiProperty,
   ApiPropertyOptional,
-} from '@nestjs/swagger/dist/decorators/api-property.decorator';
-import { EnumProto_UserRole } from '/generated/enumps';
+} from '@nestjs/swagger/dist/decorators/api-property.decorator'
+import { EnumProto_UserRole } from '/generated/enumps'
 
 export class CreateUserRequestDto implements CreateUserRequest {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  name: string;
+  name: string
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEmail()
+  email: string
 
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  email: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  password: string;
+  @MinLength(8)
+  @MaxLength(32)
+  password: string
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  phone?: string;
+  phone?: string
 
   @ApiProperty()
   @IsNotEmpty()
   @IsEnum(EnumProto_UserRole)
-  role: EnumProto_UserRole;
+  role: EnumProto_UserRole
 }

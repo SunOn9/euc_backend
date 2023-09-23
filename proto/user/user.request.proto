@@ -38,3 +38,7 @@ message UpdateUserRequest {
   GetUserConditionRequest conditions =1;
   UpdateUserDataRequest data =2;
 }
+
+message RemoveUserRequest {
+  int32 id = 1;
+}

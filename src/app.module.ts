@@ -1,30 +1,31 @@
-import { Module } from '@nestjs/common/decorators/modules/module.decorator';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { HttpModule } from '@nestjs/axios';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { Module } from '@nestjs/common/decorators/modules/module.decorator'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { HttpModule } from '@nestjs/axios'
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
+import { InMemoryDBModule } from '@nestjs-addons/in-memory-db'
 // import { ElasticsearchModule } from '@nestjs/elasticsearch';
 // import { BullModule } from '@nestjs/bull';
 // import { CacheModule } from '@nestjs/cache-manager';
 // import * as redisStore from 'cache-manager-redis-store';
 
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-import { ReceiptModule } from './receipt/receipt.module';
-import { PaymentModule } from './payment/payment.module';
-import { EventModule } from './event/event.module';
-import { GuestModule } from './guest/guest.module';
-import { MemberModule } from './member/member.module';
-import { ClubModule } from './club/club.module';
-import { PermissionModule } from './permission/permission.module';
-import { AreaModule } from './area/area.module';
-import { UtilsModule } from 'lib/utils';
-import { PaymentSessionModule } from './payment-session/payment-session.module';
-import { ReceiptSessionModule } from './receipt-session/receipt-session.module';
-import { MemberInClubModule } from './member-in-club/member-in-club.module';
-import { ClubFeeModule } from './club-fee/club-fee.module';
-import { LogModule } from './log/log.module';
-import { PlaceModule } from './place/place.module';
+import { UserModule } from './user/user.module'
+import { AuthModule } from './auth/auth.module'
+import { ReceiptModule } from './receipt/receipt.module'
+import { PaymentModule } from './payment/payment.module'
+import { EventModule } from './event/event.module'
+import { GuestModule } from './guest/guest.module'
+import { MemberModule } from './member/member.module'
+import { ClubModule } from './club/club.module'
+import { PermissionModule } from './permission/permission.module'
+import { AreaModule } from './area/area.module'
+import { UtilsModule } from 'lib/utils'
+import { PaymentSessionModule } from './payment-session/payment-session.module'
+import { ReceiptSessionModule } from './receipt-session/receipt-session.module'
+import { MemberInClubModule } from './member-in-club/member-in-club.module'
+import { ClubFeeModule } from './club-fee/club-fee.module'
+import { LogModule } from './log/log.module'
+import { PlaceModule } from './place/place.module'
 
 // const cwd = process.cwd();
 
@@ -35,6 +36,8 @@ import { PlaceModule } from './place/place.module';
       isGlobal: true,
       expandVariables: true,
     }),
+    // In-memoryDB
+    InMemoryDBModule.forRoot({}),
     // TypeOrm
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -53,6 +56,7 @@ import { PlaceModule } from './place/place.module';
       }),
       inject: [ConfigService],
     }),
+
     // // Redis
     // CacheModule.registerAsync({
     //   imports: [ConfigModule],

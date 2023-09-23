@@ -1,29 +1,67 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserRequestDto } from './dto/create-user.dto';
-import { UserRepository } from './provider/user.repository';
-import * as bcrypt from 'bcrypt';
-import { GetUserConditionRequestDto } from './dto/get-user-condition-request.dto';
-import { UpdateUserRequestDto } from './dto/update-user.dto';
+import { Injectable } from '@nestjs/common'
+import { CreateUserRequestDto } from './dto/create-user.dto'
+import { UserRepository } from './provider/user.repository'
+import * as bcrypt from 'bcrypt'
+import { GetUserConditionRequestDto } from './dto/get-user-condition-request.dto'
+import { UpdateUserRequestDto } from './dto/update-user.dto'
+import { RemoveUserRequestDto } from './dto/remove-user.dto'
+import { err } from 'neverthrow'
 
 @Injectable()
 export class UserService {
   constructor(private readonly repo: UserRepository) {}
 
-  async create(createData: CreateUserRequestDto) {
-    createData.password = await bcrypt.hash(createData.password, 10);
+  async create(requestData: CreateUserRequestDto) {
+    //Check user exits
+    const userReply = await this.getDetail({
+      email: requestData.email,
+      deletedAt: null,
+    })
 
-    return await this.repo.createUser(createData);
+    if (userReply.isOk()) {
+      return err(
+        new Error(`User already exits with email: [${requestData.email}]`),
+      )
+    }
+
+    requestData.password = await bcrypt.hash(requestData.password, 10)
+
+    return await this.repo.createUser(requestData)
   }
 
   async getDetail(requestData: GetUserConditionRequestDto) {
-    return await this.repo.getDetail(requestData);
+    return await this.repo.getDetail(requestData)
   }
 
   async getList(requestData: GetUserConditionRequestDto) {
-    return await this.repo.getList(requestData);
+    return await this.repo.getList(requestData)
   }
 
   async update(requestData: UpdateUserRequestDto) {
-    return await this.repo.updateUser(requestData);
+    //Check user
+    const userReply = await this.getDetail(requestData.conditions)
+
+    if (userReply.isErr()) {
+      return err(userReply.error)
+    }
+
+    return await this.repo.updateUser(requestData)
+  }
+
+  async remove(requestData: RemoveUserRequestDto) {
+    //Check user
+    const userReply = await this.getDetail({
+      id: requestData.id,
+    })
+
+    if (userReply.isErr()) {
+      return err(userReply.error)
+    }
+
+    if (userReply.value.deletedAt) {
+      return err(new Error(`User with id [${requestData.id}] is deleted`))
+    }
+
+    return await this.repo.removeUser(requestData)
   }
 }

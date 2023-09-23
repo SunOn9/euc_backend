@@ -31,8 +31,10 @@ service AuthService {
 
 service UserService {
   rpc CreateUser (CreateUserRequest) returns (UserReply) {}
-  rpc GetUser (GetUserConditionRequest) returns (UserReply) {}
-  rpc GetListUser (GetUserConditionRequest) returns (UserListReply) {}
-  // rpc UpdateUser (UpdateUserRequest) returns (UserReply) {}
-  // rpc DeleteUser (DeleteUserRequest) returns (SimpleReply) {}
+  rpc GetDetail (GetUserConditionRequest) returns (UserReply) {}
+  // rpc GetDetailWithExtraData (GetUserConditionRequest) returns (UserReply) {}
+  rpc GetList (GetUserConditionRequest) returns (UserListReply) {}
+  // rpc GetListWithExtraData (GetUserConditionRequest) returns (UserListReply) {}
+  rpc UpdateUser (UpdateUserRequest) returns (UserReply) {}
+  rpc RemoveUser (RemoveUserRequest) returns (SimpleReply) {}
 }

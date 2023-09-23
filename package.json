@@ -25,6 +25,7 @@
     "@elastic/elasticsearch": "^8.9.0",
     "@grpc/grpc-js": "^1.9.0",
     "@grpc/proto-loader": "^0.7.8",
+    "@nestjs-addons/in-memory-db": "^3.0.3",
     "@nestjs/axios": "^3.0.0",
     "@nestjs/bull": "^10.0.1",
     "@nestjs/cache-manager": "^2.1.0",

@@ -785,6 +785,11 @@
   resolved "https://registry.yarnpkg.com/@msgpackr-extract/msgpackr-extract-win32-x64/-/msgpackr-extract-win32-x64-3.0.2.tgz#0f164b726869f71da3c594171df5ebc1c4b0a407"
   integrity sha512-O+6Gs8UeDbyFpbSh2CPEz/UOrrdWPTBYNblZK5CxxLisYt4kGX3Sc+czffFonyjiGSq3jWLwJS/CCJc7tBr4sQ==
 
+"@nestjs-addons/in-memory-db@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@nestjs-addons/in-memory-db/-/in-memory-db-3.0.3.tgz#789ab4f2a181bb49453b4587ddb4026620ab4f7f"
+  integrity sha512-E+/7ivsddNwXo+5c0CDBBlnDS7jhMlseOOOApkgxEB79siGeOEqvIIshlSCZF8gc27N4xSJ8WqpFhFZXVJB4Qw==
+
 "@nestjs/axios@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@nestjs/axios/-/axios-3.0.0.tgz#a2e70b118e3058f3d4b9c3deacd496ec4e3ee69e"
