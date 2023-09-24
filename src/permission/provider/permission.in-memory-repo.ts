@@ -1,10 +1,10 @@
 import { UtilsService } from 'lib/utils'
-import { PermissionEntity } from '../entities/Permission.entity'
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { Result, err, ok } from 'neverthrow'
 import CustomException from 'lib/utils/custom.exception'
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
 import { InMemoryDBService } from '@nestjs-addons/in-memory-db/src/services/in-memory-db.service'
+import { PermissionEntity } from '../entities/permission.entity'
 
 interface PermissionInMemory extends Omit<PermissionEntity, 'id'> {
   id: string

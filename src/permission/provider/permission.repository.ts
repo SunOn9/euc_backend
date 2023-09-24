@@ -1,10 +1,10 @@
 import { UtilsService } from 'lib/utils'
-import { PermissionEntity } from '../entities/Permission.entity'
 import { DataSource, Repository } from 'typeorm'
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { Result, err, ok } from 'neverthrow'
 import CustomException from 'lib/utils/custom.exception'
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
+import { PermissionEntity } from '../entities/permission.entity'
 
 
 @Injectable()

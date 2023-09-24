@@ -7,6 +7,7 @@ docker pull mysql:8.1.0
 
 docker run -d --name euc-mysql -p 3306:3306 \
     --env MYSQL_ROOT_PASSWORD=190501 \
+    --env TZ=Asia/Ho_Chi_Minh \
     -v /Volumes/ImageDisk/docker/mysql:/var/lib/mysql \
     mysql:8.1.0
 

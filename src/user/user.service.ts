@@ -9,13 +9,13 @@ import { err } from 'neverthrow'
 
 @Injectable()
 export class UserService {
-  constructor(private readonly repo: UserRepository) {}
+  constructor(private readonly repo: UserRepository) { }
 
   async create(requestData: CreateUserRequestDto) {
     //Check user exits
     const userReply = await this.getDetail({
       email: requestData.email,
-      deletedAt: null,
+      isDeleted: false,
     })
 
     if (userReply.isOk()) {

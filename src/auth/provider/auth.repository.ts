@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { DataSource, Repository, SelectQueryBuilder } from 'typeorm';
+import { DataSource, FindOneOptions, ILike, Repository } from 'typeorm';
 import { AuthEntity } from '../entities/auth.entity';
 import { AuthReflect } from './auth.proto';
 import { Result, err, ok } from 'neverthrow';
@@ -37,23 +37,21 @@ export class AuthRepository extends Repository<AuthEntity> {
   ): Promise<Result<Auth, Error>> {
     try {
       if (this.utilService.isObjectEmpty(conditions)) {
-        return err(new Error(`Empty condition`));
+        return err(new Error(`Empty conditions`));
       }
 
-      const queryBuilder = this.setupQueryCondition(conditions);
-      const data = await queryBuilder.getOne();
+      const options = this.setupConditions(conditions)
 
-      // const data = await this.findOne({
-      //   where: {
-      //     ...conditions,
-      //   },
-      //   relations: ['user'],
-      // });
+      if (conditions.isExtra) {
+        options.relations = ['user'];
+      }
 
-      if (!data) {
+      const data = await this.findOne(options);
+
+      if (this.utilService.isObjectEmpty(data)) {
         const errorMessage = this.utilService.generateErrorMessage(conditions);
         return err(
-          new Error(`Cannot find auth by condition [ ${errorMessage} ]`),
+          new Error(`Cannot find auth by conditions [ ${errorMessage} ]`),
         );
       }
 
@@ -63,67 +61,16 @@ export class AuthRepository extends Repository<AuthEntity> {
     }
   }
 
-  setupQueryCondition(conditions: any): SelectQueryBuilder<AuthEntity> {
-    const queryBuilder = this.createQueryBuilder(AuthEntity.tableName);
+  setupConditions(conditions: GetAuthConditionRequestDto): FindOneOptions<AuthEntity> {
+    const { isExtra, ipAddress, ...other } = conditions
 
-    if (conditions.id) {
-      queryBuilder.andWhere(`id = :id`, {
-        id: `${conditions.id}`,
-      });
-    }
+    const options: FindOneOptions<AuthEntity> = ({
+      where: {
+        ipAddress: ILike(`%${ipAddress}%`),
+        ...other
+      }
+    })
 
-    if (conditions.userId) {
-      queryBuilder.andWhere(`user_id = :userId`, {
-        userId: `${conditions.userId}`,
-      });
-    }
-
-    if (conditions.ipAddress) {
-      queryBuilder.andWhere(`ip_address = :ipAddress`, {
-        ipAddress: `${conditions.ipAddress}`,
-      });
-    }
-
-    if (conditions.authToken) {
-      queryBuilder.andWhere(`auth_token = :authToken`, {
-        authToken: `${conditions.authToken}`,
-      });
-    }
-
-    if (conditions.sessionId) {
-      queryBuilder.andWhere(`session_id = :sessionId`, {
-        sessionId: `${conditions.sessionId}`,
-      });
-    }
-
-    if (conditions.userAgent) {
-      queryBuilder.andWhere(`user_agent = :userAgent`, {
-        userAgent: `${conditions.userAgent}`,
-      });
-    }
-
-    if (conditions.platform) {
-      queryBuilder.andWhere(`platform = :platform`, {
-        platform: `${conditions.platform}`,
-      });
-    }
-
-    if (conditions.longtitude) {
-      queryBuilder.andWhere(`longtitude = :longtitude`, {
-        longtitude: `${conditions.longtitude}`,
-      });
-    }
-
-    if (conditions.latitude) {
-      queryBuilder.andWhere(`latitude = :latitude`, {
-        latitude: `${conditions.latitude}`,
-      });
-    }
-
-    if (conditions.isExtra) {
-      queryBuilder.leftJoinAndSelect('auth.user', 'user');
-    }
-
-    return queryBuilder;
+    return options
   }
 }

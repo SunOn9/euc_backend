@@ -1,6 +1,6 @@
 import { UtilsService } from 'lib/utils'
 import { UserEntity } from '../entities/user.entity'
-import { DataSource, Repository } from 'typeorm'
+import { DataSource, FindManyOptions, FindOneOptions, ILike, Not, Raw, Repository } from 'typeorm'
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { User } from '/generated/user/user'
 import { Result, err, ok } from 'neverthrow'
@@ -12,6 +12,7 @@ import { GetUserConditionRequestDto } from '../dto/get-user-condition-request.dt
 import { UserListDataReply } from '/generated/user/user.reply'
 import { UpdateUserRequestDto } from '../dto/update-user.dto'
 import { RemoveUserRequestDto } from '../dto/remove-user.dto'
+import e from 'express'
 
 @Injectable()
 export class UserRepository extends Repository<UserEntity> {
@@ -64,7 +65,14 @@ export class UserRepository extends Repository<UserEntity> {
       if (this.utilService.isObjectEmpty(conditions)) {
         return err(new Error(`Empty conditions`))
       }
-      const dataReply = await this.findOneBy(conditions)
+
+      const options = this.setupConditions(conditions)
+
+      if (conditions.isExtra) {
+        options.relations = ['']
+      }
+
+      const dataReply = await this.findOne(options)
 
       if (!dataReply) {
         return err(
@@ -77,8 +85,6 @@ export class UserRepository extends Repository<UserEntity> {
     }
   }
 
-  //TODO: getDetailWithExtraData
-
   async getList(
     conditions: GetUserConditionRequestDto,
   ): Promise<Result<UserListDataReply, Error>> {
@@ -87,18 +93,24 @@ export class UserRepository extends Repository<UserEntity> {
       //   return err(new Error(`Empty conditions`));
       // }
 
-      const page = conditions.page ? conditions.page : 1
-      const limit = conditions.limit ? conditions.limit : 20
+      const page = conditions.page ?? 1
+      const limit = conditions.limit ?? 20
       const skip: number = limit * page - limit
 
-      const [dataReply, total] = await this.findAndCount({
-        where: { ...conditions },
+      const options: FindManyOptions<UserEntity> = {
+        ... this.setupConditions(conditions),
         take: limit,
         skip: skip,
         order: {
           name: 'ASC',
         },
-      })
+      }
+
+      if (conditions.isExtra) {
+        options.relations = ['']
+      }
+
+      const [dataReply, total] = await this.findAndCount(options)
 
       if (!dataReply) {
         return err(
@@ -122,7 +134,6 @@ export class UserRepository extends Repository<UserEntity> {
     }
   }
 
-  //TODO: GetListWithExtraData
   async removeUser(
     removeData: RemoveUserRequestDto,
   ): Promise<Result<boolean, Error>> {
@@ -133,5 +144,21 @@ export class UserRepository extends Repository<UserEntity> {
     }
 
     return ok(true)
+  }
+
+  setupConditions(conditions: GetUserConditionRequestDto): FindOneOptions<UserEntity> {
+    const { isExtra, name, email, phone, isDeleted, page, limit, ...other } = conditions
+
+    const options: FindOneOptions<UserEntity> = ({
+      where: {
+        name: ILike(`%${name}%`),
+        email: ILike(`%${email}%`),
+        phone: ILike(`%${phone}%`),
+        deletedAt: isDeleted ? null : Not(null),
+        ...other
+      }
+    })
+
+    return options
   }
 }

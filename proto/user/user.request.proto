@@ -11,11 +11,13 @@ message GetUserConditionRequest {
   // optional string password = 4;
   optional string phone = 5;
   optional EnumProto.UserRole role =6;
-  optional google.protobuf.Timestamp created_at = 7;
-  optional google.protobuf.Timestamp updated_at = 8;
-  optional google.protobuf.Timestamp deleted_at = 9;
+  // optional google.protobuf.Timestamp created_at = 7;
+  // optional google.protobuf.Timestamp updated_at = 8;
+  // optional google.protobuf.Timestamp deleted_at = 9;
   optional int32 page =10;
   optional int32 limit =11;
+  optional bool isExtra =12;
+  optional bool isDeleted =13;
 }
 
 message CreateUserRequest {
