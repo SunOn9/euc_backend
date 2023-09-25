@@ -1,63 +1,48 @@
-import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { GrpcMethod } from '@nestjs/microservices';
-import { CreateAuthRequestDto } from './dto/create-auth.dto';
-import { AuthListReply, AuthReply } from 'src/generated/auth/auth.reply';
-import { GetAuthConditionRequestDto } from './dto/get-condition-auth.dto';
-import CustomException from 'lib/utils/custom.exception';
+import {
+  Controller,
+  Request,
+  Post,
+  UseGuards,
+  Body,
+  HttpStatus,
+} from '@nestjs/common'
+import { AuthService } from './auth.service'
+import CustomException from 'lib/utils/custom.exception'
+import { SimpleReply } from '/generated/common'
+import { LoginGuard } from './guard/local-auth.guard'
+import * as CONST from '../prelude/constant'
+import { CreateAuthRequestDto } from './dto/create-auth.dto'
+import { AuthReply } from '/generated/auth/auth.reply'
+import { LoginRequestDto } from './dto/login.dto'
 
 @Controller({ path: 'auth' })
 export class AuthController {
   constructor(private readonly service: AuthService) {}
 
-  // @GrpcMethod('AuthService', 'CreateAuth')
-  // async createAuth(request: CreateAuthRequestDto): Promise<AuthReply> {
-  //   const response = {} as AuthReply;
-  //   const data = await this.service.create(request);
-  //   if (data.isErr()) {
-  //     throw new CustomException(
-  //       'ERROR',
-  //       data.error.message,
-  //       HttpStatus.BAD_REQUEST,
-  //     );
-  //   }
-  //   response.statusCode = 200;
-  //   response.message = 'success';
-  //   response.payload = data.value;
-  //   return response;
-  // }
+  @UseGuards(LoginGuard)
+  @Post('/login')
+  async login(
+    @Request() req,
+    @Body() bodyData: LoginRequestDto,
+  ): Promise<AuthReply> {
+    const response = {} as AuthReply
 
-  @GrpcMethod('AuthService', 'GetAuth')
-  async getAuth(request: GetAuthConditionRequestDto): Promise<AuthReply> {
-    const response = {} as AuthReply;
-    const data = await this.service.getDetail(request);
+    console.log(req.sessionID)
+    console.log(req.session)
+
+    const data = await this.service.create(bodyData.data, req.user.id)
+
     if (data.isErr()) {
       throw new CustomException(
         'ERROR',
         data.error.message,
         HttpStatus.BAD_REQUEST,
-      );
+      )
     }
-    response.statusCode = 200;
-    response.message = 'success';
-    response.payload = data.value;
-    return response;
-  }
 
-  // @Get('list')
-  // async getListAuth(request: GetAuthConditionRequestDto): Promise<AuthListReply> {
-  //   const response = {} as AuthReply;
-  //   const data = await this.service.(request);
-  //   if (data.isErr()) {
-  //     throw new CustomException(
-  //       'ERROR',
-  //       data.error.message,
-  //       HttpStatus.BAD_REQUEST,
-  //     );
-  //   }
-  //   response.statusCode = 200;
-  //   response.message = 'success';
-  //   response.payload = data.value;
-  //   return response;
-  // }
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = data.value
+    return response
+  }
 }

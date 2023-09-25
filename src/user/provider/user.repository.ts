@@ -1,6 +1,14 @@
 import { UtilsService } from 'lib/utils'
 import { UserEntity } from '../entities/user.entity'
-import { DataSource, FindManyOptions, FindOneOptions, ILike, Not, Raw, Repository } from 'typeorm'
+import {
+  DataSource,
+  FindManyOptions,
+  FindOneOptions,
+  ILike,
+  Not,
+  Raw,
+  Repository,
+} from 'typeorm'
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { User } from '/generated/user/user'
 import { Result, err, ok } from 'neverthrow'
@@ -12,7 +20,6 @@ import { GetUserConditionRequestDto } from '../dto/get-user-condition-request.dt
 import { UserListDataReply } from '/generated/user/user.reply'
 import { UpdateUserRequestDto } from '../dto/update-user.dto'
 import { RemoveUserRequestDto } from '../dto/remove-user.dto'
-import e from 'express'
 
 @Injectable()
 export class UserRepository extends Repository<UserEntity> {
@@ -98,7 +105,7 @@ export class UserRepository extends Repository<UserEntity> {
       const skip: number = limit * page - limit
 
       const options: FindManyOptions<UserEntity> = {
-        ... this.setupConditions(conditions),
+        ...this.setupConditions(conditions),
         take: limit,
         skip: skip,
         order: {
@@ -128,7 +135,6 @@ export class UserRepository extends Repository<UserEntity> {
         limit,
         userList,
       })
-
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
@@ -146,18 +152,21 @@ export class UserRepository extends Repository<UserEntity> {
     return ok(true)
   }
 
-  setupConditions(conditions: GetUserConditionRequestDto): FindOneOptions<UserEntity> {
-    const { isExtra, name, email, phone, isDeleted, page, limit, ...other } = conditions
+  setupConditions(
+    conditions: GetUserConditionRequestDto,
+  ): FindOneOptions<UserEntity> {
+    const { isExtra, name, email, phone, isDeleted, page, limit, ...other } =
+      conditions
 
-    const options: FindOneOptions<UserEntity> = ({
+    const options: FindOneOptions<UserEntity> = {
       where: {
-        name: ILike(`%${name}%`),
-        email: ILike(`%${email}%`),
-        phone: ILike(`%${phone}%`),
-        deletedAt: isDeleted ? null : Not(null),
-        ...other
-      }
-    })
+        ...(name ? { name: ILike(`%${name}%`) } : {}),
+        ...(email ? { email: ILike(`%${email}%`) } : {}),
+        ...(phone ? { phone: ILike(`%${phone}%`) } : {}),
+        deletedAt: isDeleted ? Not(null) : null,
+        ...other,
+      },
+    }
 
     return options
   }

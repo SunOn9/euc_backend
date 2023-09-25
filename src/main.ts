@@ -1,14 +1,17 @@
-import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { join } from 'path';
-import { ValidationPipe } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.module';
+import { NestFactory } from '@nestjs/core'
+// import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+// import { join } from 'path';
+import { ValidationPipe } from '@nestjs/common'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { AppModule } from './app.module'
 import {
-  CustomRpcExceptionFilter,
+  // CustomRpcExceptionFilter,
   HttpExceptionFilter,
-} from './exception.filter';
+} from './exception.filter'
 
+import * as passport from 'passport'
+import * as session from 'express-session'
+import { ConfigService } from '@nestjs/config'
 async function bootstrap() {
   //grpc service
   // const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -39,25 +42,39 @@ async function bootstrap() {
   //http service
   const httpApp = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'debug', 'verbose'],
-  });
+  })
+
+  const configService = httpApp.get(ConfigService)
+
+  httpApp.use(
+    session({
+      secret: configService.get('SECRET'),
+      resave: false,
+      saveUninitialized: false,
+      cookie: { maxAge: 2628000 },
+    }),
+  )
+  httpApp.use(passport.initialize())
+  httpApp.use(passport.session())
+
   httpApp.enableCors({
     credentials: true,
-  });
+  })
   httpApp.useGlobalPipes(
     new ValidationPipe({ whitelist: true, transform: true }),
-  );
-  httpApp.useGlobalFilters(new HttpExceptionFilter());
+  )
+  httpApp.useGlobalFilters(new HttpExceptionFilter())
   const config = new DocumentBuilder()
     .setTitle('EUC')
     .setDescription('EUC')
     .setVersion('1.0')
     .addTag('euc')
-    .build();
-  const document = SwaggerModule.createDocument(httpApp, config);
-  SwaggerModule.setup('api', httpApp, document);
+    .build()
+  const document = SwaggerModule.createDocument(httpApp, config)
+  SwaggerModule.setup('api', httpApp, document)
 
-  await httpApp.listen(3001);
-  console.log(`Application is running on: ${await httpApp.getUrl()}`);
+  await httpApp.listen(configService.get('HTTP_PORT'))
+  console.log(`Application is running on: ${await httpApp.getUrl()}`)
 }
 
-bootstrap();
+bootstrap()

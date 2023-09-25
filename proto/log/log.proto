@@ -10,5 +10,6 @@ message Log {
   int32 auth_id = 3;
   string target = 4;
   string action = 5;
-  google.protobuf.Timestamp created_at = 6;
+  string data =6;
+  google.protobuf.Timestamp created_at = 7;
 }

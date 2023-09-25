@@ -26,6 +26,7 @@ import { MemberInClubModule } from './member-in-club/member-in-club.module'
 import { ClubFeeModule } from './club-fee/club-fee.module'
 import { LogModule } from './log/log.module'
 import { PlaceModule } from './place/place.module'
+import { PassportModule } from '@nestjs/passport'
 
 // const cwd = process.cwd();
 
@@ -56,7 +57,6 @@ import { PlaceModule } from './place/place.module'
       }),
       inject: [ConfigService],
     }),
-
     // // Redis
     // CacheModule.registerAsync({
     //   imports: [ConfigModule],
