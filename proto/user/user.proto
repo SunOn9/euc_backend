@@ -15,4 +15,19 @@ message User {
   google.protobuf.Timestamp created_at = 7;
   google.protobuf.Timestamp updated_at = 8;
   google.protobuf.Timestamp deleted_at = 9;
+  repeated Auth auth = 10;
+
+  message Auth {
+    int32 id = 1;
+    // int32 user_id = 2;
+    optional string ip_address = 3;
+    optional string auth_token = 4;
+    optional string user_agent = 5;
+    optional string platform = 6;
+    optional string session_id = 7;
+    optional int32 longtitude = 8;
+    optional int32 latitude = 9;
+    int32 created_at = 10;
+  }
+  
 }

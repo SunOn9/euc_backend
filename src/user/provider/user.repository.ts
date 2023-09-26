@@ -5,9 +5,8 @@ import {
   FindManyOptions,
   FindOneOptions,
   ILike,
-  Not,
-  Raw,
   Repository,
+  SelectQueryBuilder,
 } from 'typeorm'
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { User } from '/generated/user/user'
@@ -73,13 +72,18 @@ export class UserRepository extends Repository<UserEntity> {
         return err(new Error(`Empty conditions`))
       }
 
-      const options = this.setupConditions(conditions)
+      const queryBuilder = this.setupQueryCondition(conditions)
 
       if (conditions.isExtra) {
-        options.relations = ['']
+        queryBuilder.setFindOptions({
+          relationLoadStrategy: 'query',
+          relations: {
+            auth: true,
+          },
+        })
       }
 
-      const dataReply = await this.findOne(options)
+      const dataReply = await queryBuilder.orderBy(`id`, 'DESC').getOne()
 
       if (!dataReply) {
         return err(
@@ -104,20 +108,22 @@ export class UserRepository extends Repository<UserEntity> {
       const limit = conditions.limit ?? 20
       const skip: number = limit * page - limit
 
-      const options: FindManyOptions<UserEntity> = {
-        ...this.setupConditions(conditions),
-        take: limit,
-        skip: skip,
-        order: {
-          name: 'ASC',
-        },
-      }
+      const queryBuilder = this.setupQueryCondition(conditions)
 
       if (conditions.isExtra) {
-        options.relations = ['']
+        queryBuilder.setFindOptions({
+          relationLoadStrategy: 'query',
+          relations: {
+            auth: true,
+          },
+        })
       }
 
-      const [dataReply, total] = await this.findAndCount(options)
+      const [dataReply, total] = await queryBuilder
+        .orderBy(`id`, 'DESC')
+        .take(limit)
+        .skip(skip)
+        .getManyAndCount()
 
       if (!dataReply) {
         return err(
@@ -152,21 +158,41 @@ export class UserRepository extends Repository<UserEntity> {
     return ok(true)
   }
 
-  setupConditions(
+  setupQueryCondition(
     conditions: GetUserConditionRequestDto,
-  ): FindOneOptions<UserEntity> {
-    const { isExtra, name, email, phone, isDeleted, page, limit, ...other } =
-      conditions
+  ): SelectQueryBuilder<UserEntity> {
+    const queryBuilder = this.createQueryBuilder(UserEntity.tableName)
 
-    const options: FindOneOptions<UserEntity> = {
-      where: {
-        ...(name ? { name: ILike(`%${name}%`) } : {}),
-        ...(email ? { email: ILike(`%${email}%`) } : {}),
-        ...(phone ? { phone: ILike(`%${phone}%`) } : {}),
-        ...other,
-      },
+    if (conditions.id !== undefined) {
+      queryBuilder.andWhere(`id = :id`, {
+        id: conditions.id,
+      })
     }
 
-    return options
+    if (conditions.name !== undefined) {
+      queryBuilder.andWhere(`name LIKE '%:name%'`, {
+        name: conditions.name,
+      })
+    }
+
+    if (conditions.email !== undefined) {
+      queryBuilder.andWhere(`email LIKE '%:email%'`, {
+        email: conditions.email,
+      })
+    }
+
+    if (conditions.phone !== undefined) {
+      queryBuilder.andWhere(`phone LIKE '%:phone%'`, {
+        phone: conditions.phone,
+      })
+    }
+
+    if (conditions.role !== undefined) {
+      queryBuilder.andWhere(`role = :role`, {
+        role: conditions.role,
+      })
+    }
+
+    return queryBuilder
   }
 }

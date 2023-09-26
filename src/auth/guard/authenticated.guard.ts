@@ -21,9 +21,9 @@ export class AthenticatedGuard implements CanActivate {
       return true
     }
 
-    const rawHeader = cookieParser.parse(request.rawHeaders)
+    // const rawHeader = cookieParser.parse(request.rawHeaders)
 
-    console.log(rawHeader)
+    // console.log(rawHeader)
     // const session = await this.sessionService.get()
     // if (session.isErr()) {
     //   return false

@@ -1,4 +1,4 @@
-import { UserEntity } from 'src/user/entities/user.entity';
+import { UserEntity } from 'src/user/entities/user.entity'
 import {
   Column,
   CreateDateColumn,
@@ -6,47 +6,47 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { LogEntity } from '/log/entities/log.entity';
+} from 'typeorm'
+import { LogEntity } from '/log/entities/log.entity'
 
 @Entity({ name: 'auth' })
 export class AuthEntity {
-  static tableName = 'auth';
+  static tableName = 'auth'
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
-  @ManyToOne(() => UserEntity, (user) => user.auth)
-  user: UserEntity;
-
-  @Column({ nullable: true })
-  ipAddress?: string | null;
+  @ManyToOne(() => UserEntity, user => user.auth)
+  user: UserEntity
 
   @Column({ nullable: true })
-  authToken?: string | null;
+  ipAddress?: string | null
 
   @Column({ nullable: true })
-  sessionId?: string | null;
+  authToken?: string | null
 
   @Column({ nullable: true })
-  userAgent?: string | null;
+  sessionId?: string | null
 
   @Column({ nullable: true })
-  platform?: string | null;
+  userAgent?: string | null
 
   @Column({ nullable: true })
-  longtitude?: number | null;
+  platform?: string | null
 
   @Column({ nullable: true })
-  latitude?: number | null;
+  longtitude?: number | null
 
-  @OneToMany(() => LogEntity, (log) => log.auth)
-  log: LogEntity[];
+  @Column({ nullable: true })
+  latitude?: number | null
+
+  @OneToMany(() => LogEntity, log => log.auth)
+  log: LogEntity[]
 
   @CreateDateColumn()
-  createdAt: number;
+  createdAt: number
 
   constructor(partial: Partial<AuthEntity>) {
-    Object.assign(this, partial);
+    Object.assign(this, partial)
   }
 }
