@@ -26,7 +26,8 @@ import { MemberInClubModule } from './member-in-club/member-in-club.module'
 import { ClubFeeModule } from './club-fee/club-fee.module'
 import { LogModule } from './log/log.module'
 import { PlaceModule } from './place/place.module'
-import { PassportModule } from '@nestjs/passport'
+import { APP_GUARD } from '@nestjs/core'
+import { AthenticatedGuard } from './auth/guard/authenticated.guard'
 
 // const cwd = process.cwd();
 
@@ -113,6 +114,11 @@ import { PassportModule } from '@nestjs/passport'
     LogModule,
     PlaceModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AthenticatedGuard,
+    },
+  ],
 })
 export class AppModule {}

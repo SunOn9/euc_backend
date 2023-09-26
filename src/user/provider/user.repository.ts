@@ -163,7 +163,6 @@ export class UserRepository extends Repository<UserEntity> {
         ...(name ? { name: ILike(`%${name}%`) } : {}),
         ...(email ? { email: ILike(`%${email}%`) } : {}),
         ...(phone ? { phone: ILike(`%${phone}%`) } : {}),
-        deletedAt: isDeleted ? Not(null) : null,
         ...other,
       },
     }

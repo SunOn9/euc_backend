@@ -10,7 +10,9 @@ import { PassportModule } from '@nestjs/passport'
 import { LocalStrategy } from './guard/local.strategy'
 import { SessionSerializer } from './guard/session.serializer'
 import { InMemoryDBModule } from '@nestjs-addons/in-memory-db'
+import { SessionModule } from '/session/session.module'
 // import { AthenticatedGuard } from './guard/authenticated.guard'
+import { SessionService } from '/session/session.service'
 
 @Module({
   imports: [
@@ -18,6 +20,7 @@ import { InMemoryDBModule } from '@nestjs-addons/in-memory-db'
     UserModule,
     PassportModule.register({ session: true }),
     InMemoryDBModule.forFeature('auth', {}),
+    SessionModule,
   ],
   controllers: [AuthController],
   providers: [
@@ -26,6 +29,7 @@ import { InMemoryDBModule } from '@nestjs-addons/in-memory-db'
     AuthRepository,
     LocalStrategy,
     SessionSerializer,
+    SessionService,
   ],
   exports: [AuthService, AuthReflect, AuthRepository],
 })

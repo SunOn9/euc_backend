@@ -5,11 +5,9 @@ import CustomException from 'lib/utils/custom.exception'
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
 import { InMemoryDBService } from '@nestjs-addons/in-memory-db/src/services/in-memory-db.service'
 import { SessionEntity } from '../entities/session.entity'
+import { UserEntity } from '/user/entities/user.entity'
 
-interface SessionInMemory extends Omit<SessionEntity, 'id'> {
-  id: string
-  table: string
-}
+interface SessionInMemory extends SessionEntity {}
 
 @Injectable()
 export class SessionInMemoryRepository extends InMemoryDBService<SessionInMemory> {
@@ -21,12 +19,7 @@ export class SessionInMemoryRepository extends InMemoryDBService<SessionInMemory
     createData: SessionEntity,
   ): Promise<Result<boolean, Error>> {
     try {
-      const { id, ...other } = createData
-      const { table, ...data } = this.create({
-        id: id.toString(),
-        table: SessionEntity.tableName,
-        ...other,
-      })
+      const data = this.create(createData)
 
       if (this.ultilService.isObjectEmpty(data)) {
         return err(new Error(`Cannot create session in memory`))
@@ -43,12 +36,7 @@ export class SessionInMemoryRepository extends InMemoryDBService<SessionInMemory
   ): Promise<Result<boolean, Error>> {
     try {
       createData.map(each => {
-        const { id, ...other } = each
-        const { table, ...data } = this.create({
-          id: id.toString(),
-          table: SessionEntity.tableName,
-          ...other,
-        })
+        const data = this.create(each)
 
         if (this.ultilService.isObjectEmpty(data)) {
           return err(new Error(`Cannot create session in memory`))
@@ -65,7 +53,7 @@ export class SessionInMemoryRepository extends InMemoryDBService<SessionInMemory
     removeData: Partial<SessionEntity>,
   ): Promise<Result<boolean, Error>> {
     try {
-      const sessionReply = this.get(removeData.id.toString())
+      const sessionReply = this.get(removeData.id)
 
       if (this.ultilService.isObjectEmpty(sessionReply)) {
         return err(
@@ -73,11 +61,28 @@ export class SessionInMemoryRepository extends InMemoryDBService<SessionInMemory
         )
       }
 
-      this.delete(removeData.id.toString())
+      this.delete(removeData.id)
 
       return ok(true)
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
+  }
+
+  async getSession(
+    sessionId: string,
+  ): Promise<Result<Partial<UserEntity>, Error>> {
+    const reply = this.get(sessionId)
+
+    if (!reply) {
+      return err(new Error(`Unvalid session id`))
+    }
+
+    return ok(reply.userInfo)
+  }
+
+  async getAllSession(): Promise<Result<any, Error>> {
+    const reply = this.getAll()
+    return ok(reply)
   }
 }

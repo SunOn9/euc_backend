@@ -8,23 +8,21 @@ import { PermissionEntity } from '../entities/permission.entity'
 
 interface PermissionInMemory extends Omit<PermissionEntity, 'id'> {
   id: string
-  table: string
 }
 
 @Injectable()
 export class PermissionInMemoryRepository extends InMemoryDBService<PermissionInMemory> {
-  constructor(
-    private ultilService: UtilsService
-  ) {
+  constructor(private ultilService: UtilsService) {
     super({ featureName: 'permission' })
   }
 
-  async createPermission(createData: PermissionEntity): Promise<Result<boolean, Error>> {
+  async createPermission(
+    createData: PermissionEntity,
+  ): Promise<Result<boolean, Error>> {
     try {
       const { id, ...other } = createData
-      const { table, ...data } = this.create({
+      const data = this.create({
         id: id.toString(),
-        table: PermissionEntity.tableName,
         ...other,
       })
 
@@ -38,13 +36,14 @@ export class PermissionInMemoryRepository extends InMemoryDBService<PermissionIn
     }
   }
 
-  async createListPermission(createData: PermissionEntity[]): Promise<Result<boolean, Error>> {
+  async createListPermission(
+    createData: PermissionEntity[],
+  ): Promise<Result<boolean, Error>> {
     try {
-      createData.map((each) => {
+      createData.map(each => {
         const { id, ...other } = each
-        const { table, ...data } = this.create({
+        const data = this.create({
           id: id.toString(),
-          table: PermissionEntity.tableName,
           ...other,
         })
 
@@ -59,12 +58,16 @@ export class PermissionInMemoryRepository extends InMemoryDBService<PermissionIn
     }
   }
 
-  async removePermission(removeData: Partial<PermissionEntity>): Promise<Result<boolean, Error>> {
+  async removePermission(
+    removeData: Partial<PermissionEntity>,
+  ): Promise<Result<boolean, Error>> {
     try {
       const permissionReply = this.get(removeData.id.toString())
 
       if (this.ultilService.isObjectEmpty(permissionReply)) {
-        return err(new Error(`Cannot get permission with id: [${permissionReply.id}]`))
+        return err(
+          new Error(`Cannot get permission with id: [${removeData.id}]`),
+        )
       }
 
       this.delete(removeData.id.toString())
@@ -73,5 +76,35 @@ export class PermissionInMemoryRepository extends InMemoryDBService<PermissionIn
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
+  }
+
+  async getPermission(
+    permissionId: number,
+  ): Promise<Result<PermissionEntity, Error>> {
+    try {
+      const permissionReply = this.get(permissionId.toString())
+
+      if (this.ultilService.isObjectEmpty(permissionReply)) {
+        return err(
+          new Error(`Cannot get permission with id: [${permissionId}]`),
+        )
+      }
+
+      const { id, ...other } = permissionReply
+
+      const reply = {
+        id: Number(id),
+        ...other,
+      } as PermissionEntity
+
+      return ok(reply)
+    } catch (e) {
+      throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  async getAllPermission(): Promise<Result<any, Error>> {
+    const reply = this.getAll()
+    return ok(reply)
   }
 }

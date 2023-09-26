@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core'
+import { NestFactory, Reflector } from '@nestjs/core'
 // import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 // import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common'
@@ -12,6 +12,10 @@ import {
 import * as passport from 'passport'
 import * as session from 'express-session'
 import { ConfigService } from '@nestjs/config'
+import { AthenticatedGuard } from './auth/guard/authenticated.guard'
+import { SessionService } from './session/session.service'
+import * as cookieParser from 'cookie-parser'
+
 async function bootstrap() {
   //grpc service
   // const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -56,6 +60,11 @@ async function bootstrap() {
   )
   httpApp.use(passport.initialize())
   httpApp.use(passport.session())
+
+  const reflector = httpApp.get(Reflector)
+  const sessionService = httpApp.get(SessionService)
+  httpApp.useGlobalGuards(new AthenticatedGuard(reflector, sessionService))
+  httpApp.use(cookieParser())
 
   httpApp.enableCors({
     credentials: true,

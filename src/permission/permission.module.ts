@@ -4,6 +4,8 @@ import { PermissionController } from './permission.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { PermissionEntity } from './entities/permission.entity'
 import { InMemoryDBModule } from '@nestjs-addons/in-memory-db'
+import { PermissionInMemoryRepository } from './provider/permission.in-memory-repo'
+import { PermissionRepository } from './provider/permission.repository'
 
 @Module({
   imports: [
@@ -11,6 +13,10 @@ import { InMemoryDBModule } from '@nestjs-addons/in-memory-db'
     InMemoryDBModule.forFeature('permission', {}),
   ],
   controllers: [PermissionController],
-  providers: [PermissionService],
+  providers: [
+    PermissionService,
+    PermissionRepository,
+    PermissionInMemoryRepository,
+  ],
 })
 export class PermissionModule {}
