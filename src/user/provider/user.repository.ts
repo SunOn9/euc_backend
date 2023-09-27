@@ -78,7 +78,7 @@ export class UserRepository extends Repository<UserEntity> {
         queryBuilder.setFindOptions({
           relationLoadStrategy: 'query',
           relations: {
-            auth: true,
+            // auth: true,
           },
         })
       }
@@ -114,7 +114,7 @@ export class UserRepository extends Repository<UserEntity> {
         queryBuilder.setFindOptions({
           relationLoadStrategy: 'query',
           relations: {
-            auth: true,
+            // auth: true,
           },
         })
       }
@@ -165,32 +165,41 @@ export class UserRepository extends Repository<UserEntity> {
 
     if (conditions.id !== undefined) {
       queryBuilder.andWhere(`id = :id`, {
-        id: conditions.id,
+        id: `${conditions.id}`,
       })
     }
 
     if (conditions.name !== undefined) {
-      queryBuilder.andWhere(`name LIKE '%:name%'`, {
-        name: conditions.name,
+      queryBuilder.andWhere(`name LIKE :name`, {
+        name: `%${conditions.name}%`,
       })
     }
 
     if (conditions.email !== undefined) {
-      queryBuilder.andWhere(`email LIKE '%:email%'`, {
-        email: conditions.email,
+      queryBuilder.andWhere(`email LIKE :email`, {
+        email: `%${conditions.email}%`,
       })
     }
 
+    if (conditions.username !== undefined) {
+      queryBuilder.andWhere(`email = :username`, {
+        username: `${conditions.username}`,
+      })
+    }
     if (conditions.phone !== undefined) {
-      queryBuilder.andWhere(`phone LIKE '%:phone%'`, {
-        phone: conditions.phone,
+      queryBuilder.andWhere(`phone LIKE :phone`, {
+        phone: `%${conditions.phone}%`,
       })
     }
 
     if (conditions.role !== undefined) {
       queryBuilder.andWhere(`role = :role`, {
-        role: conditions.role,
+        role: `${conditions.role}`,
       })
+    }
+
+    if (conditions.isDeleted) {
+      queryBuilder.withDeleted()
     }
 
     return queryBuilder

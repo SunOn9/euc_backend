@@ -9,7 +9,7 @@ message UserReply {
   string message = 2;
   optional string error_code = 3;
   optional User payload = 4;
-  optional UserExtraData extraData =5;
+  optional UserExtraData extra_data =5;
 }
 
 message UserListDataReply {
@@ -24,7 +24,7 @@ message UserListReply {
   string message = 2;
   optional string error_code = 3;
   UserListDataReply payload = 4;
-  optional UserExtraData extraData =5;
+  optional UserExtraData extra_data =5;
 }
 
 message UserExtraData {

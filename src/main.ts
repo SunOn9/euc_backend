@@ -12,9 +12,6 @@ import {
 import * as passport from 'passport'
 import * as session from 'express-session'
 import { ConfigService } from '@nestjs/config'
-import { AthenticatedGuard } from './auth/guard/authenticated.guard'
-import { SessionService } from './session/session.service'
-import * as cookieParser from 'cookie-parser'
 
 async function bootstrap() {
   //grpc service
@@ -50,21 +47,17 @@ async function bootstrap() {
 
   const configService = httpApp.get(ConfigService)
 
+  const oneMonth = 30 * 24 * 60 * 60 * 1000
   httpApp.use(
     session({
       secret: configService.get('SECRET'),
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: 2628000 },
+      cookie: { maxAge: oneMonth },
     }),
   )
   httpApp.use(passport.initialize())
   httpApp.use(passport.session())
-
-  const reflector = httpApp.get(Reflector)
-  const sessionService = httpApp.get(SessionService)
-  httpApp.useGlobalGuards(new AthenticatedGuard(reflector, sessionService))
-  httpApp.use(cookieParser())
 
   httpApp.enableCors({
     credentials: true,

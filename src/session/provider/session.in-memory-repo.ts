@@ -80,9 +80,4 @@ export class SessionInMemoryRepository extends InMemoryDBService<SessionInMemory
 
     return ok(reply.userInfo)
   }
-
-  async getAllSession(): Promise<Result<any, Error>> {
-    const reply = this.getAll()
-    return ok(reply)
-  }
 }

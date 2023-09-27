@@ -16,8 +16,9 @@ message GetUserConditionRequest {
   // optional google.protobuf.Timestamp deleted_at = 9;
   optional int32 page =10;
   optional int32 limit =11;
-  optional bool isExtra =12;
-  optional bool isDeleted =13;
+  optional bool is_extra =12;
+  optional bool is_deleted =13;
+  optional string user_name =14;
 }
 
 message CreateUserRequest {

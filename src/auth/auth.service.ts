@@ -44,8 +44,7 @@ export class AuthService {
     password: string,
   ): Promise<Partial<User> | null> {
     const user = await this.userService.getDetail({
-      email: username,
-      isDeleted: false,
+      username: username,
     })
 
     if (user.isErr()) {

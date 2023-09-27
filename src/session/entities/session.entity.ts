@@ -3,6 +3,8 @@ export class SessionEntity {
   static tableName = 'session'
   id: string
 
+  expireDate: Date
+
   userInfo: Partial<UserEntity>
 
   constructor(partial: Partial<SessionEntity>) {

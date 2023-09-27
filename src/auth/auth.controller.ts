@@ -6,14 +6,16 @@ import {
   Body,
   HttpStatus,
   SetMetadata,
+  Get,
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import CustomException from 'lib/utils/custom.exception'
 import { LoginGuard } from './guard/local-auth.guard'
 import * as CONST from '../prelude/constant'
-import { AuthReply } from '/generated/auth/auth.reply'
 import { LoginRequestDto } from './dto/login.dto'
 import { SessionService } from '/session/session.service'
+import { SimpleReply } from '/generated/common'
+import { UserReply } from '/generated/user/user.reply'
 
 const AllowUnauthorizedRequest = () =>
   SetMetadata('allowUnauthorizedRequest', true)
@@ -31,8 +33,10 @@ export class AuthController {
   async login(
     @Request() req: any,
     @Body() bodyData: LoginRequestDto,
-  ): Promise<AuthReply> {
-    const response = {} as AuthReply
+  ): Promise<UserReply> {
+    const response = {} as UserReply
+
+    bodyData.data.sessionId = req.sessionID
 
     const data = await this.service.create(bodyData.data, req.user.id)
 
@@ -44,11 +48,32 @@ export class AuthController {
       )
     }
 
-    await this.sessionService.set(req.sessionId, req.session)
+    await this.sessionService.set(
+      req.sessionID,
+      req.session.cookie._expires,
+      req.session.passport.user,
+    )
 
     response.statusCode = CONST.DEFAULT_SUCCESS_CODE
     response.message = CONST.DEFAULT_SUCCESS_MESSAGE
-    response.payload = data.value
+    response.payload = req.user
     return response
+  }
+
+  @Get('/logout')
+  async logout(@Request() req: any): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+
+    await this.sessionService.del(req.sessionID)
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = 'success'
+    return response
+  }
+
+  @Get('check')
+  async check(): Promise<boolean> {
+    return true
   }
 }

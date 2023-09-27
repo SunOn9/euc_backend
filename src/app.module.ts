@@ -28,6 +28,8 @@ import { LogModule } from './log/log.module'
 import { PlaceModule } from './place/place.module'
 import { APP_GUARD } from '@nestjs/core'
 import { AthenticatedGuard } from './auth/guard/authenticated.guard'
+import { ScheduleModule } from '@nestjs/schedule'
+import { CaslModule } from './casl/casl.module';
 
 // const cwd = process.cwd();
 
@@ -58,6 +60,7 @@ import { AthenticatedGuard } from './auth/guard/authenticated.guard'
       }),
       inject: [ConfigService],
     }),
+    ScheduleModule.forRoot(),
     // // Redis
     // CacheModule.registerAsync({
     //   imports: [ConfigModule],
@@ -113,6 +116,7 @@ import { AthenticatedGuard } from './auth/guard/authenticated.guard'
     ClubFeeModule,
     LogModule,
     PlaceModule,
+    CaslModule,
   ],
   providers: [
     {

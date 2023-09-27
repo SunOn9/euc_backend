@@ -40,4 +40,5 @@ message EnumProto {
     STUDENT = 0;
     WORKER = 1;
   }
+  
 }

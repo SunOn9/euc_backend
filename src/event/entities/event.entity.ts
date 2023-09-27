@@ -8,64 +8,62 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { MemberEntity } from '/member/entities/member.entity';
-import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity';
-import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity';
-import { GuestEntity } from '/guest/entities/guest.entity';
-import { PlaceEntity } from '/place/entities/place.entity';
-import { EnumProto_EventType } from '/generated/enumps';
+} from 'typeorm'
+import { MemberEntity } from '/member/entities/member.entity'
+import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity'
+import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity'
+import { GuestEntity } from '/guest/entities/guest.entity'
+import { PlaceEntity } from '/place/entities/place.entity'
+import { EnumProto_EventType } from '/generated/enumps'
+import { ClubEntity } from '/club/entities/club.entity'
 
 @Entity({ name: 'event' })
 export class EventEntity {
-  static tableName = 'event';
+  static tableName = 'event'
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column()
-  name: string;
+  name: string
 
-  @ManyToMany(() => MemberEntity, (member) => member.event)
-  member: MemberEntity[];
+  @ManyToMany(() => MemberEntity, member => member.event)
+  member: MemberEntity[]
 
-  @ManyToMany(() => GuestEntity, (guest) => guest.event)
-  guest: GuestEntity[];
+  @ManyToMany(() => GuestEntity, guest => guest.event)
+  guest: GuestEntity[]
 
-  @ManyToOne(() => PlaceEntity, (place) => place.event)
-  place?: PlaceEntity | null;
+  @ManyToOne(() => PlaceEntity, place => place.event)
+  place?: PlaceEntity | null
 
-  @OneToMany(
-    () => PaymentSessionEntity,
-    (paymentSession) => paymentSession.event,
-  )
-  paymentSession?: PaymentSessionEntity[];
+  @ManyToOne(() => ClubEntity, club => club.event)
+  club: ClubEntity
 
-  @OneToMany(
-    () => ReceiptSessionEntity,
-    (receiptSession) => receiptSession.event,
-  )
-  receiptSession?: ReceiptSessionEntity[];
+  @OneToMany(() => PaymentSessionEntity, paymentSession => paymentSession.event)
+  paymentSession?: PaymentSessionEntity[]
+
+  @OneToMany(() => ReceiptSessionEntity, receiptSession => receiptSession.event)
+  receiptSession?: ReceiptSessionEntity[]
 
   @Column()
-  startEventDate: Date;
+  startEventDate: Date
 
   @Column()
-  endEventDate: Date;
+  endEventDate: Date
 
   @Column()
-  type: EnumProto_EventType;
+  type: EnumProto_EventType
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn()
-  deletedAt: Date;
+  deletedAt: Date
 
   constructor(partial: Partial<EventEntity>) {
-    Object.assign(this, partial);
+    Object.assign(this, partial)
   }
 }

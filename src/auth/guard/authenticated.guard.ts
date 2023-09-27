@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { SessionService } from '/session/session.service'
 import { Reflector } from '@nestjs/core'
-import * as cookieParser from 'cookie-parser'
+import { SessionSerializer } from './session.serializer'
 @Injectable()
 export class AthenticatedGuard implements CanActivate {
   constructor(
@@ -21,13 +21,28 @@ export class AthenticatedGuard implements CanActivate {
       return true
     }
 
-    // const rawHeader = cookieParser.parse(request.rawHeaders)
+    const connectSidHeader = request.rawHeaders.find(
+      (header: string | string[]) => header.includes('connect.sid'),
+    )
 
-    // console.log(rawHeader)
-    // const session = await this.sessionService.get()
-    // if (session.isErr()) {
-    //   return false
-    // }
+    let connectSid = null
+
+    if (connectSidHeader) {
+      const connectSidIndex = connectSidHeader.indexOf('=') + 1
+      connectSid = connectSidHeader.slice(connectSidIndex)
+    }
+
+    if (!connectSid) {
+      return false
+    }
+
+    const sessionID: string = connectSid.split('.')[0].slice(4)
+
+    const session = await this.sessionService.get(sessionID)
+
+    if (session.isErr()) {
+      return false
+    }
 
     return true
   }

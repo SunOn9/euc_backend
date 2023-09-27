@@ -8,42 +8,40 @@ export class CreateAuthRequestDto implements CreateAuthRequest {
   // @IsOptional()
   // @IsNumber()
   // @Type(() => Number)
-  // public userId?: number
+  // userId?: number
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  public ipAddress?: string
+  ipAddress?: string
+
+  @IsOptional()
+  @IsString()
+  authToken?: string
+
+  @IsOptional()
+  @IsString()
+  sessionId?: string
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  public authToken?: string
+  userAgent?: string
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  public sessionId?: string
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  public userAgent?: string
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
-  public platform?: string
+  platform?: string
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  public longtitude?: number
+  longtitude?: number
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  public latitude?: number
+  latitude?: number
 }

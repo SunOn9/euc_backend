@@ -1,4 +1,4 @@
-import { AreaEntity } from 'src/area/entities/area.entity';
+import { AreaEntity } from 'src/area/entities/area.entity'
 import {
   Column,
   CreateDateColumn,
@@ -8,53 +8,57 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { GuestEntity } from '/guest/entities/guest.entity';
-import { MemberInClubEntity } from '/member-in-club/entities/member-in-club.entity';
-import { ClubFeeEntity } from '/club-fee/entities/club-fee.entity';
-import { UserEntity } from '/user/entities/user.entity';
+} from 'typeorm'
+import { GuestEntity } from '/guest/entities/guest.entity'
+import { MemberInClubEntity } from '/member-in-club/entities/member-in-club.entity'
+import { ClubFeeEntity } from '/club-fee/entities/club-fee.entity'
+import { UserEntity } from '/user/entities/user.entity'
+import { EventEntity } from '/event/entities/event.entity'
 
 @Entity({ name: 'club' })
 export class ClubEntity {
-  static tableName = 'club';
+  static tableName = 'club'
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column()
-  name: string;
+  name: string
 
   @Column()
-  fund: number;
+  fund: number
 
   @Column()
-  totalMember: number;
+  totalMember: number
 
-  @OneToMany(() => MemberInClubEntity, (memberInClub) => memberInClub.club)
-  memberInClub: MemberInClubEntity[];
+  @OneToMany(() => MemberInClubEntity, memberInClub => memberInClub.club)
+  memberInClub: MemberInClubEntity[]
 
-  @OneToMany(() => ClubFeeEntity, (fee) => fee.club)
-  fee: ClubFeeEntity[];
+  @OneToMany(() => ClubFeeEntity, fee => fee.club)
+  fee: ClubFeeEntity[]
 
-  @OneToMany(() => GuestEntity, (guest) => guest.club)
-  guest: GuestEntity[];
+  @OneToMany(() => EventEntity, event => event.club)
+  event: EventEntity[]
 
-  @ManyToOne(() => AreaEntity, (area) => area.club)
-  area: AreaEntity;
+  @OneToMany(() => GuestEntity, guest => guest.club)
+  guest: GuestEntity[]
 
-  @OneToMany(() => UserEntity, (user) => user.club)
-  user: UserEntity[];
+  @ManyToOne(() => AreaEntity, area => area.club)
+  area: AreaEntity
+
+  @OneToMany(() => UserEntity, user => user.club)
+  user: UserEntity[]
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date;
+  deletedAt?: Date
 
   constructor(partial: Partial<ClubEntity>) {
-    Object.assign(this, partial);
+    Object.assign(this, partial)
   }
 }
