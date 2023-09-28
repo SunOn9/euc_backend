@@ -1,50 +1,64 @@
-import { Type } from 'class-transformer';
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
-import { GetAuthConditionRequest } from 'src/generated/auth/auth.request';
+import { Type } from 'class-transformer'
+import {
+  IsBoolean,
+  IsDate,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator'
+import { GetAuthConditionRequest } from 'src/generated/auth/auth.request'
 
 export class GetAuthConditionRequestDto implements GetAuthConditionRequest {
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  public id?: number;
+  id?: number
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  public userId?: number;
+  userId?: number
 
   @IsOptional()
   @IsString()
-  public ipAddress?: string;
+  ipAddress?: string
 
   @IsOptional()
   @IsString()
-  public authToken?: string;
+  authToken?: string
 
   @IsOptional()
   @IsString()
-  public sessionId?: string;
+  sessionId?: string
 
   @IsOptional()
   @IsString()
-  public userAgent?: string;
+  userAgent?: string
 
   @IsOptional()
   @IsString()
-  public platform?: string;
+  platform?: string
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  public longtitude?: number;
+  longtitude?: number
 
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  public latitude?: number;
+  latitude?: number
 
   @IsOptional()
   @IsBoolean()
   @Type(() => Boolean)
-  isExtra?: boolean;
+  isExtra?: boolean
+
+  @IsOptional()
+  @IsDate()
+  fromDate?: Date
+
+  @IsOptional()
+  @IsDate()
+  toDate?: Date
 }

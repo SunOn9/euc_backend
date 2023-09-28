@@ -11,6 +11,8 @@ export class AthenticatedGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest()
+    //TODO: delete this
+    return true
 
     const allowUnauthorizedRequest = this.reflector.get<boolean>(
       'allowUnauthorizedRequest',

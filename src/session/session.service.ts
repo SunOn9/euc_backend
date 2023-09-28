@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common'
-import { UserEntity } from '/user/entities/user.entity'
 import { SessionInMemoryRepository } from './provider/session.in-memory-repo'
 import { Result, err, ok } from 'neverthrow'
 import { Cron, CronExpression } from '@nestjs/schedule'
+import { User } from '/generated/user/user'
 
 @Injectable()
 export class SessionService {
@@ -11,7 +11,7 @@ export class SessionService {
 
   @Cron(CronExpression.EVERY_WEEKEND)
   handleDeleteSession() {
-    this.logger.debug(`=== Deleted expired session ===`)
+    this.logger.debug(`=== Start delete expired session ===`)
 
     const data = this.repo.getAll()
 
@@ -23,12 +23,14 @@ export class SessionService {
         this.logger.debug(`Deleted expired session:  ${each.id}`)
       }
     })
+
+    this.logger.debug(`=== End delete expired session ===`)
   }
 
   async set(
     sessionId: string,
     expireDate: Date,
-    userInfo: Partial<UserEntity>,
+    userInfo: Partial<User>,
   ): Promise<Result<boolean, Error>> {
     const reply = await this.repo.createSession({
       id: sessionId,
@@ -43,7 +45,7 @@ export class SessionService {
     return ok(true)
   }
 
-  async get(sessionId: string): Promise<Result<Partial<UserEntity>, Error>> {
+  async get(sessionId: string): Promise<Result<Partial<User>, Error>> {
     const reply = await this.repo.getSession(sessionId)
 
     if (reply.isErr()) {

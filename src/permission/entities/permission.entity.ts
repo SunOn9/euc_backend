@@ -1,4 +1,12 @@
-import { Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 import { UserEntity } from '/user/entities/user.entity'
 @Entity({ name: 'permission' })
 export class PermissionEntity {
@@ -7,20 +15,23 @@ export class PermissionEntity {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Column()
+  name: string
+
   @ManyToMany(() => UserEntity, user => user.permission)
   user: UserEntity[]
 
-  action: string[]
+  @Column('json')
+  rules: JSON
 
-  subject?: string[]
+  @CreateDateColumn()
+  createdAt: Date
 
-  fields?: string[]
+  @UpdateDateColumn()
+  updatedAt: Date
 
-  conditions?: any
-
-  inverted?: boolean
-
-  reason?: string
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date
 
   constructor(partial: Partial<PermissionEntity>) {
     Object.assign(this, partial)

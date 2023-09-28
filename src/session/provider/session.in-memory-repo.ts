@@ -6,8 +6,10 @@ import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
 import { InMemoryDBService } from '@nestjs-addons/in-memory-db/src/services/in-memory-db.service'
 import { SessionEntity } from '../entities/session.entity'
 import { UserEntity } from '/user/entities/user.entity'
+import { Session } from '/generated/session/session'
+import { User } from '/generated/user/user'
 
-interface SessionInMemory extends SessionEntity {}
+interface SessionInMemory extends Session {}
 
 @Injectable()
 export class SessionInMemoryRepository extends InMemoryDBService<SessionInMemory> {
@@ -15,9 +17,7 @@ export class SessionInMemoryRepository extends InMemoryDBService<SessionInMemory
     super({ featureName: 'session' })
   }
 
-  async createSession(
-    createData: SessionEntity,
-  ): Promise<Result<boolean, Error>> {
+  async createSession(createData: Session): Promise<Result<boolean, Error>> {
     try {
       const data = this.create(createData)
 
@@ -32,7 +32,7 @@ export class SessionInMemoryRepository extends InMemoryDBService<SessionInMemory
   }
 
   async createListSession(
-    createData: SessionEntity[],
+    createData: Session[],
   ): Promise<Result<boolean, Error>> {
     try {
       createData.map(each => {
@@ -50,7 +50,7 @@ export class SessionInMemoryRepository extends InMemoryDBService<SessionInMemory
   }
 
   async removeSession(
-    removeData: Partial<SessionEntity>,
+    removeData: Partial<Session>,
   ): Promise<Result<boolean, Error>> {
     try {
       const sessionReply = this.get(removeData.id)
@@ -69,9 +69,7 @@ export class SessionInMemoryRepository extends InMemoryDBService<SessionInMemory
     }
   }
 
-  async getSession(
-    sessionId: string,
-  ): Promise<Result<Partial<UserEntity>, Error>> {
+  async getSession(sessionId: string): Promise<Result<Partial<User>, Error>> {
     const reply = this.get(sessionId)
 
     if (!reply) {

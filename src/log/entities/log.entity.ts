@@ -27,8 +27,11 @@ export class LogEntity {
   @Column()
   action: string
 
-  @Column('simple-json', { nullable: true })
-  data: any
+  @Column('json', { nullable: true })
+  oldData?: JSON
+
+  @Column('json', { nullable: true })
+  newData?: JSON
 
   @CreateDateColumn()
   createdAt: Date

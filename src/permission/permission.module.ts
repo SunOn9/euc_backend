@@ -6,6 +6,7 @@ import { PermissionEntity } from './entities/permission.entity'
 import { InMemoryDBModule } from '@nestjs-addons/in-memory-db'
 import { PermissionInMemoryRepository } from './provider/permission.in-memory-repo'
 import { PermissionRepository } from './provider/permission.repository'
+import { PermissionReflect } from './provider/permission.proto'
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { PermissionRepository } from './provider/permission.repository'
     PermissionService,
     PermissionRepository,
     PermissionInMemoryRepository,
+    PermissionReflect,
   ],
 })
 export class PermissionModule {}

@@ -4,18 +4,20 @@ package euc_backend;
 
 import "google/protobuf/timestamp.proto";
 import "enumps.proto";
+import "google/protobuf/struct.proto";
 
 message User {
   int32 id = 1;
   string name = 2;
   string email = 3;
   string password = 4;
-  string phone = 5;
+  optional string phone = 5;
   EnumProto.UserRole role =6;
   google.protobuf.Timestamp created_at = 7;
   google.protobuf.Timestamp updated_at = 8;
-  google.protobuf.Timestamp deleted_at = 9;
+  optional google.protobuf.Timestamp deleted_at = 9;
   repeated Auth auth = 10;
+  repeated Permission permission = 11;
 
   message Auth {
     int32 id = 1;
@@ -27,7 +29,15 @@ message User {
     optional string session_id = 7;
     optional int32 longtitude = 8;
     optional int32 latitude = 9;
-    int32 created_at = 10;
+    google.protobuf.Timestamp created_at = 10;
   }
   
+  message Permission {
+    int32 id = 1;
+    string name =2;
+    google.protobuf.Value rules =3;
+    google.protobuf.Timestamp createdAt =4;
+    google.protobuf.Timestamp updatedAt =5;
+    google.protobuf.Timestamp deletedAt =6;
+  }
 }

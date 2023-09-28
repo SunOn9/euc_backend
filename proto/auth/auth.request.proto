@@ -1,6 +1,8 @@
 syntax = "proto3";
 
 package euc_backend;
+import "google/protobuf/timestamp.proto";
+
 
 message GetAuthConditionRequest {
   optional int32 id = 1;
@@ -13,6 +15,9 @@ message GetAuthConditionRequest {
   optional int32 longtitude =8;
   optional int32 latitude =9;
   optional bool is_extra = 10;
+  optional google.protobuf.Timestamp from_date =11;
+  optional google.protobuf.Timestamp to_date =12;
+
 }
 
 message CreateAuthRequest {

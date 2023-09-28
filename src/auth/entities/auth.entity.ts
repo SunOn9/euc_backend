@@ -44,7 +44,7 @@ export class AuthEntity {
   log: LogEntity[]
 
   @CreateDateColumn()
-  createdAt: number
+  createdAt: Date
 
   constructor(partial: Partial<AuthEntity>) {
     Object.assign(this, partial)

@@ -1,0 +1,45 @@
+syntax = "proto3";
+package euc_backend;
+
+import "google/protobuf/timestamp.proto";
+import "enumps.proto";
+import "google/protobuf/struct.proto";
+
+message GetPermissionConditionRequest {
+  optional int32 id = 1;
+  optional string name =2;
+  // optional google.protobuf.Value rules =3;
+  // optional google.protobuf.Timestamp createdAt =4;
+  // optional google.protobuf.Timestamp updatedAt =5;
+  // optional google.protobuf.Timestamp deletedAt =6;
+  optional int32 page =7;
+  optional int32 limit =8;
+
+}
+
+message CreatePermissionRequest {
+  // optional int32 id = 1;
+  string name =2;
+  optional google.protobuf.Value rules =3;
+  // optional google.protobuf.Timestamp createdAt =9;
+  // optional google.protobuf.Timestamp updatedAt =10;
+  // optional google.protobuf.Timestamp deletedAt =11;
+}
+
+message UpdatePermissionDataRequest {
+  // optional int32 id = 1;
+  optional string name =2;
+  optional google.protobuf.Value rules =3;
+  // optional google.protobuf.Timestamp createdAt =9;
+  // optional google.protobuf.Timestamp updatedAt =10;
+  // optional google.protobuf.Timestamp deletedAt =11;
+}
+
+message UpdatePermissionRequest {
+  GetPermissionConditionRequest conditions =1;
+  UpdatePermissionDataRequest data =2;
+}
+
+message RemovePermissionRequest {
+  int32 id = 1;
+}

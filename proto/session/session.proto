@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package euc_backend;
+
+import "enumps.proto";
+import "google/protobuf/timestamp.proto";
+
+message Session {
+  string id = 1;
+  google.protobuf.Timestamp expireDate =2;
+  User userInfo =3;
+
+  message User {
+    optional int32 id = 1;
+    optional string name = 2;
+    optional string email = 3;
+    // string password = 4;
+    optional string phone = 5;
+    optional EnumProto.UserRole role =6;
+    optional google.protobuf.Timestamp created_at = 7;
+    optional google.protobuf.Timestamp updated_at = 8;
+    optional google.protobuf.Timestamp deleted_at = 9;
+  }
+}

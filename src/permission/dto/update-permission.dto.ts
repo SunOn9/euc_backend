@@ -1,4 +1,17 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreatePermissionDto } from './create-permission.dto';
+import { IsNotEmpty } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger/dist/decorators/api-property.decorator'
+import {
+  UpdateUserDataRequest,
+  UpdateUserRequest,
+} from '/generated/user/user.request'
+import { GetPermissionConditionRequestDto } from './get-permission-condition-request.dto'
 
-export class UpdatePermissionDto extends PartialType(CreatePermissionDto) {}
+export class UpdateUserRequestDto implements UpdateUserRequest {
+  @ApiProperty()
+  @IsNotEmpty()
+  conditions!: GetPermissionConditionRequestDto
+
+  @ApiProperty()
+  @IsNotEmpty()
+  data!: UpdateUserDataRequest
+}

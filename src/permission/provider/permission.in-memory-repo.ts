@@ -4,9 +4,9 @@ import { Result, err, ok } from 'neverthrow'
 import CustomException from 'lib/utils/custom.exception'
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
 import { InMemoryDBService } from '@nestjs-addons/in-memory-db/src/services/in-memory-db.service'
-import { PermissionEntity } from '../entities/permission.entity'
+import { Permission } from '/generated/permission/permission'
 
-interface PermissionInMemory extends Omit<PermissionEntity, 'id'> {
+interface PermissionInMemory extends Omit<Permission, 'id'> {
   id: string
 }
 
@@ -17,7 +17,7 @@ export class PermissionInMemoryRepository extends InMemoryDBService<PermissionIn
   }
 
   async createPermission(
-    createData: PermissionEntity,
+    createData: Permission,
   ): Promise<Result<boolean, Error>> {
     try {
       const { id, ...other } = createData
@@ -37,7 +37,7 @@ export class PermissionInMemoryRepository extends InMemoryDBService<PermissionIn
   }
 
   async createListPermission(
-    createData: PermissionEntity[],
+    createData: Permission[],
   ): Promise<Result<boolean, Error>> {
     try {
       createData.map(each => {
@@ -59,7 +59,7 @@ export class PermissionInMemoryRepository extends InMemoryDBService<PermissionIn
   }
 
   async removePermission(
-    removeData: Partial<PermissionEntity>,
+    removeData: Partial<Permission>,
   ): Promise<Result<boolean, Error>> {
     try {
       const permissionReply = this.get(removeData.id.toString())
@@ -80,7 +80,7 @@ export class PermissionInMemoryRepository extends InMemoryDBService<PermissionIn
 
   async getPermission(
     permissionId: number,
-  ): Promise<Result<PermissionEntity, Error>> {
+  ): Promise<Result<Permission, Error>> {
     try {
       const permissionReply = this.get(permissionId.toString())
 
@@ -95,7 +95,7 @@ export class PermissionInMemoryRepository extends InMemoryDBService<PermissionIn
       const reply = {
         id: Number(id),
         ...other,
-      } as PermissionEntity
+      } as Permission
 
       return ok(reply)
     } catch (e) {

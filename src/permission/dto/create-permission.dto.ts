@@ -1,11 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { Type } from 'class-transformer'
-import { IsNotEmpty, IsNumber } from 'class-validator'
+import { IsJSON, IsNotEmpty, IsString } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger/dist/decorators/api-property.decorator'
+import { CreatePermissionRequest } from '/generated/permission/permission.request'
+import { Transform } from 'class-transformer'
 
-export class CreatePermissionDto {
+export class CreatePermissionRequestDto implements CreatePermissionRequest {
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumber()
-  @Type(() => Number)
-  id: number
+  @IsString()
+  name: string
+
+  @ApiProperty()
+  @IsNotEmpty()
+  rules: JSON
 }

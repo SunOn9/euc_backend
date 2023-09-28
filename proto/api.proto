@@ -18,10 +18,12 @@ import "member/member.proto";
 import "payment/payment.proto";
 import "payment-session/payment-session.proto";
 import "permission/permission.proto";
+import "permission/permission.request.proto";
+import "permission/permission.reply.proto";
 import "place/place.proto";
 import "receipt/receipt.proto";
 import "receipt-session/receipt-session.proto";
-
+import "session/session.proto";
 
 service AuthService {
   // rpc CreateAuth (CreateAuthRequest) returns (AuthReply) {}

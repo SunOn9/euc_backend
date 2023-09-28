@@ -1,11 +1,15 @@
 import { UtilsService } from 'lib/utils'
-import { DataSource, Repository } from 'typeorm'
+import { DataSource, Repository, SelectQueryBuilder } from 'typeorm'
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { Result, err, ok } from 'neverthrow'
 import CustomException from 'lib/utils/custom.exception'
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
 import { PermissionEntity } from '../entities/permission.entity'
-
+import { PermissionReflect } from './permission.proto'
+import { CreatePermissionRequestDto } from '../dto/create-permission.dto'
+import { Permission } from '/generated/permission/permission'
+import { GetPermissionConditionRequestDto } from '../dto/get-permission-condition-request.dto'
+import { PermissionListDataReply } from '/generated/permission/permission.reply'
 
 @Injectable()
 export class PermissionRepository extends Repository<PermissionEntity> {
@@ -13,119 +17,111 @@ export class PermissionRepository extends Repository<PermissionEntity> {
     // @Inject(CACHE_MANAGER)
     // private cache: Cache,
     private dataSource: DataSource,
-    // private proto: PermissionReflect,
+    private proto: PermissionReflect,
     private utilService: UtilsService,
   ) {
     super(PermissionEntity, dataSource.createEntityManager())
   }
 
-  // async createPermission(
-  //   createData: CreatePermissionRequestDto,
-  // ): Promise<Result<Permission, Error>> {
-  //   try {
-  //     const dataReply = await this.save(createData)
+  async createPermission(
+    createData: CreatePermissionRequestDto,
+  ): Promise<Result<Permission, Error>> {
+    try {
+      const dataReply = await this.save(createData)
 
-  //     if (this.utilService.isObjectEmpty(dataReply)) {
-  //       return err(new Error(`Cannot create Permission in database`))
-  //     }
+      if (this.utilService.isObjectEmpty(dataReply)) {
+        return err(new Error(`Cannot create Permission in database`))
+      }
 
-  //     return ok(this.proto.reflect(dataReply))
-  //   } catch (e) {
-  //     throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
-  //   }
-  // }
+      return ok(this.proto.reflect(dataReply))
+    } catch (e) {
+      throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
+    }
+  }
 
-  // async updatePermission(
-  //   updateData: UpdatePermissionRequestDto,
-  // ): Promise<Result<Permission, Error>> {
-  //   try {
-  //     if (this.utilService.isObjectEmpty(updateData.conditions)) {
-  //       return err(new Error(`Empty conditions`))
-  //     }
+  async getDetail(
+    conditions: GetPermissionConditionRequestDto,
+  ): Promise<Result<Permission, Error>> {
+    try {
+      if (this.utilService.isObjectEmpty(conditions)) {
+        return err(new Error(`Empty conditions`))
+      }
 
-  //     await this.update(updateData.conditions, updateData.data)
+      const queryBuilder = this.setupQueryCondition(conditions)
 
-  //     return await this.getDetail(updateData.conditions)
-  //   } catch (e) {
-  //     throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
-  //   }
-  // }
+      const dataReply = await queryBuilder.orderBy(`id`, 'DESC').getOne()
 
-  // async getDetail(
-  //   conditions: GetPermissionConditionRequestDto,
-  // ): Promise<Result<Permission, Error>> {
-  //   try {
-  //     if (this.utilService.isObjectEmpty(conditions)) {
-  //       return err(new Error(`Empty conditions`))
-  //     }
-  //     const dataReply = await this.findOneBy(conditions)
+      if (!dataReply) {
+        return err(
+          new Error(`Cannot get permission with conditions: [${conditions}]`),
+        )
+      }
+      return ok(this.proto.reflect(dataReply))
+    } catch (e) {
+      throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
+    }
+  }
 
-  //     if (!dataReply) {
-  //       return err(
-  //         new Error(`Cannot get Permission with conditions: [${conditions}]`),
-  //       )
-  //     }
-  //     return ok(this.proto.reflect(dataReply))
-  //   } catch (e) {
-  //     throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
-  //   }
-  // }
+  async getList(
+    conditions: GetPermissionConditionRequestDto,
+  ): Promise<Result<PermissionListDataReply, Error>> {
+    try {
+      // if (!conditions) {
+      //   return err(new Error(`Empty conditions`));
+      // }
 
-  // //TODO: getDetailWithExtraData
+      const page = conditions.page ? conditions.page : 1
+      const limit = conditions.limit ? conditions.limit : 20
+      const skip: number = limit * page - limit
 
-  // async getList(
-  //   conditions: GetPermissionConditionRequestDto,
-  // ): Promise<Result<PermissionListDataReply, Error>> {
-  //   try {
-  //     // if (!conditions) {
-  //     //   return err(new Error(`Empty conditions`));
-  //     // }
+      const queryBuilder = this.setupQueryCondition(conditions)
 
-  //     const page = conditions.page ? conditions.page : 1
-  //     const limit = conditions.limit ? conditions.limit : 20
-  //     const skip: number = limit * page - limit
+      const [dataReply, total] = await queryBuilder
+        .orderBy(`id`, 'DESC')
+        .take(limit)
+        .skip(skip)
+        .getManyAndCount()
 
-  //     const [dataReply, total] = await this.findAndCount({
-  //       where: { ...conditions },
-  //       take: limit,
-  //       skip: skip,
-  //       order: {
-  //         name: 'ASC',
-  //       },
-  //     })
+      if (!dataReply) {
+        return err(
+          new Error(
+            `Cannot get list Permission with conditions: [${conditions}]`,
+          ),
+        )
+      }
 
-  //     if (!dataReply) {
-  //       return err(
-  //         new Error(`Cannot get list Permission with conditions: [${conditions}]`),
-  //       )
-  //     }
+      const permissionList: Permission[] = dataReply.map(each => {
+        return this.proto.reflect(each)
+      })
 
-  //     const PermissionList: Permission[] = dataReply.map(each => {
-  //       return this.proto.reflect(each)
-  //     })
+      return ok({
+        total,
+        page,
+        limit,
+        permissionList,
+      })
+    } catch (e) {
+      throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
+    }
+  }
 
-  //     return ok({
-  //       total,
-  //       page,
-  //       limit,
-  //       PermissionList,
-  //     })
+  setupQueryCondition(
+    conditions: GetPermissionConditionRequestDto,
+  ): SelectQueryBuilder<PermissionEntity> {
+    const queryBuilder = this.createQueryBuilder(PermissionEntity.tableName)
 
-  //   } catch (e) {
-  //     throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
-  //   }
-  // }
+    if (conditions.id !== undefined) {
+      queryBuilder.andWhere(`id = :id`, {
+        id: `${conditions.id}`,
+      })
+    }
 
-  // //TODO: GetListWithExtraData
-  // async removePermission(
-  //   removeData: RemovePermissionRequestDto,
-  // ): Promise<Result<boolean, Error>> {
-  //   const dataReply = await this.softDelete(removeData)
+    if (conditions.name !== undefined) {
+      queryBuilder.andWhere(`name LIKE :name`, {
+        name: `%${conditions.name}%`,
+      })
+    }
 
-  //   if (this.utilService.isObjectEmpty(dataReply)) {
-  //     return err(new Error(`Error when remove Permission`))
-  //   }
-
-  //   return ok(true)
-  // }
+    return queryBuilder
+  }
 }
