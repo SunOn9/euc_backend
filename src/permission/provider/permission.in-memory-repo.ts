@@ -58,6 +58,29 @@ export class PermissionInMemoryRepository extends InMemoryDBService<PermissionIn
     }
   }
 
+  async updatePermission(
+    updateData: Permission,
+  ): Promise<Result<boolean, Error>> {
+    try {
+      const { id, ...other } = updateData
+
+      const request = {
+        id: id.toString(),
+        ...other,
+      } as PermissionInMemory
+
+      const data = this.update(request)
+
+      if (this.ultilService.isObjectEmpty(data)) {
+        return err(new Error(`Cannot update permission in memory`))
+      }
+
+      return ok(true)
+    } catch (e) {
+      throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
+    }
+  }
+
   async removePermission(
     removeData: Partial<Permission>,
   ): Promise<Result<boolean, Error>> {

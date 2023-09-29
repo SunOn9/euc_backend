@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   Query,
+  Req,
 } from '@nestjs/common'
 import { PermissionService } from './permission.service'
 import CustomException from 'lib/utils/custom.exception'
@@ -26,7 +27,7 @@ export class PermissionController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
-  async createUser(
+  async create(
     // @Req() req: Request,
     @Body() bodyData: CreatePermissionRequestDto,
   ): Promise<PermissionReply> {
@@ -47,27 +48,28 @@ export class PermissionController {
     return response
   }
 
-  @Get('detail/:id')
-  async getDetail(
-    // @Req() req: Request,
-    @Param() request: GetPermissionConditionRequestDto,
-  ): Promise<PermissionReply> {
-    const response = {} as PermissionReply
-    const data = await this.service.getDetail(request)
+  // @Get('detail')
+  // async getDetail(
+  //   @Req() req: Request,
+  //   // @Param() request: GetPermissionConditionRequestDto,
+  // ): Promise<PermissionReply> {
+  //   const response = {} as PermissionReply
 
-    if (data.isErr()) {
-      throw new CustomException(
-        'ERROR',
-        data.error.message,
-        HttpStatus.BAD_REQUEST,
-      )
-    }
+  //   const data = await this.service.getDetail({ id: /*req.user.id*/ 1 })
 
-    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
-    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
-    response.payload = data.value
-    return response
-  }
+  //   if (data.isErr()) {
+  //     throw new CustomException(
+  //       'ERROR',
+  //       data.error.message,
+  //       HttpStatus.BAD_REQUEST,
+  //     )
+  //   }
+
+  //   response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+  //   response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+  //   response.payload = data.value
+  //   return response
+  // }
 
   @Get('list')
   async getList(

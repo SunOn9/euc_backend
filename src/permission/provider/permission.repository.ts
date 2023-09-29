@@ -10,6 +10,9 @@ import { CreatePermissionRequestDto } from '../dto/create-permission.dto'
 import { Permission } from '/generated/permission/permission'
 import { GetPermissionConditionRequestDto } from '../dto/get-permission-condition-request.dto'
 import { PermissionListDataReply } from '/generated/permission/permission.reply'
+import { UpdatePermissionDataRequest } from '/generated/permission/permission.request'
+import { UpdatePermissionRequestDto } from '../dto/update-permission.dto'
+import { RemovePermissionRequestDto } from '../dto/remove-permission.dto'
 
 @Injectable()
 export class PermissionRepository extends Repository<PermissionEntity> {
@@ -27,13 +30,43 @@ export class PermissionRepository extends Repository<PermissionEntity> {
     createData: CreatePermissionRequestDto,
   ): Promise<Result<Permission, Error>> {
     try {
-      const dataReply = await this.save(createData)
+      const { rules, ...other } = createData
+
+      const data = {
+        rules: rules,
+        ...other,
+      } as PermissionEntity
+
+      const dataReply = await this.save(data)
 
       if (this.utilService.isObjectEmpty(dataReply)) {
         return err(new Error(`Cannot create Permission in database`))
       }
 
       return ok(this.proto.reflect(dataReply))
+    } catch (e) {
+      throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  async updatePermission(
+    updateData: UpdatePermissionRequestDto,
+  ): Promise<Result<Permission, Error>> {
+    try {
+      if (this.utilService.isObjectEmpty(updateData.conditions)) {
+        return err(new Error(`Empty conditions`))
+      }
+
+      const { rules, ...other } = updateData.data
+
+      const data = {
+        rules: rules,
+        ...other,
+      } as PermissionEntity
+
+      await this.update(updateData.conditions, data)
+
+      return await this.getDetail(updateData.conditions)
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
@@ -103,6 +136,18 @@ export class PermissionRepository extends Repository<PermissionEntity> {
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
+  }
+
+  async removePermission(
+    removeData: RemovePermissionRequestDto,
+  ): Promise<Result<boolean, Error>> {
+    const dataReply = await this.softDelete(removeData)
+
+    if (this.utilService.isObjectEmpty(dataReply)) {
+      return err(new Error(`Error when remove permission`))
+    }
+
+    return ok(true)
   }
 
   setupQueryCondition(

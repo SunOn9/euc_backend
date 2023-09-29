@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { UserEntity } from '/user/entities/user.entity'
+import { RawRule } from '../casl/rules'
 @Entity({ name: 'permission' })
 export class PermissionEntity {
   static tableName = 'permission'
@@ -22,7 +23,7 @@ export class PermissionEntity {
   user: UserEntity[]
 
   @Column('json')
-  rules: JSON
+  rules: RawRule
 
   @CreateDateColumn()
   createdAt: Date

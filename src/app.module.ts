@@ -29,7 +29,6 @@ import { PlaceModule } from './place/place.module'
 import { APP_GUARD } from '@nestjs/core'
 import { AthenticatedGuard } from './auth/guard/authenticated.guard'
 import { ScheduleModule } from '@nestjs/schedule'
-import { CaslModule } from './casl/casl.module';
 
 // const cwd = process.cwd();
 
@@ -116,7 +115,6 @@ import { CaslModule } from './casl/casl.module';
     ClubFeeModule,
     LogModule,
     PlaceModule,
-    CaslModule,
   ],
   providers: [
     {

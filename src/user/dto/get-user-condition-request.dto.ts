@@ -59,7 +59,25 @@ export class GetUserConditionRequestDto implements GetUserConditionRequest {
   @IsOptional()
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
-  isExtra?: boolean
+  isExtraPermission?: boolean
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  isExtraLog?: boolean
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  isExtraClub?: boolean
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  isExtraAuth?: boolean
 
   @ApiPropertyOptional()
   @IsOptional()

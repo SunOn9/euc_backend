@@ -7,6 +7,7 @@ import { InMemoryDBModule } from '@nestjs-addons/in-memory-db'
 import { PermissionInMemoryRepository } from './provider/permission.in-memory-repo'
 import { PermissionRepository } from './provider/permission.repository'
 import { PermissionReflect } from './provider/permission.proto'
+import { CaslAbilityFactory } from './casl/casl-ability.factory'
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PermissionReflect } from './provider/permission.proto'
     PermissionRepository,
     PermissionInMemoryRepository,
     PermissionReflect,
+    CaslAbilityFactory,
   ],
 })
 export class PermissionModule {}

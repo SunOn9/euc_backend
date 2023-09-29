@@ -74,15 +74,6 @@ export class UserRepository extends Repository<UserEntity> {
 
       const queryBuilder = this.setupQueryCondition(conditions)
 
-      if (conditions.isExtra) {
-        queryBuilder.setFindOptions({
-          relationLoadStrategy: 'query',
-          relations: {
-            // auth: true,
-          },
-        })
-      }
-
       const dataReply = await queryBuilder.orderBy(`id`, 'DESC').getOne()
 
       if (!dataReply) {
@@ -109,15 +100,6 @@ export class UserRepository extends Repository<UserEntity> {
       const skip: number = limit * page - limit
 
       const queryBuilder = this.setupQueryCondition(conditions)
-
-      if (conditions.isExtra) {
-        queryBuilder.setFindOptions({
-          relationLoadStrategy: 'query',
-          relations: {
-            // auth: true,
-          },
-        })
-      }
 
       const [dataReply, total] = await queryBuilder
         .orderBy(`id`, 'DESC')
@@ -201,6 +183,16 @@ export class UserRepository extends Repository<UserEntity> {
     if (conditions.isDeleted) {
       queryBuilder.withDeleted()
     }
+
+    queryBuilder.setFindOptions({
+      relationLoadStrategy: 'query',
+      relations: {
+        auth: conditions.isExtraAuth ?? false,
+        permission: conditions.isExtraPermission ?? false,
+        log: conditions.isExtraLog ?? false,
+        club: conditions.isExtraClub ?? false,
+      },
+    })
 
     return queryBuilder
   }

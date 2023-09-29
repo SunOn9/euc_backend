@@ -44,6 +44,7 @@ export class AuthService {
   ): Promise<Partial<User> | null> {
     const user = await this.userService.getDetail({
       username: username,
+      isExtraPermission: true,
     })
 
     if (user.isErr()) {

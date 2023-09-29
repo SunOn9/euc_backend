@@ -1,13 +1,6 @@
-import {
-  IsBoolean,
-  IsDate,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator'
+import { IsNumber, IsOptional, IsString } from 'class-validator'
 import { ApiPropertyOptional } from '@nestjs/swagger/dist/decorators/api-property.decorator'
-import { Transform, Type } from 'class-transformer'
+import { Type } from 'class-transformer'
 import { GetPermissionConditionRequest } from '/generated/permission/permission.request'
 
 export class GetPermissionConditionRequestDto

@@ -17,6 +17,7 @@ export class UserReflect {
     reflect.updatedAt = entity.updatedAt ?? null
     reflect.deletedAt = entity.deletedAt ?? null
     reflect.auth = entity.auth ?? []
+    reflect.permission = entity.permission ?? []
     return reflect
   }
 }

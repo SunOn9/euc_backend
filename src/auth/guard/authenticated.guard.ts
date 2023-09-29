@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { SessionService } from '/session/session.service'
 import { Reflector } from '@nestjs/core'
-import { SessionSerializer } from './session.serializer'
+
 @Injectable()
 export class AthenticatedGuard implements CanActivate {
   constructor(
@@ -12,7 +12,7 @@ export class AthenticatedGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest()
     //TODO: delete this
-    return true
+    // return true
 
     const allowUnauthorizedRequest = this.reflector.get<boolean>(
       'allowUnauthorizedRequest',

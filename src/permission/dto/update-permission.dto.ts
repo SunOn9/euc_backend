@@ -1,17 +1,18 @@
 import { IsNotEmpty } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger/dist/decorators/api-property.decorator'
-import {
-  UpdateUserDataRequest,
-  UpdateUserRequest,
-} from '/generated/user/user.request'
-import { GetPermissionConditionRequestDto } from './get-permission-condition-request.dto'
 
-export class UpdateUserRequestDto implements UpdateUserRequest {
+import { GetPermissionConditionRequestDto } from './get-permission-condition-request.dto'
+import {
+  UpdatePermissionDataRequest,
+  UpdatePermissionRequest,
+} from '/generated/permission/permission.request'
+
+export class UpdatePermissionRequestDto implements UpdatePermissionRequest {
   @ApiProperty()
   @IsNotEmpty()
   conditions!: GetPermissionConditionRequestDto
 
   @ApiProperty()
   @IsNotEmpty()
-  data!: UpdateUserDataRequest
+  data!: UpdatePermissionDataRequest
 }
