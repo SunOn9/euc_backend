@@ -11,8 +11,6 @@ import { LocalStrategy } from './guard/local.strategy'
 import { SessionSerializer } from './guard/session.serializer'
 import { InMemoryDBModule } from '@nestjs-addons/in-memory-db'
 import { SessionModule } from '/session/session.module'
-// import { AthenticatedGuard } from './guard/authenticated.guard'
-import { SessionService } from '/session/session.service'
 
 @Module({
   imports: [
@@ -29,8 +27,7 @@ import { SessionService } from '/session/session.service'
     AuthRepository,
     LocalStrategy,
     SessionSerializer,
-    SessionService,
   ],
   exports: [AuthService, AuthReflect, AuthRepository],
 })
-export class AuthModule {}
+export class AuthModule { }

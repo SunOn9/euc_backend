@@ -59,6 +59,8 @@ async function bootstrap() {
   httpApp.use(passport.initialize())
   httpApp.use(passport.session())
 
+  httpApp.enableShutdownHooks()
+
   httpApp.enableCors({
     credentials: true,
   })

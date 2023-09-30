@@ -27,7 +27,7 @@ api/src/generated/*
 !api/src/generated/.gitkeep
 src/generated/*
 !src/generated/.gitkeep
-data/fadovn_store.sql
+data/sessions.json
 upload/*
 !upload/.gitkeep
 

@@ -38,6 +38,11 @@
 ### Env
 
 `Copy file 'env.example' to new file name '.env'`
+`Add SECRET`
+
+### Data
+
+`Create data/session.json`
 
 ### RUN
 

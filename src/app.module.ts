@@ -29,6 +29,7 @@ import { PlaceModule } from './place/place.module'
 import { APP_GUARD } from '@nestjs/core'
 import { AthenticatedGuard } from './auth/guard/authenticated.guard'
 import { ScheduleModule } from '@nestjs/schedule'
+import { SessionModule } from './session/session.module'
 
 // const cwd = process.cwd();
 
@@ -115,6 +116,7 @@ import { ScheduleModule } from '@nestjs/schedule'
     ClubFeeModule,
     LogModule,
     PlaceModule,
+    SessionModule
   ],
   providers: [
     {
@@ -123,4 +125,4 @@ import { ScheduleModule } from '@nestjs/schedule'
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
