@@ -11,8 +11,6 @@ export class AthenticatedGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest()
-    //TODO: delete this
-    // return true
 
     const allowUnauthorizedRequest = this.reflector.get<boolean>(
       'allowUnauthorizedRequest',
@@ -23,22 +21,7 @@ export class AthenticatedGuard implements CanActivate {
       return true
     }
 
-    const connectSidHeader = request.rawHeaders.find(
-      (header: string | string[]) => header.includes('connect.sid'),
-    )
-
-    let connectSid = null
-
-    if (connectSidHeader) {
-      const connectSidIndex = connectSidHeader.indexOf('=') + 1
-      connectSid = connectSidHeader.slice(connectSidIndex)
-    }
-
-    if (!connectSid) {
-      return false
-    }
-
-    const sessionID: string = connectSid.split('.')[0].slice(4)
+    const sessionID = this.extractSessionIDFromRequest(request)
 
     const session = await this.sessionService.get(sessionID)
 
@@ -47,5 +30,17 @@ export class AthenticatedGuard implements CanActivate {
     }
 
     return true
+  }
+
+  extractSessionIDFromRequest(request: any): string {
+    const connectSidHeader = request.rawHeaders.find(
+      (header: string | string[]) => header.includes('connect.sid'),
+    )
+    let connectSid = null
+    if (connectSidHeader) {
+      const connectSidIndex = connectSidHeader.indexOf('=') + 1
+      connectSid = connectSidHeader.slice(connectSidIndex)
+    }
+    return (connectSid.split('.')[0].slice(4))
   }
 }

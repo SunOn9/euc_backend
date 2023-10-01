@@ -22,8 +22,8 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    "prettier/prettier": ["error", { endOfLine: "off" }],
-    "prettier/prettier": ["error", { tabWidth: 2 }],
+    // "prettier/prettier": ["error", { endOfLine: "off" }],
+    // "prettier/prettier": ["error", { tabWidth: 2 }],
     // 'neverthrow/must-use-result': 'error',
     '@typescript-eslint/naming-convention': [
       'error',

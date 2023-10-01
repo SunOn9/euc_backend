@@ -13,7 +13,7 @@ export class SessionService implements BeforeApplicationShutdown, OnModuleInit {
 
   beforeApplicationShutdown() {
     const fs = require('fs');
-    this.logger.debug(`=== Save session to JSON file`)
+    this.logger.debug(`Save session to JSON file`)
     const sessionsReply = this.repo.getAll()
 
     if (!sessionsReply) {
@@ -25,7 +25,7 @@ export class SessionService implements BeforeApplicationShutdown, OnModuleInit {
 
   onModuleInit() {
     const fs = require('fs');
-    this.logger.debug(`=== Load session from JSON file`)
+    this.logger.debug(`Load session from JSON file`)
 
     const sessionReply = fs.readFileSync('data/sessions.json', 'utf8');
 

@@ -20,10 +20,15 @@ import { GetUserConditionRequestDto } from './dto/get-user-condition-request.dto
 import { UpdateUserRequestDto } from './dto/update-user.dto'
 import { SimpleReply } from '/generated/common'
 import { RemoveUserRequestDto } from './dto/remove-user.dto'
+import { UseGuards } from '@nestjs/common'
+import { PermissionsGuard } from '/permission/guard/permission.guard'
+import { CheckPermissions } from '/permission/guard/permission.decorator'
+import { Action, Subject } from '/permission/casl/casl.enum'
 
+@UseGuards(PermissionsGuard)
 @Controller('user')
 export class UserController {
-  constructor(private readonly service: UserService) {}
+  constructor(private readonly service: UserService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
@@ -94,6 +99,7 @@ export class UserController {
   }
 
   @Get('list')
+  @CheckPermissions({ action: [Action.CREATE, Action.READ], subject: [Subject.USER, Subject.AREA], fields: [] })
   async getList(
     // @Req() req: Request,
     @Query() request: GetUserConditionRequestDto,

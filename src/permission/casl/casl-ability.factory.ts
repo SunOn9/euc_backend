@@ -6,12 +6,12 @@ import CustomException from 'lib/utils/custom.exception'
 
 @Injectable()
 export class CaslAbilityFactory {
-  constructor(private readonly sessionSerivce: SessionService) {}
+  constructor(private readonly sessionService: SessionService) { }
 
   async defineAbility(sessionId: string) {
     const { can, cannot, build } = new AbilityBuilder(createMongoAbility)
 
-    const user = await this.sessionSerivce.get(sessionId)
+    const user = await this.sessionService.get(sessionId)
 
     if (user.isErr()) {
       throw new CustomException(
@@ -25,11 +25,11 @@ export class CaslAbilityFactory {
 
     rawRules.map(each => {
       if (each.inverted === true) {
-        can(each.action, each.subject, each.fields, each.conditions)
-      } else {
         cannot(each.action, each.subject, each.fields, each.conditions).because(
           each.reason,
         )
+      } else {
+        can(each.action, each.subject, each.fields, each.conditions)
       }
     })
 

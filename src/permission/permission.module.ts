@@ -9,6 +9,7 @@ import { PermissionRepository } from './provider/permission.repository'
 import { PermissionReflect } from './provider/permission.proto'
 import { CaslAbilityFactory } from './casl/casl-ability.factory'
 import { SessionModule } from '/session/session.module'
+import { PermissionsGuard } from './guard/permission.guard'
 
 @Module({
   imports: [
@@ -23,6 +24,8 @@ import { SessionModule } from '/session/session.module'
     PermissionInMemoryRepository,
     PermissionReflect,
     CaslAbilityFactory,
+    PermissionsGuard
   ],
+  exports: [PermissionsGuard, CaslAbilityFactory]
 })
 export class PermissionModule { }
