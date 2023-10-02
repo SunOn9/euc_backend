@@ -29,7 +29,7 @@ message Permission {
 
   message Rules {
     repeated string action =1;
-    repeated string subject =2;
+    repeated google.protobuf.Value subject =2;
     repeated string fields =3;
     optional google.protobuf.Value conditions =4;
     optional bool inverted =5;

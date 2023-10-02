@@ -1,4 +1,4 @@
-import { Action, Subject } from './casl.enum'
+import { Action, Subject } from './casl.type'
 
 export class RawRule {
   action: Action[]

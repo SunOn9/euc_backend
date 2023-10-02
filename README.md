@@ -1,5 +1,7 @@
 # Backend EUC
 
+## NOTE: For Linux or MacOS. Window need use WSL
+
 ### Run docker ENV
 
 `bash script/setup_docker.sh`
@@ -33,7 +35,7 @@
 
 ### Build Proto
 
-`yarn gen-proto`
+`yarn gen-proto` or `bash script/generate_proto.sh`
 
 ### Env
 
@@ -42,7 +44,8 @@
 
 ### Data
 
-`Create data/session.json`
+`Open folder data`
+`Copy file 'sessions.example.json' to new file name 'sessions.json'`
 
 ### RUN
 

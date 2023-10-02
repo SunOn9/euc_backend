@@ -18,6 +18,7 @@ message User {
   optional google.protobuf.Timestamp deleted_at = 9;
   repeated Auth auth = 10;
   repeated Permission permission = 11;
+  Club club = 12;
 
   message Auth {
     int32 id = 1;
@@ -39,5 +40,15 @@ message User {
     google.protobuf.Timestamp createdAt =4;
     google.protobuf.Timestamp updatedAt =5;
     optional google.protobuf.Timestamp deletedAt =6;
+  }
+
+  message Club {
+    int32 id = 1;
+    string name = 2;
+    int32 fund =3;
+    int32 total_member = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    optional google.protobuf.Timestamp deleted_at = 7;
   }
 }

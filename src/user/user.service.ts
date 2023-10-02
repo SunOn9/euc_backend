@@ -9,7 +9,7 @@ import { err } from 'neverthrow'
 
 @Injectable()
 export class UserService {
-  constructor(private readonly repo: UserRepository) { }
+  constructor(private readonly repo: UserRepository) {}
 
   async create(requestData: CreateUserRequestDto) {
     //Check user exits
@@ -38,13 +38,7 @@ export class UserService {
   }
 
   async update(requestData: UpdateUserRequestDto) {
-    //Check user
-    const userReply = await this.getDetail(requestData.conditions)
-
-    if (userReply.isErr()) {
-      return err(userReply.error)
-    }
-
+    // if(requestData.data.permissionList.length !== undefined)
     return await this.repo.updateUser(requestData)
   }
 

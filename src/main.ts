@@ -1,45 +1,15 @@
 import { NestFactory } from '@nestjs/core'
-// import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-// import { join } from 'path';
+
 import { ValidationPipe } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
-import {
-  // CustomRpcExceptionFilter,
-  HttpExceptionFilter,
-} from './exception.filter'
+import { HttpExceptionFilter } from './exception.filter'
 
 import * as passport from 'passport'
 import * as session from 'express-session'
 import { ConfigService } from '@nestjs/config'
 
 async function bootstrap() {
-  //grpc service
-  // const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(
-  //   AppModule,
-  //   {
-  //     transport: Transport.GRPC,
-  //     options: {
-  //       package: ['euc_backend'],
-  //       loader: {
-  //         longs: String,
-  //         enums: String,
-  //         json: true,
-  //         defaults: true,
-  //       },
-  //       protoPath: [join(__dirname, '../../proto/api.proto')],
-  //     },
-  //     logger: ['error', 'warn', 'debug', 'verbose'],
-  //   },
-  // );
-  // await grpcApp.useGlobalPipes(
-  //   new ValidationPipe({ whitelist: true, transform: true }),
-  // );
-
-  // grpcApp.useGlobalFilters(new CustomRpcExceptionFilter());
-
-  // await grpcApp.listen();
-
   //http service
   const httpApp = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'debug', 'verbose'],

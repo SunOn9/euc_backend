@@ -39,6 +39,7 @@ message UpdateUserDataRequest {
   string password = 3;
   optional string phone = 4;
   EnumProto.UserRole role =5;
+  repeated int32 permission_list =6;
 }
 
 message UpdateUserRequest {

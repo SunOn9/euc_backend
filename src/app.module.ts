@@ -60,6 +60,7 @@ import { SessionModule } from './session/session.module'
       }),
       inject: [ConfigService],
     }),
+    //ScheduleModule
     ScheduleModule.forRoot(),
     // // Redis
     // CacheModule.registerAsync({
@@ -116,7 +117,7 @@ import { SessionModule } from './session/session.module'
     ClubFeeModule,
     LogModule,
     PlaceModule,
-    SessionModule
+    SessionModule,
   ],
   providers: [
     {
@@ -125,4 +126,4 @@ import { SessionModule } from './session/session.module'
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

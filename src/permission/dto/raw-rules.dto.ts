@@ -6,7 +6,7 @@ import {
   IsArray,
   IsEnum,
 } from 'class-validator'
-import { Action, Subject } from '../casl/casl.enum'
+import { Action, Subject } from '../casl/casl.type'
 import { Transform } from 'class-transformer'
 
 export class RawRulesDto {
@@ -26,20 +26,20 @@ export class RawRulesDto {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  fields: string[]
+  fields?: string[]
 
   @ApiPropertyOptional()
   @IsOptional()
-  conditions: any
+  conditions?: any
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
-  inverted: boolean
+  inverted?: boolean
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  reason: string
+  reason?: string
 }

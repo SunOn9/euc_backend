@@ -18,6 +18,7 @@ export class UserReflect {
     reflect.deletedAt = entity.deletedAt ?? null
     reflect.auth = entity.auth ?? []
     reflect.permission = entity.permission ?? []
+    reflect.club = entity.club ?? null
     return reflect
   }
 }

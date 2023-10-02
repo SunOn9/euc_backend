@@ -23,15 +23,21 @@ import { RemoveUserRequestDto } from './dto/remove-user.dto'
 import { UseGuards } from '@nestjs/common'
 import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
-import { Action, Subject } from '/permission/casl/casl.enum'
+import { Action } from '../permission/casl/casl.type'
+import { UserEntity } from './entities/user.entity'
 
 @UseGuards(PermissionsGuard)
 @Controller('user')
 export class UserController {
-  constructor(private readonly service: UserService) { }
+  constructor(private readonly service: UserService) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
+  @CheckPermissions({
+    action: [Action.CREATE],
+    subject: [UserEntity],
+    fields: [],
+  })
   async createUser(
     // @Req() req: Request,
     @Body() bodyData: CreateUserRequestDto,
@@ -54,6 +60,14 @@ export class UserController {
   }
 
   @Post('update')
+  @CheckPermissions({
+    action: [Action.UPDATE],
+    subject: [UserEntity],
+    fields: [],
+    conditions: {
+      club: 'user.club',
+    },
+  })
   @HttpCode(HttpStatus.CREATED)
   async updateUser(
     // @Req() req: Request,
@@ -77,6 +91,11 @@ export class UserController {
   }
 
   @Get('detail/:id')
+  @CheckPermissions({
+    action: [Action.READ],
+    subject: [UserEntity],
+    fields: [],
+  })
   async getDetail(
     // @Req() req: Request,
     @Param() request: GetUserConditionRequestDto,
@@ -99,7 +118,11 @@ export class UserController {
   }
 
   @Get('list')
-  @CheckPermissions({ action: [Action.CREATE, Action.READ], subject: [Subject.USER, Subject.AREA], fields: [] })
+  @CheckPermissions({
+    action: [Action.READ],
+    subject: [UserEntity],
+    fields: [],
+  })
   async getList(
     // @Req() req: Request,
     @Query() request: GetUserConditionRequestDto,

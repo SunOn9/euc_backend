@@ -7,7 +7,7 @@ export class AthenticatedGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly sessionService: SessionService,
-  ) { }
+  ) {}
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest()
@@ -36,11 +36,14 @@ export class AthenticatedGuard implements CanActivate {
     const connectSidHeader = request.rawHeaders.find(
       (header: string | string[]) => header.includes('connect.sid'),
     )
-    let connectSid = null
+    let reply = null
+
     if (connectSidHeader) {
       const connectSidIndex = connectSidHeader.indexOf('=') + 1
-      connectSid = connectSidHeader.slice(connectSidIndex)
+      const connectSid = connectSidHeader.slice(connectSidIndex)
+      reply = connectSid.split('.')[0].slice(4)
     }
-    return (connectSid.split('.')[0].slice(4))
+
+    return reply
   }
 }

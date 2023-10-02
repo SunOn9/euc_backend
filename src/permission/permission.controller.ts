@@ -10,6 +10,7 @@ import {
   HttpStatus,
   Query,
   Req,
+  UseGuards,
 } from '@nestjs/common'
 import { PermissionService } from './permission.service'
 import CustomException from 'lib/utils/custom.exception'
@@ -20,13 +21,23 @@ import {
 } from '/generated/permission/permission.reply'
 import * as CONST from '../prelude/constant'
 import { GetPermissionConditionRequestDto } from './dto/get-permission-condition-request.dto'
+import { PermissionsGuard } from './guard/permission.guard'
+import { CheckPermissions } from './guard/permission.decorator'
+import { Action } from './casl/casl.type'
+import { PermissionEntity } from './entities/permission.entity'
 
+@UseGuards(PermissionsGuard)
 @Controller('permission')
 export class PermissionController {
   constructor(private readonly service: PermissionService) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
+  @CheckPermissions({
+    action: [Action.CREATE],
+    subject: [PermissionEntity],
+    fields: [],
+  })
   async create(
     // @Req() req: Request,
     @Body() bodyData: CreatePermissionRequestDto,
@@ -72,6 +83,11 @@ export class PermissionController {
   // }
 
   @Get('list')
+  @CheckPermissions({
+    action: [Action.READ],
+    subject: [PermissionEntity],
+    fields: [],
+  })
   async getList(
     // @Req() req: Request,
     @Query() request: GetPermissionConditionRequestDto,

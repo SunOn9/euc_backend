@@ -10,14 +10,12 @@ import { PermissionListDataReply } from '/generated/permission/permission.reply'
 // import CustomException from 'lib/utils/custom.exception'
 import { UpdatePermissionRequestDto } from './dto/update-permission.dto'
 import { RemovePermissionRequestDto } from './dto/remove-permission.dto'
-import { CaslAbilityFactory } from './casl/casl-ability.factory'
 
 @Injectable()
 export class PermissionService {
   constructor(
     private readonly repo: PermissionRepository,
     private readonly repoIMDB: PermissionInMemoryRepository,
-    private readonly casl: CaslAbilityFactory,
   ) {}
 
   // async onModuleInit() {
