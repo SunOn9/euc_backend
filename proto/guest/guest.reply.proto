@@ -1,0 +1,26 @@
+syntax = "proto3";
+package euc_backend;
+
+
+import "guest/guest.proto";
+
+message GuestReply {
+  int32 status_code = 1;
+  string message = 2;
+  optional string error_code = 3;
+  optional Guest payload = 4;
+}
+
+message GuestListDataReply {
+  repeated Guest guest_list = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message GuestListReply {
+  int32 status_code = 1;
+  string message = 2;
+  optional string error_code = 3;
+  GuestListDataReply payload = 4;
+}

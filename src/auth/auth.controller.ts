@@ -17,6 +17,7 @@ import { SessionService } from '/session/session.service'
 import { SimpleReply } from '/generated/common'
 import { UserReply } from '/generated/user/user.reply'
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const AllowUnauthorizedRequest = () =>
   SetMetadata('allowUnauthorizedRequest', true)
 

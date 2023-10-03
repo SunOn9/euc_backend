@@ -1,0 +1,43 @@
+syntax = "proto3";
+package euc_backend;
+
+import "google/protobuf/timestamp.proto";
+import "enumps.proto";
+
+message GetPaymentConditionRequest {
+  optional int32 id = 1;
+  optional string title = 2;
+  optional string description = 3;
+  optional int32 amount = 4;
+  optional EnumProto.MoneyMethod method = 5;
+  // optional google.protobuf.Timestamp created_at = 7;
+  // optional google.protobuf.Timestamp updated_at = 8;
+  // optional google.protobuf.Timestamp deleted_at = 9;
+  optional int32 page =10;
+  optional int32 limit =11;
+  optional bool is_deleted =13;
+  optional bool is_extra_payment_session =15;
+}
+
+message CreatePaymentRequest {
+  string title = 2;
+  optional string description = 3;
+  int32 amount = 4;
+  EnumProto.MoneyMethod method = 5;
+}
+
+message UpdatePaymentDataRequest {
+  optional string title = 2;
+  optional string description = 3;
+  optional int32 amount = 4;
+  optional EnumProto.MoneyMethod method = 5;
+}
+
+message UpdatePaymentRequest {
+  GetPaymentConditionRequest conditions =1;
+  UpdatePaymentDataRequest data =2;
+}
+
+message RemovePaymentRequest {
+  int32 id = 1;
+}

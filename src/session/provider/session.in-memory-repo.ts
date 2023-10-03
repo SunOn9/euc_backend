@@ -9,7 +9,7 @@ import { UserEntity } from '/user/entities/user.entity'
 import { Session } from '/generated/session/session'
 import { User } from '/generated/user/user'
 
-interface SessionInMemory extends Session {}
+type SessionInMemory = Session
 
 @Injectable()
 export class SessionInMemoryRepository extends InMemoryDBService<SessionInMemory> {

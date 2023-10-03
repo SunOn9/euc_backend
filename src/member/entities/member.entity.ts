@@ -9,45 +9,42 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { EventEntity } from 'src/event/entities/event.entity';
-import { AreaEntity } from '/area/entities/area.entity';
-import { MemberInClubEntity } from '/member-in-club/entities/member-in-club.entity';
-import {
-  EnumProto_MemberStatus,
-  EnumProto_MemberType,
-} from '/generated/enumps';
+} from 'typeorm'
+import { EventEntity } from 'src/event/entities/event.entity'
+import { AreaEntity } from '/area/entities/area.entity'
+import { MemberInClubEntity } from '/member-in-club/entities/member-in-club.entity'
+import { EnumProto_MemberStatus, EnumProto_MemberType } from '/generated/enumps'
 
 @Entity({ name: 'member' })
 export class MemberEntity {
-  static tableName = 'member';
+  static tableName = 'member'
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column()
-  name: string;
+  name: string
 
   @Column()
-  nickName: string;
+  nickName: string
 
   @Column()
-  birthday: Date;
+  birthday: Date
 
   @Column()
-  status: EnumProto_MemberStatus;
+  status: EnumProto_MemberStatus
 
   @Column()
-  type: EnumProto_MemberType;
+  type: EnumProto_MemberType
 
   @Column({ nullable: true })
-  monthlyFee?: string | null;
+  monthlyFee?: string | null
 
-  @ManyToOne(() => AreaEntity, (area) => area.member)
-  hometown: AreaEntity;
+  @ManyToOne(() => AreaEntity, area => area.member)
+  hometown: AreaEntity
 
-  @OneToMany(() => MemberInClubEntity, (memberInClub) => memberInClub.member)
-  memberInClub: MemberInClubEntity[];
+  @OneToMany(() => MemberInClubEntity, memberInClub => memberInClub.member)
+  memberInClub: MemberInClubEntity[]
 
   @ManyToMany(() => EventEntity)
   @JoinTable({
@@ -55,18 +52,18 @@ export class MemberEntity {
     joinColumn: { name: 'member_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'event_id', referencedColumnName: 'id' },
   })
-  event: EventEntity[];
+  event: EventEntity[]
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date;
+  deletedAt?: Date
 
   constructor(partial: Partial<MemberEntity>) {
-    Object.assign(this, partial);
+    Object.assign(this, partial)
   }
 }

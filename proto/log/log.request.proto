@@ -1,0 +1,26 @@
+syntax = "proto3";
+package euc_backend;
+
+import "google/protobuf/timestamp.proto";
+import "enumps.proto";
+
+message GetdLogConditionRequest {
+  optional int32 id = 1;
+  optional string target = 4;
+  optional string action = 5;
+  optional string old_data =6;
+  optional string new_data =7;
+  // google.protobuf.Timestamp created_at = 8;
+  optional int32 page =10;
+  optional int32 limit =11;
+  optional bool is_deleted =13;
+  optional bool is_extra_user =15;
+  optional bool is_extra_auth =18;
+}
+
+message CreatedLogRequest {
+  string target = 4;
+  string action = 5;
+  optional string old_data =6;
+  string new_data =7;
+}

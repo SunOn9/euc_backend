@@ -1,33 +1,46 @@
-import { BeforeApplicationShutdown, Injectable, Logger, OnModuleInit } from '@nestjs/common'
+/* eslint-disable @typescript-eslint/no-var-requires */
+import {
+  BeforeApplicationShutdown,
+  Injectable,
+  Logger,
+  OnModuleInit,
+} from '@nestjs/common'
 import { SessionInMemoryRepository } from './provider/session.in-memory-repo'
 import { Result, err, ok } from 'neverthrow'
 import { Cron, CronExpression } from '@nestjs/schedule'
 import { User } from '/generated/user/user'
 import { SessionEntity } from './entities/session.entity'
 
-
 @Injectable()
 export class SessionService implements BeforeApplicationShutdown, OnModuleInit {
-  constructor(private readonly repo: SessionInMemoryRepository) { }
+  constructor(private readonly repo: SessionInMemoryRepository) {}
   private readonly logger = new Logger(SessionService.name)
 
   beforeApplicationShutdown() {
-    const fs = require('fs');
+    const fs = require('fs')
     this.logger.debug(`Save session to JSON file`)
     const sessionsReply = this.repo.getAll()
 
     if (!sessionsReply) {
-      fs.writeFileSync('data/sessions.json', JSON.stringify('', null, 4), 'utf8')
+      fs.writeFileSync(
+        'data/sessions.json',
+        JSON.stringify('', null, 4),
+        'utf8',
+      )
     }
 
-    fs.writeFileSync('data/sessions.json', JSON.stringify(sessionsReply, null, 4), 'utf8')
+    fs.writeFileSync(
+      'data/sessions.json',
+      JSON.stringify(sessionsReply, null, 4),
+      'utf8',
+    )
   }
 
   onModuleInit() {
-    const fs = require('fs');
+    const fs = require('fs')
     this.logger.debug(`Load session from JSON file`)
 
-    const sessionReply = fs.readFileSync('data/sessions.json', 'utf8');
+    const sessionReply = fs.readFileSync('data/sessions.json', 'utf8')
 
     if (!sessionReply) {
       return

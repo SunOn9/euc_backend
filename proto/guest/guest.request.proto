@@ -1,0 +1,42 @@
+syntax = "proto3";
+package euc_backend;
+
+import "google/protobuf/timestamp.proto";
+import "enumps.proto";
+
+message GetGuestConditionRequest {
+  optional int32 id = 1;
+  optional string name = 2;
+  optional string nick_name = 3;
+  optional EnumProto.MemberType type = 4;
+  // google.protobuf.Timestamp created_at = 7;
+  // google.protobuf.Timestamp updated_at = 8;
+  // optional google.protobuf.Timestamp deleted_at = 9;
+  optional int32 page =10;
+  optional int32 limit =11;
+  // optional bool is_extra =12;
+  optional bool is_deleted =13;
+  optional bool is_extra_club =15;
+  optional bool is_extra_event =16;
+}
+
+message CreateGuestRequest {
+  string name = 2;
+  optional string nick_name = 3;
+  EnumProto.MemberType type = 4;
+}
+
+message UpdateGuestDataRequest {
+  optional string name = 2;
+  optional string nick_name = 3;
+  optional EnumProto.MemberType type = 4;
+}
+
+message UpdateGuestRequest {
+  GetGuestConditionRequest conditions =1;
+  UpdateGuestDataRequest data =2;
+}
+
+message RemoveGuestRequest {
+  int32 id = 1;
+}

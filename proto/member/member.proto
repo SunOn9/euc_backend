@@ -14,11 +14,40 @@ message Member {
   google.protobuf.Timestamp birthday = 4;
   EnumProto.MemberStatus status = 5;
   EnumProto.MemberType type = 6;
-  string monthly_fee = 7;
-  // AreaEntity hometown = 8;
-  // repeated MemberInClubEntity member_in_club = 9;
-  // repeated EventEntity event = 10;
+  optional string monthly_fee = 7;
   google.protobuf.Timestamp created_at = 11;
   google.protobuf.Timestamp updated_at = 12;
-  google.protobuf.Timestamp deleted_at = 13;
+  optional google.protobuf.Timestamp deleted_at = 13;
+  Area hometown =14;
+  repeated Club club =15;
+  repeated Event event =16;
+
+  message Area {
+    int32 id = 1;
+    string name = 2;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    google.protobuf.Timestamp deleted_at = 7;
+  }
+
+  message Club {
+    int32 id = 1;
+    string name = 2;
+    // int32 fund =3;
+    int32 total_member = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    optional google.protobuf.Timestamp deleted_at = 7;
+  }
+
+  message Event {
+    int32 id = 1;
+    string name = 2;
+    google.protobuf.Timestamp start_event_date = 8;
+    google.protobuf.Timestamp end_event_date = 9;
+    EnumProto.EventType type =10;
+    google.protobuf.Timestamp created_at = 11;
+    google.protobuf.Timestamp updated_at = 12;
+    optional google.protobuf.Timestamp deleted_at = 13;
+  }
 }

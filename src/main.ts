@@ -38,12 +38,14 @@ async function bootstrap() {
     new ValidationPipe({ whitelist: true, transform: true }),
   )
   httpApp.useGlobalFilters(new HttpExceptionFilter())
+
   const config = new DocumentBuilder()
     .setTitle('EUC')
     .setDescription('EUC')
     .setVersion('1.0')
     .addTag('euc')
     .build()
+
   const document = SwaggerModule.createDocument(httpApp, config)
   SwaggerModule.setup('api', httpApp, document)
 

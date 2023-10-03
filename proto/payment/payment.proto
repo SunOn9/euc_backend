@@ -9,11 +9,21 @@ import "google/protobuf/timestamp.proto";
 message Payment {
   int32 id = 1;
   string title = 2;
-  string description = 3;
-  double amount = 4;
+  optional string description = 3;
+  int32 amount = 4;
   EnumProto.MoneyMethod method = 5;
-  // PaymentSessionEntity payment_session = 6;
+  PaymentSession payment_session = 6;
   google.protobuf.Timestamp created_at = 7;
   google.protobuf.Timestamp updated_at = 8;
-  google.protobuf.Timestamp deleted_at = 9;
+  optional google.protobuf.Timestamp deleted_at = 9;
+
+  message PaymentSession {
+    int32 id = 1;
+    EnumProto.SessionStatus status = 4;
+    optional google.protobuf.Timestamp date_confirm = 5;
+    optional google.protobuf.Timestamp date_done = 7;
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp updated_at = 10;
+    optional google.protobuf.Timestamp deleted_at = 11;
+  }
 }

@@ -1,0 +1,26 @@
+syntax = "proto3";
+package euc_backend;
+
+
+import "event/event.proto";
+
+message EventReply {
+  int32 status_code = 1;
+  string message = 2;
+  optional string error_code = 3;
+  optional Event payload = 4;
+}
+
+message EventListDataReply {
+  repeated Event event_list = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message EventListReply {
+  int32 status_code = 1;
+  string message = 2;
+  optional string error_code = 3;
+  EventListDataReply payload = 4;
+}

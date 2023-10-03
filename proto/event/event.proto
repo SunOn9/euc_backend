@@ -9,15 +9,25 @@ import "google/protobuf/timestamp.proto";
 message Event {
   int32 id = 1;
   string name = 2;
-  // repeated int32 member_ids = 3;
-  // repeated int32 guest_ids = 4;
-  int32 place_id = 5;
-  // repeated int32 payment_session_ids = 6;
-  // repeated int32 receipt_session_ids = 7;
   google.protobuf.Timestamp start_event_date = 8;
   google.protobuf.Timestamp end_event_date = 9;
   EnumProto.EventType type =10;
   google.protobuf.Timestamp created_at = 11;
   google.protobuf.Timestamp updated_at = 12;
-  google.protobuf.Timestamp deleted_at = 13;
+  optional google.protobuf.Timestamp deleted_at = 13;
+  repeated Member member = 14;
+  repeated Guest guest = 15;
+  repeated PaymentSession payment_session =16;
+  repeated ReiceiptSession reiceipt_session =17;
+  optional Place place = 18;
+
+  message Member {}
+  
+  message Guest {}
+
+  message PaymentSession {}
+
+  message ReiceiptSession {}
+
+  message Place {}
 }

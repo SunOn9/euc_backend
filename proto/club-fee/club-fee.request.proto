@@ -1,0 +1,41 @@
+syntax = "proto3";
+package euc_backend;
+
+import "google/protobuf/timestamp.proto";
+import "enumps.proto";
+
+message GetUserConditionRequest {
+  optional int32 id = 1;
+  optional int32 student_fee = 3;
+  optional int32 worker_fee = 4;
+  optional int32 monthly_fee = 5;
+  // google.protobuf.Timestamp created_at = 6;
+  // optional google.protobuf.Timestamp deleted_at = 7;
+  optional int32 page =10;
+  optional int32 limit =11;
+  // optional bool is_extra =12;
+  optional bool is_deleted =13;
+  optional bool is_extra_club =15;
+
+}
+
+message CreateUserRequest {
+  int32 student_fee = 3;
+  int32 worker_fee = 4;
+  int32 monthly_fee = 5;
+}
+
+message UpdateUserDataRequest {
+  optional int32 student_fee = 3;
+  optional int32 worker_fee = 4;
+  optional int32 monthly_fee = 5;
+}
+
+message UpdateUserRequest {
+  GetUserConditionRequest conditions =1;
+  UpdateUserDataRequest data =2;
+}
+
+message RemoveUserRequest {
+  int32 id = 1;
+}

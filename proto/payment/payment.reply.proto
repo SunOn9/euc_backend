@@ -1,0 +1,26 @@
+syntax = "proto3";
+package euc_backend;
+
+
+import "payment/payment.proto";
+
+message PaymentReply {
+  int32 status_code = 1;
+  string message = 2;
+  optional string error_code = 3;
+  optional Payment payload = 4;
+}
+
+message PaymentListDataReply {
+  repeated Payment payment_list = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message PaymentListReply {
+  int32 status_code = 1;
+  string message = 2;
+  optional string error_code = 3;
+  PaymentListDataReply payload = 4;
+}

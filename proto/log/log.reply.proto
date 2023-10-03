@@ -1,0 +1,26 @@
+syntax = "proto3";
+package euc_backend;
+
+
+import "log/log.proto";
+
+message LogReply {
+  int32 status_code = 1;
+  string message = 2;
+  optional string error_code = 3;
+  optional Log payload = 4;
+}
+
+message LogListDataReply {
+  repeated Log log_list = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message LogListReply {
+  int32 status_code = 1;
+  string message = 2;
+  optional string error_code = 3;
+  LogListDataReply payload = 4;
+}

@@ -22,7 +22,6 @@ message User {
 
   message Auth {
     int32 id = 1;
-    // int32 user_id = 2;
     optional string ip_address = 3;
     optional string auth_token = 4;
     optional string user_agent = 5;

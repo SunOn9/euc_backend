@@ -11,9 +11,30 @@ message Guest {
   string name = 2;
   string nick_name = 3;
   EnumProto.MemberType type = 4;
-  // ClubEntity club = 5;
-  // repeated EventEntity event = 6;
   google.protobuf.Timestamp created_at = 7;
   google.protobuf.Timestamp updated_at = 8;
-  google.protobuf.Timestamp deleted_at = 9;
+  optional google.protobuf.Timestamp deleted_at = 9;
+  Club club = 10;
+  repeated Event event = 11;
+
+  message Club {
+    int32 id = 1;
+    string name = 2;
+    int32 fund =3;
+    int32 total_member = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    optional google.protobuf.Timestamp deleted_at = 7;
+  }
+
+  message Event {
+    int32 id = 1;
+    string name = 2;
+    google.protobuf.Timestamp start_event_date = 8;
+    google.protobuf.Timestamp end_event_date = 9;
+    EnumProto.EventType type =10;
+    google.protobuf.Timestamp created_at = 11;
+    google.protobuf.Timestamp updated_at = 12;
+    optional google.protobuf.Timestamp deleted_at = 13;
+  }
 }
