@@ -45,6 +45,7 @@ export class AuthService {
   ): Promise<Partial<User> | null> {
     const user = await this.userService.getDetail({
       username: username,
+      isExtraClub: true,
       isExtraPermission: true,
     })
 

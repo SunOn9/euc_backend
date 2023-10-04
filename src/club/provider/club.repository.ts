@@ -4,40 +4,44 @@ import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { Result, err, ok } from 'neverthrow'
 import CustomException from 'lib/utils/custom.exception'
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
-import { AreaReflect } from './area.proto'
-import { AreaEntity } from '../entities/area.entity'
-import { Area } from '/generated/area/area'
-import { AreaListDataReply } from '/generated/area/area.reply'
-import { CreateAreaRequestDto } from '../dto/create-area.dto'
-import { GetAreaConditionRequestDto } from '../dto/get-area-condition-request.dto'
-import { RemoveAreaRequestDto } from '../dto/remove-area.dto'
-import { UpdateAreaRequestDto } from '../dto/update-area.dto'
+import { ClubEntity } from '../entities/club.entity'
+import { ClubReflect } from './club.proto'
+import { CreateClubRequestDto } from '../dto/create-club.dto'
+import { Club } from '/generated/club/club'
+import { GetClubConditionRequestDto } from '../dto/get-club-condition-request.dto'
+import { UpdateClubRequestDto } from '../dto/update-club.dto'
+import { ClubListDataReply } from '/generated/club/club.reply'
+import { RemoveClubRequestDto } from '../dto/remove-club.dto'
+import { AreaEntity } from '/area/entities/area.entity'
 
 @Injectable()
-export class AreaRepository extends Repository<AreaEntity> {
+export class ClubRepository extends Repository<ClubEntity> {
   constructor(
     // @Inject(CACHE_MANAGER)
     // private cache: Cache,
     private dataSource: DataSource,
-    private proto: AreaReflect,
+    private proto: ClubReflect,
     private utilService: UtilsService,
   ) {
-    super(AreaEntity, dataSource.createEntityManager())
+    super(ClubEntity, dataSource.createEntityManager())
   }
 
-  async createArea(
-    createData: CreateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
+  async createClub(
+    createData: CreateClubRequestDto,
+  ): Promise<Result<Club, Error>> {
     try {
-      const saveData = {
-        ...createData,
-        slug: this.utilService.convertToSlug(createData.name),
-      } as AreaEntity
+      const { areaId, ...other } = createData
+
+      const saveData: Partial<ClubEntity> = {
+        ...other,
+        totalMember: 0,
+        area: { id: areaId } as AreaEntity,
+      }
 
       const dataReply = await this.save(saveData)
 
       if (this.utilService.isObjectEmpty(dataReply)) {
-        return err(new Error(`Cannot create area in database`))
+        return err(new Error(`Cannot create club in database`))
       }
 
       return ok(this.proto.reflect(dataReply))
@@ -46,9 +50,9 @@ export class AreaRepository extends Repository<AreaEntity> {
     }
   }
 
-  async updateArea(
-    updateData: UpdateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
+  async updateClub(
+    updateData: UpdateClubRequestDto,
+  ): Promise<Result<Club, Error>> {
     try {
       if (this.utilService.isObjectEmpty(updateData.conditions)) {
         return err(new Error(`Empty conditions`))
@@ -63,8 +67,8 @@ export class AreaRepository extends Repository<AreaEntity> {
   }
 
   async getDetail(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<Area, Error>> {
+    conditions: GetClubConditionRequestDto,
+  ): Promise<Result<Club, Error>> {
     try {
       if (this.utilService.isObjectEmpty(conditions)) {
         return err(new Error(`Empty conditions`))
@@ -76,7 +80,7 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get area with conditions: [${conditions}]`),
+          new Error(`Cannot get club with conditions: [${conditions}]`),
         )
       }
 
@@ -87,8 +91,8 @@ export class AreaRepository extends Repository<AreaEntity> {
   }
 
   async getList(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<AreaListDataReply, Error>> {
+    conditions: GetClubConditionRequestDto,
+  ): Promise<Result<ClubListDataReply, Error>> {
     try {
       // if (!conditions) {
       //   return err(new Error(`Empty conditions`));
@@ -108,11 +112,11 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get list area with conditions: [${conditions}]`),
+          new Error(`Cannot get list club with conditions: [${conditions}]`),
         )
       }
 
-      const areaList: Area[] = dataReply.map(each => {
+      const clubList: Club[] = dataReply.map(each => {
         return this.proto.reflect(each)
       })
 
@@ -120,29 +124,29 @@ export class AreaRepository extends Repository<AreaEntity> {
         total,
         page,
         limit,
-        areaList,
+        clubList,
       })
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async removeArea(
-    removeData: RemoveAreaRequestDto,
+  async removeClub(
+    removeData: RemoveClubRequestDto,
   ): Promise<Result<boolean, Error>> {
     const dataReply = await this.softDelete(removeData)
 
     if (this.utilService.isObjectEmpty(dataReply)) {
-      return err(new Error(`Error when remove area`))
+      return err(new Error(`Error when remove club`))
     }
 
     return ok(true)
   }
 
   setupQueryCondition(
-    conditions: GetAreaConditionRequestDto,
-  ): SelectQueryBuilder<AreaEntity> {
-    const queryBuilder = this.createQueryBuilder(AreaEntity.tableName)
+    conditions: GetClubConditionRequestDto,
+  ): SelectQueryBuilder<ClubEntity> {
+    const queryBuilder = this.createQueryBuilder(ClubEntity.tableName)
 
     if (conditions.id !== undefined) {
       queryBuilder.andWhere(`id = :id`, {
@@ -156,11 +160,27 @@ export class AreaRepository extends Repository<AreaEntity> {
       })
     }
 
+    if (conditions.fund !== undefined) {
+      queryBuilder.andWhere(`fund LIKE :fund`, {
+        fund: `%${conditions.fund}%`,
+      })
+    }
+
+    if (conditions.totalMember !== undefined) {
+      queryBuilder.andWhere(`total_member LIKE :totalMember`, {
+        totalMember: `%${conditions.totalMember}%`,
+      })
+    }
+
+    if (conditions.isDeleted) {
+      queryBuilder.withDeleted()
+    }
+
     queryBuilder.setFindOptions({
       relationLoadStrategy: 'query',
       relations: {
-        club: conditions.isExtraClub ?? false,
-        member: conditions.isExtraMember ?? false,
+        fee: conditions.isExtraClubFee ?? false,
+        area: conditions.isExtraArea ?? false,
       },
     })
 

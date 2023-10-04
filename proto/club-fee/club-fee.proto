@@ -16,10 +16,11 @@ message ClubFee {
   message Club {
     int32 id = 1;
     string name = 2;
-    int32 fund =3;
-    int32 total_member = 4;
-    google.protobuf.Timestamp created_at = 5;
-    google.protobuf.Timestamp updated_at = 6;
-    optional google.protobuf.Timestamp deleted_at = 7;
+    optional string abbreviation = 3;
+    int32 fund =4;
+    int32 total_member = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+    optional google.protobuf.Timestamp deleted_at = 8;
   }
 }

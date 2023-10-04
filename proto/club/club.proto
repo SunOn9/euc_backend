@@ -7,17 +7,19 @@ package euc_backend;
 message Club {
   int32 id = 1;
   string name = 2;
-  optional int32 fund =3;
-  int32 total_member = 4;
-  google.protobuf.Timestamp created_at = 5;
-  google.protobuf.Timestamp updated_at = 6;
-  optional google.protobuf.Timestamp deleted_at = 7;
-  repeated ClubFee fee =8;
-  Area area =9;
+  optional string abbreviation = 3;
+  optional int32 fund =4;
+  int32 total_member = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+  optional google.protobuf.Timestamp deleted_at = 8;
+  repeated ClubFee fee =9;
+  Area area =10;
 
   message Area {
     int32 id = 1;
     string name = 2;
+    string slug = 3;
     // repeated Club club = 3;
     // repeated Member member = 4;
     google.protobuf.Timestamp created_at = 5;

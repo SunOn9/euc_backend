@@ -1,34 +1,140 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ClubFeeService } from './club-fee.service';
-import { CreateClubFeeDto } from './dto/create-club-fee.dto';
-import { UpdateClubFeeDto } from './dto/update-club-fee.dto';
+import { Controller } from '@nestjs/common/decorators/core/controller.decorator'
+import { ClubFeeService } from './club-fee.service'
+import { HttpCode } from '@nestjs/common/decorators/http/http-code.decorator'
+import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
+import {
+  Get,
+  Post,
+} from '@nestjs/common/decorators/http/request-mapping.decorator'
+import {
+  Body,
+  Param,
+  Query,
+  Req,
+} from '@nestjs/common/decorators/http/route-params.decorator'
+import {
+  ClubFeeListReply,
+  ClubFeeReply,
+} from '/generated/club-fee/club-fee.reply'
+import CustomException from 'lib/utils/custom.exception'
+import { CreateClubFeeRequestDto } from './dto/create-club-fee.dto'
+import * as CONST from '../prelude/constant'
+import { GetClubFeeConditionRequestDto } from './dto/get-club-fee-condition-request.dto'
+import { SimpleReply } from '/generated/common'
+import { RemoveClubFeeRequestDto } from './dto/remove-club-fee.dto'
+import { UseGuards } from '@nestjs/common'
+import { PermissionsGuard } from '/permission/guard/permission.guard'
+import { CheckPermissions } from '/permission/guard/permission.decorator'
+import { Action } from '../permission/casl/casl.type'
+import { ClubFeeEntity } from './entities/club-fee.entity'
 
-@Controller('club-fee')
+@UseGuards(PermissionsGuard)
+@Controller('clubFee')
 export class ClubFeeController {
-  constructor(private readonly clubFeeService: ClubFeeService) {}
+  constructor(private readonly service: ClubFeeService) {}
 
-  @Post()
-  create(@Body() createClubFeeDto: CreateClubFeeDto) {
-    return this.clubFeeService.create(createClubFeeDto);
+  @HttpCode(HttpStatus.CREATED)
+  @Post('create')
+  @CheckPermissions({
+    action: [Action.CREATE],
+    subject: [ClubFeeEntity],
+    fields: [],
+  })
+  async createClubFee(
+    @Req() req: Request,
+    @Body() bodyData: CreateClubFeeRequestDto,
+  ): Promise<ClubFeeReply> {
+    const data = await this.service.create(req['userInfo'].id, bodyData)
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+    const response = {} as ClubFeeReply
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = data.value
+    return response
   }
 
-  @Get()
-  findAll() {
-    return this.clubFeeService.findAll();
+  @Get('detail')
+  @CheckPermissions({
+    action: [Action.READ],
+    subject: [ClubFeeEntity],
+    fields: [],
+  })
+  async getDetail(
+    // @Req() req: Request,
+    @Query() request: GetClubFeeConditionRequestDto,
+  ): Promise<ClubFeeReply> {
+    const response = {} as ClubFeeReply
+    const data = await this.service.getDetail(request)
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = data.value
+
+    return response
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.clubFeeService.findOne(+id);
+  @Get('list')
+  @CheckPermissions({
+    action: [Action.READ],
+    subject: [ClubFeeEntity],
+    fields: [],
+  })
+  async getList(
+    // @Req() req: Request,
+    @Query() request: GetClubFeeConditionRequestDto,
+  ): Promise<ClubFeeListReply> {
+    const response = {} as ClubFeeListReply
+    const listData = await this.service.getList(request)
+
+    if (listData.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        listData.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = listData.value
+    return response
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateClubFeeDto: UpdateClubFeeDto) {
-    return this.clubFeeService.update(+id, updateClubFeeDto);
-  }
+  @Get('remove/:id')
+  async removeClubFee(
+    // @Req() req: Request,
+    @Param() request: RemoveClubFeeRequestDto,
+  ): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    const data = await this.service.remove(request)
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.clubFeeService.remove(+id);
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = CONST.DEFAULT_REMOVE_SUCCESS_MESSAGE
+    return response
   }
 }

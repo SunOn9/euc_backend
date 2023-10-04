@@ -25,6 +25,9 @@ export class ClubEntity {
   @Column()
   name: string
 
+  @Column({ nullable: true })
+  abbreviation?: string
+
   @Column()
   fund: number
 
@@ -43,7 +46,7 @@ export class ClubEntity {
   @OneToMany(() => GuestEntity, guest => guest.club)
   guest: GuestEntity[]
 
-  @ManyToOne(() => AreaEntity, area => area.club)
+  @ManyToOne(() => AreaEntity, area => area.club, { cascade: true })
   area: AreaEntity
 
   @OneToMany(() => UserEntity, user => user.club)

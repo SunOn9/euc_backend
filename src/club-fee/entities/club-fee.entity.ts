@@ -5,37 +5,35 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { ClubEntity } from '/club/entities/club.entity';
+} from 'typeorm'
+import { ClubEntity } from '/club/entities/club.entity'
 
 @Entity({ name: 'club_fee' })
 export class ClubFeeEntity {
-  static tableName = 'club_fee';
+  static tableName = 'club_fee'
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
-  @ManyToOne(() => ClubEntity, (club) => club.fee)
-  club: ClubEntity;
-
-  @Column()
-  studentFee: number;
+  @ManyToOne(() => ClubEntity, club => club.fee)
+  club: ClubEntity
 
   @Column()
-  workerFee: number;
+  studentFee: number
 
   @Column()
-  monthlyFee: number;
+  workerFee: number
 
-  // @Column()
+  @Column()
+  monthlyFee: number
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @DeleteDateColumn()
-  deletedAt: Date;
+  deletedAt: Date
 
   constructor(partial: Partial<ClubFeeEntity>) {
-    Object.assign(this, partial);
+    Object.assign(this, partial)
   }
 }

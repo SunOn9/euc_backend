@@ -29,7 +29,11 @@ export class UserRepository extends Repository<UserEntity> {
     createData: CreateUserRequestDto,
   ): Promise<Result<User, Error>> {
     try {
-      const dataReply = await this.save(createData)
+      const saveData = {
+        ...createData,
+      } as UserEntity
+
+      const dataReply = await this.save(saveData)
 
       if (this.utilService.isObjectEmpty(dataReply)) {
         return err(new Error(`Cannot create user in database`))

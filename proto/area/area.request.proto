@@ -7,11 +7,6 @@ import "enumps.proto";
 message GetAreaConditionRequest {
   optional int32 id = 1;
   optional string name = 2;
-  // repeated Club club = 3;
-  // repeated Member member = 4;
-  // google.protobuf.Timestamp created_at = 5;
-  // google.protobuf.Timestamp updated_at = 6;
-  // google.protobuf.Timestamp deleted_at = 7;
   optional int32 page =10;
   optional int32 limit =11;
   optional bool is_extra_club =12;

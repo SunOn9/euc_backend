@@ -11,5 +11,6 @@ import { PermissionModule } from '/permission/permission.module'
   imports: [TypeOrmModule.forFeature([AreaEntity]), PermissionModule],
   controllers: [AreaController],
   providers: [AreaService, AreaRepository, AreaReflect],
+  exports: [AreaService, AreaRepository, AreaReflect],
 })
 export class AreaModule {}

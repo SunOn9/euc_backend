@@ -4,40 +4,38 @@ import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { Result, err, ok } from 'neverthrow'
 import CustomException from 'lib/utils/custom.exception'
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
-import { AreaReflect } from './area.proto'
-import { AreaEntity } from '../entities/area.entity'
-import { Area } from '/generated/area/area'
-import { AreaListDataReply } from '/generated/area/area.reply'
-import { CreateAreaRequestDto } from '../dto/create-area.dto'
-import { GetAreaConditionRequestDto } from '../dto/get-area-condition-request.dto'
-import { RemoveAreaRequestDto } from '../dto/remove-area.dto'
-import { UpdateAreaRequestDto } from '../dto/update-area.dto'
+import { ClubFeeEntity } from '../entities/club-fee.entity'
+import { ClubFee } from '/generated/club-fee/club-fee'
+import { ClubFeeListDataReply } from '/generated/club-fee/club-fee.reply'
+import { ClubFeeReflect } from './club-fee.proto'
+import { CreateClubFeeRequestDto } from '../dto/create-club-fee.dto'
+import { GetClubFeeConditionRequestDto } from '../dto/get-club-fee-condition-request.dto'
+import { RemoveClubFeeRequestDto } from '../dto/remove-club-fee.dto'
 
 @Injectable()
-export class AreaRepository extends Repository<AreaEntity> {
+export class ClubFeeRepository extends Repository<ClubFeeEntity> {
   constructor(
     // @Inject(CACHE_MANAGER)
     // private cache: Cache,
     private dataSource: DataSource,
-    private proto: AreaReflect,
+    private proto: ClubFeeReflect,
     private utilService: UtilsService,
   ) {
-    super(AreaEntity, dataSource.createEntityManager())
+    super(ClubFeeEntity, dataSource.createEntityManager())
   }
 
-  async createArea(
-    createData: CreateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
+  async createClubFee(
+    createData: CreateClubFeeRequestDto,
+  ): Promise<Result<ClubFee, Error>> {
     try {
-      const saveData = {
+      const saveData: Partial<ClubFeeEntity> = {
         ...createData,
-        slug: this.utilService.convertToSlug(createData.name),
-      } as AreaEntity
+      }
 
       const dataReply = await this.save(saveData)
 
       if (this.utilService.isObjectEmpty(dataReply)) {
-        return err(new Error(`Cannot create area in database`))
+        return err(new Error(`Cannot create club-fee in database`))
       }
 
       return ok(this.proto.reflect(dataReply))
@@ -46,25 +44,9 @@ export class AreaRepository extends Repository<AreaEntity> {
     }
   }
 
-  async updateArea(
-    updateData: UpdateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
-    try {
-      if (this.utilService.isObjectEmpty(updateData.conditions)) {
-        return err(new Error(`Empty conditions`))
-      }
-
-      await this.update(updateData.conditions, updateData.data)
-
-      return await this.getDetail(updateData.conditions)
-    } catch (e) {
-      throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
-    }
-  }
-
   async getDetail(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<Area, Error>> {
+    conditions: GetClubFeeConditionRequestDto,
+  ): Promise<Result<ClubFee, Error>> {
     try {
       if (this.utilService.isObjectEmpty(conditions)) {
         return err(new Error(`Empty conditions`))
@@ -76,7 +58,7 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get area with conditions: [${conditions}]`),
+          new Error(`Cannot get club-fee with conditions: [${conditions}]`),
         )
       }
 
@@ -87,8 +69,8 @@ export class AreaRepository extends Repository<AreaEntity> {
   }
 
   async getList(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<AreaListDataReply, Error>> {
+    conditions: GetClubFeeConditionRequestDto,
+  ): Promise<Result<ClubFeeListDataReply, Error>> {
     try {
       // if (!conditions) {
       //   return err(new Error(`Empty conditions`));
@@ -108,11 +90,13 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get list area with conditions: [${conditions}]`),
+          new Error(
+            `Cannot get list club-fee with conditions: [${conditions}]`,
+          ),
         )
       }
 
-      const areaList: Area[] = dataReply.map(each => {
+      const clubFeeList: ClubFee[] = dataReply.map(each => {
         return this.proto.reflect(each)
       })
 
@@ -120,29 +104,29 @@ export class AreaRepository extends Repository<AreaEntity> {
         total,
         page,
         limit,
-        areaList,
+        clubFeeList,
       })
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async removeArea(
-    removeData: RemoveAreaRequestDto,
+  async removeClubFee(
+    removeData: RemoveClubFeeRequestDto,
   ): Promise<Result<boolean, Error>> {
     const dataReply = await this.softDelete(removeData)
 
     if (this.utilService.isObjectEmpty(dataReply)) {
-      return err(new Error(`Error when remove area`))
+      return err(new Error(`Error when remove club-fee`))
     }
 
     return ok(true)
   }
 
   setupQueryCondition(
-    conditions: GetAreaConditionRequestDto,
-  ): SelectQueryBuilder<AreaEntity> {
-    const queryBuilder = this.createQueryBuilder(AreaEntity.tableName)
+    conditions: GetClubFeeConditionRequestDto,
+  ): SelectQueryBuilder<ClubFeeEntity> {
+    const queryBuilder = this.createQueryBuilder(ClubFeeEntity.tableName)
 
     if (conditions.id !== undefined) {
       queryBuilder.andWhere(`id = :id`, {
@@ -150,17 +134,32 @@ export class AreaRepository extends Repository<AreaEntity> {
       })
     }
 
-    if (conditions.name !== undefined) {
-      queryBuilder.andWhere(`name LIKE :name`, {
-        name: `%${conditions.name}%`,
+    if (conditions.studentFee !== undefined) {
+      queryBuilder.andWhere(`student_fee = :studentFee`, {
+        studentFee: `${conditions.studentFee}`,
       })
+    }
+
+    if (conditions.workerFee !== undefined) {
+      queryBuilder.andWhere(`worker_fee = :workerFee`, {
+        workerFee: `${conditions.workerFee}`,
+      })
+    }
+
+    if (conditions.monthlyFee !== undefined) {
+      queryBuilder.andWhere(`monthly_fee = :monthlyFee`, {
+        monthlyFee: `${conditions.monthlyFee}`,
+      })
+    }
+
+    if (conditions.isDeleted) {
+      queryBuilder.withDeleted()
     }
 
     queryBuilder.setFindOptions({
       relationLoadStrategy: 'query',
       relations: {
         club: conditions.isExtraClub ?? false,
-        member: conditions.isExtraMember ?? false,
       },
     })
 

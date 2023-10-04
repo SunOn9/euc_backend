@@ -1,26 +1,46 @@
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
-import { CreateClubFeeDto } from './dto/create-club-fee.dto'
-import { UpdateClubFeeDto } from './dto/update-club-fee.dto'
+import { err } from 'neverthrow'
+import { CreateClubFeeRequestDto } from './dto/create-club-fee.dto'
+import { GetClubFeeConditionRequestDto } from './dto/get-club-fee-condition-request.dto'
+import { RemoveClubFeeRequestDto } from './dto/remove-club-fee.dto'
+import { ClubFeeRepository } from './provider/club-fee.repository'
 
 @Injectable()
 export class ClubFeeService {
-  create(createClubFeeDto: CreateClubFeeDto) {
-    return 'This action adds a new clubFee'
+  constructor(private readonly repo: ClubFeeRepository) {}
+
+  async create(clubId: number, requestData: CreateClubFeeRequestDto) {
+    //Check clubFee exits
+
+    // if (clubFeeReply.isOk()) {
+    //   return err(new Error(`ClubFee already exits in: [${``}]`))
+    // }
+
+    return await this.repo.createClubFee(requestData)
   }
 
-  findAll() {
-    return `This action returns all clubFee`
+  async getDetail(requestData: GetClubFeeConditionRequestDto) {
+    return await this.repo.getDetail(requestData)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} clubFee`
+  async getList(requestData: GetClubFeeConditionRequestDto) {
+    return await this.repo.getList(requestData)
   }
 
-  update(id: number, updateClubFeeDto: UpdateClubFeeDto) {
-    return `This action updates a #${id} clubFee`
-  }
+  async remove(requestData: RemoveClubFeeRequestDto) {
+    //Check clubFee
+    const clubFeeReply = await this.getDetail({
+      id: requestData.id,
+    })
 
-  remove(id: number) {
-    return `This action removes a #${id} clubFee`
+    if (clubFeeReply.isErr()) {
+      return err(clubFeeReply.error)
+    }
+
+    if (clubFeeReply.value.deletedAt) {
+      return err(new Error(`ClubFee with id [${requestData.id}] is deleted`))
+    }
+
+    return await this.repo.removeClubFee(requestData)
   }
 }

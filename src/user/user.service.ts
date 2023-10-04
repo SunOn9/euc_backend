@@ -15,7 +15,6 @@ export class UserService {
     //Check user exits
     const userReply = await this.getDetail({
       email: requestData.email,
-      isDeleted: false,
     })
 
     if (userReply.isOk()) {

@@ -8,6 +8,7 @@ export class AreaReflect {
     const reflect = Area.create()
     reflect.id = entity.id ?? 0
     reflect.name = entity.name ?? ''
+    reflect.slug = entity.slug ?? ''
     reflect.createdAt = entity.createdAt ?? null
     reflect.updatedAt = entity.updatedAt ?? null
     reflect.deletedAt = entity.deletedAt ?? null
