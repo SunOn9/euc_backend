@@ -1,4 +1,18 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateAreaDto } from './create-area.dto';
+import { IsNotEmpty } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger/dist/decorators/api-property.decorator'
 
-export class UpdateAreaDto extends PartialType(CreateAreaDto) {}
+import { GetAreaConditionRequestDto } from './get-area-condition-request.dto'
+import {
+  UpdateAreaDataRequest,
+  UpdateAreaRequest,
+} from '/generated/area/area.request'
+
+export class UpdateAreaRequestDto implements UpdateAreaRequest {
+  @ApiProperty()
+  @IsNotEmpty()
+  conditions!: GetAreaConditionRequestDto
+
+  @ApiProperty()
+  @IsNotEmpty()
+  data!: UpdateAreaDataRequest
+}

@@ -1,16 +1,14 @@
 syntax = "proto3";
-
 package euc_backend;
 
 import "enumps.proto";
-
 import "google/protobuf/timestamp.proto";
 
 
 message Member {
   int32 id = 1;
   string name = 2;
-  string nick_name = 3;
+  optional string nick_name = 3;
   google.protobuf.Timestamp birthday = 4;
   EnumProto.MemberStatus status = 5;
   EnumProto.MemberType type = 6;

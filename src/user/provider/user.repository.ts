@@ -1,13 +1,6 @@
 import { UtilsService } from 'lib/utils'
 import { UserEntity } from '../entities/user.entity'
-import {
-  DataSource,
-  FindManyOptions,
-  FindOneOptions,
-  ILike,
-  Repository,
-  SelectQueryBuilder,
-} from 'typeorm'
+import { DataSource, Repository, SelectQueryBuilder } from 'typeorm'
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { User } from '/generated/user/user'
 import { Result, err, ok } from 'neverthrow'

@@ -1,6 +1,6 @@
-import { Injectable, NotAcceptableException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { CreateAuthRequestDto } from './dto/create-auth.dto'
-import { Result, err, ok } from 'neverthrow'
+import { Result } from 'neverthrow'
 import { Auth } from 'src/generated/auth/auth'
 import { AuthEntity } from './entities/auth.entity'
 import { AuthRepository } from './provider/auth.repository'
@@ -9,6 +9,7 @@ import { UserEntity } from 'src/user/entities/user.entity'
 import { UserService } from '/user/user.service'
 import * as bcrypt from 'bcrypt'
 import { User } from '/generated/user/user'
+import { NotAcceptableException } from '@nestjs/common/exceptions/not-acceptable.exception'
 
 @Injectable()
 export class AuthService {

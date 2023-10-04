@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common';
-import { GuestService } from './guest.service';
-import { GuestController } from './guest.controller';
+import { GuestService } from './guest.service'
+import { GuestController } from './guest.controller'
+import { Module } from '@nestjs/common/decorators/modules/module.decorator'
 
 @Module({
   controllers: [GuestController],

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { CreateUserRequestDto } from './dto/create-user.dto'
 import { UserRepository } from './provider/user.repository'
 import * as bcrypt from 'bcrypt'

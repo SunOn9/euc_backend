@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import {
-  BeforeApplicationShutdown,
-  Injectable,
-  Logger,
-  OnModuleInit,
-} from '@nestjs/common'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
+
 import { SessionInMemoryRepository } from './provider/session.in-memory-repo'
 import { Result, err, ok } from 'neverthrow'
 import { Cron, CronExpression } from '@nestjs/schedule'
 import { User } from '/generated/user/user'
 import { SessionEntity } from './entities/session.entity'
+import { Logger } from '@nestjs/common/services/logger.service'
+import { BeforeApplicationShutdown } from '@nestjs/common/interfaces/hooks/before-application-shutdown.interface'
+import { OnModuleInit } from '@nestjs/common/interfaces/hooks/on-init.interface'
 
 @Injectable()
 export class SessionService implements BeforeApplicationShutdown, OnModuleInit {

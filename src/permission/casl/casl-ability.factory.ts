@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import {
   AbilityBuilder,
   AbilityTuple,
@@ -12,6 +12,7 @@ import { SessionService } from '/session/session.service'
 import CustomException from 'lib/utils/custom.exception'
 import { EnumProto_UserRole } from '/generated/enumps'
 import { Action, Subject } from './casl.type'
+import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
 
 type AppAbility = MongoAbility<[Action, Subject]>
 

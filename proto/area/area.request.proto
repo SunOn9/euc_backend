@@ -14,7 +14,8 @@ message GetAreaConditionRequest {
   // google.protobuf.Timestamp deleted_at = 7;
   optional int32 page =10;
   optional int32 limit =11;
-  // optional bool is_extra =12;
+  optional bool is_extra_club =12;
+  optional bool is_extra_member =13;
 }
 
 message CreateAreaRequest {

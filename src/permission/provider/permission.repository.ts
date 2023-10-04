@@ -10,7 +10,6 @@ import { CreatePermissionRequestDto } from '../dto/create-permission.dto'
 import { Permission } from '/generated/permission/permission'
 import { GetPermissionConditionRequestDto } from '../dto/get-permission-condition-request.dto'
 import { PermissionListDataReply } from '/generated/permission/permission.reply'
-import { UpdatePermissionDataRequest } from '/generated/permission/permission.request'
 import { UpdatePermissionRequestDto } from '../dto/update-permission.dto'
 import { RemovePermissionRequestDto } from '../dto/remove-permission.dto'
 

@@ -8,11 +8,23 @@ import "google/protobuf/timestamp.proto";
 message Receipt {
   int32 id = 1;
   string title = 2;
-  string description = 3;
-  double amount = 4;
+  optional string description = 3;
+  int32 amount = 4;
   EnumProto.MoneyMethod method = 5;
-  // ReceiptSessionEntity receipt_session = 6;
+  ReceiptSession receipt_session = 6;
   google.protobuf.Timestamp created_at = 7;
   google.protobuf.Timestamp updated_at = 8;
-  google.protobuf.Timestamp deleted_at = 9;
+  optional google.protobuf.Timestamp deleted_at = 9;
+
+  message ReceiptSession {
+    int32 id = 1;
+    string title = 2;
+    optional string description = 3;
+    EnumProto.SessionStatus status = 6;
+    google.protobuf.Timestamp date_confirm = 7;
+    google.protobuf.Timestamp date_done = 9;
+    google.protobuf.Timestamp created_at = 11;
+    google.protobuf.Timestamp updated_at = 12;
+    optional google.protobuf.Timestamp deleted_at = 13;
+  }
 }

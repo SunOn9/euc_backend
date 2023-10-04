@@ -4,7 +4,7 @@ package euc_backend;
 import "google/protobuf/timestamp.proto";
 import "enumps.proto";
 
-message GetUserConditionRequest {
+message GetClubFeeConditionRequest {
   optional int32 id = 1;
   optional int32 student_fee = 3;
   optional int32 worker_fee = 4;
@@ -19,23 +19,23 @@ message GetUserConditionRequest {
 
 }
 
-message CreateUserRequest {
+message CreateClubFeeRequest {
   int32 student_fee = 3;
   int32 worker_fee = 4;
   int32 monthly_fee = 5;
 }
 
-message UpdateUserDataRequest {
+message UpdateClubFeeDataRequest {
   optional int32 student_fee = 3;
   optional int32 worker_fee = 4;
   optional int32 monthly_fee = 5;
 }
 
-message UpdateUserRequest {
-  GetUserConditionRequest conditions =1;
-  UpdateUserDataRequest data =2;
+message UpdateClubFeeRequest {
+  GetClubFeeConditionRequest conditions =1;
+  UpdateClubFeeDataRequest data =2;
 }
 
-message RemoveUserRequest {
+message RemoveClubFeeRequest {
   int32 id = 1;
 }

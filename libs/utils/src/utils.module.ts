@@ -1,5 +1,6 @@
-import { Global, Module } from '@nestjs/common';
-import { UtilsService } from './utils.service';
+import { Module } from '@nestjs/common/decorators/modules/module.decorator'
+import { UtilsService } from './utils.service'
+import { Global } from '@nestjs/common/decorators/modules/global.decorator'
 
 @Global()
 @Module({

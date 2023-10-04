@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { CreateLogDto } from './dto/create-log.dto'
 import { UpdateLogDto } from './dto/update-log.dto'
 

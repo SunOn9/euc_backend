@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { UserEntity } from '../entities/user.entity'
 import { User } from '/generated/user/user'
 import { EnumProto_UserRole } from '/generated/enumps'

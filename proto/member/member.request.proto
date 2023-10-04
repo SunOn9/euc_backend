@@ -7,39 +7,38 @@ import "enumps.proto";
 message GetMemberConditionRequest {
   optional int32 id = 1;
   optional string name = 2;
-  optional string email = 3;
-  // optional string password = 4;
-  optional string phone = 5;
-  optional EnumProto.MemberRole role =6;
-  // optional google.protobuf.Timestamp created_at = 7;
-  // optional google.protobuf.Timestamp updated_at = 8;
-  // optional google.protobuf.Timestamp deleted_at = 9;
+  optional string nick_name = 3;
+  optional google.protobuf.Timestamp birthday = 4;
+  optional EnumProto.MemberStatus status = 5;
+  optional EnumProto.MemberType type = 6;
+  optional string monthly_fee = 7;
+  // google.protobuf.Timestamp created_at = 11;
+  // google.protobuf.Timestamp updated_at = 12;
+  // optional google.protobuf.Timestamp deleted_at = 13;
   optional int32 page =10;
   optional int32 limit =11;
-  // optional bool is_extra =12;
   optional bool is_deleted =13;
-  optional string user_name =14;
-  optional bool is_extra_permission =15;
-  optional bool is_extra_log =16;
+  optional bool is_extra_hometown =15;
+  optional bool is_extra_event =16;
   optional bool is_extra_club =17;
-  optional bool is_extra_auth =18;
 }
 
 message CreateMemberRequest {
-  string name = 1;
-  string email = 2;
-  string password = 3;
-  optional string phone = 4;
-  EnumProto.MemberRole role =5;
+  string name = 2;
+  optional string nick_name = 3;
+  optional google.protobuf.Timestamp birthday = 4;
+  EnumProto.MemberStatus status = 5;
+  EnumProto.MemberType type = 6;
+  optional string monthly_fee = 7;
 }
 
 message UpdateMemberDataRequest {
-  string name = 1;
-  string email = 2;
-  string password = 3;
-  optional string phone = 4;
-  EnumProto.MemberRole role =5;
-  repeated int32 permission_list =6;
+  optional string name = 2;
+  optional string nick_name = 3;
+  optional google.protobuf.Timestamp birthday = 4;
+  optional EnumProto.MemberStatus status = 5;
+  optional EnumProto.MemberType type = 6;
+  optional string monthly_fee = 7;
 }
 
 message UpdateMemberRequest {

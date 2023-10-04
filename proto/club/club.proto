@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 
-package uec_backend;
+package euc_backend;
 
 message Club {
   int32 id = 1;

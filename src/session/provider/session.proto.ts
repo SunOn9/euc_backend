@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { SessionEntity } from '../entities/session.entity'
 import { Session } from '/generated/session/session'
 

@@ -1,18 +1,18 @@
 syntax = "proto3";
+package euc_backend;
 
+import "enumps.proto"; 
 import "google/protobuf/timestamp.proto";
-import "enumps.proto";
 
-package uec_backend;
 
 message Area {
   int32 id = 1;
   string name = 2;
-  repeated Club club = 3;
-  repeated Member member = 4;
   google.protobuf.Timestamp created_at = 5;
   google.protobuf.Timestamp updated_at = 6;
   google.protobuf.Timestamp deleted_at = 7;
+  repeated Club club = 8;
+  repeated Member member = 9;
 
   message Club {
     int32 id = 1;

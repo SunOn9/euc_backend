@@ -8,12 +8,18 @@
 
 ### Create Database
 
-`echo "CREATE DATABASE euc CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" | docker exec -i mysql /usr/bin/mysql -u root --password=190501
-`
+`echo "CREATE DATABASE <YOUR_DATABASE_NAME> CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" | docker exec -i mysql /usr/bin/mysql -u root --password=<YOUR_PASSWORD>
+` or ...
 
 ### Install yarn & nestjs
 
-`google.com`
+#### Yarn : https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable
+
+Via NPM : `npm install --global yarn`
+
+#### NestJS : https://docs.nestjs.com/
+
+Via NPM : `npm i -g @nestjs/cli`
 
 ### Install package
 
@@ -41,6 +47,7 @@
 
 `Copy file 'env.example' to new file name '.env'`
 `Add SECRET`
+`Add Database Name, Password, Username , ...`
 
 ### Data
 

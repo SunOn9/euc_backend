@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { PermissionEntity } from '../entities/permission.entity'
 import { Permission } from '/generated/permission/permission'
 

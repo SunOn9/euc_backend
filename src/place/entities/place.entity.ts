@@ -6,35 +6,38 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { EventEntity } from '/event/entities/event.entity';
+} from 'typeorm'
+import { EventEntity } from '/event/entities/event.entity'
 
 @Entity({ name: 'place' })
 export class PlaceEntity {
-  static tableName = 'place';
+  static tableName = 'place'
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column()
-  name: string;
+  name: string
+
+  @Column()
+  address: string
 
   @Column({ nullable: true })
-  fee?: number | null;
+  fee?: number | null
 
-  @OneToMany(() => EventEntity, (event) => event.place)
-  event: EventEntity[];
+  @OneToMany(() => EventEntity, event => event.place)
+  event: EventEntity[]
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date;
+  deletedAt?: Date
 
   constructor(partial: Partial<PlaceEntity>) {
-    Object.assign(this, partial);
+    Object.assign(this, partial)
   }
 }

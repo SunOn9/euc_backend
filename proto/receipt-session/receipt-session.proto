@@ -8,15 +8,49 @@ import "google/protobuf/timestamp.proto";
 message ReceiptSession {
   int32 id = 1;
   string title = 2;
-  string description = 3;
-  // EventEntity event = 4;
-  // repeated Receipt receipt = 5;
+  optional string description = 3;
   EnumProto.SessionStatus status = 6;
   google.protobuf.Timestamp date_confirm = 7;
-  // UserEntity user_confirm = 8;
   google.protobuf.Timestamp date_done = 9;
-  // UserEntity user_done = 10;
   google.protobuf.Timestamp created_at = 11;
   google.protobuf.Timestamp updated_at = 12;
-  google.protobuf.Timestamp deleted_at = 13;
+  optional google.protobuf.Timestamp deleted_at = 13;
+  optional Event event = 14;
+  repeated Receipt receipt = 15;
+  optional User user_done = 16;
+  optional User user_confirm = 17;
+
+  message Event {
+    int32 id = 1;
+    string name = 2;
+    google.protobuf.Timestamp start_event_date = 8;
+    google.protobuf.Timestamp end_event_date = 9;
+    EnumProto.EventType type =10;
+    google.protobuf.Timestamp created_at = 11;
+    google.protobuf.Timestamp updated_at = 12;
+    optional google.protobuf.Timestamp deleted_at = 13;
+  }
+
+  message Receipt {
+    int32 id = 1;
+    string title = 2;
+    optional string description = 3;
+    int32 amount = 4;
+    EnumProto.MoneyMethod method = 5;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+    optional google.protobuf.Timestamp deleted_at = 9;
+  }
+
+  message User {
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+    string password = 4;
+    optional string phone = 5;
+    EnumProto.UserRole role =6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+    optional google.protobuf.Timestamp deleted_at = 9;
+  }
 }

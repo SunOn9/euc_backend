@@ -1,6 +1,6 @@
 import { Auth } from '../../generated/auth/auth'
 import { AuthEntity } from '../entities/auth.entity'
-import { Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 @Injectable()
 export class AuthReflect {
   reflect(entity: AuthEntity): Auth {

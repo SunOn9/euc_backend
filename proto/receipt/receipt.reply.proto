@@ -2,25 +2,25 @@ syntax = "proto3";
 package euc_backend;
 
 
-import "user/user.proto";
+import "receipt/receipt.proto";
 
-message UserReply {
+message ReceiptReply {
   int32 status_code = 1;
   string message = 2;
   optional string error_code = 3;
-  optional User payload = 4;
+  optional Receipt payload = 4;
 }
 
-message UserListDataReply {
-  repeated User user_list = 1;
+message ReceiptListDataReply {
+  repeated Receipt receipt_list = 1;
   int32 total = 2;
   int32 page = 3;
   int32 limit = 4;
 }
 
-message UserListReply {
+message ReceiptListReply {
   int32 status_code = 1;
   string message = 2;
   optional string error_code = 3;
-  UserListDataReply payload = 4;
+  ReceiptListDataReply payload = 4;
 }

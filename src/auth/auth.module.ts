@@ -1,4 +1,3 @@
-import { Module } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { AuthController } from './auth.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
@@ -11,6 +10,7 @@ import { LocalStrategy } from './guard/local.strategy'
 import { SessionSerializer } from './guard/session.serializer'
 import { InMemoryDBModule } from '@nestjs-addons/in-memory-db'
 import { SessionModule } from '/session/session.module'
+import { Module } from '@nestjs/common/decorators/modules/module.decorator'
 
 @Module({
   imports: [
@@ -30,4 +30,4 @@ import { SessionModule } from '/session/session.module'
   ],
   exports: [AuthService, AuthReflect, AuthRepository],
 })
-export class AuthModule { }
+export class AuthModule {}

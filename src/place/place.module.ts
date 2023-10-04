@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common';
-import { PlaceService } from './place.service';
-import { PlaceController } from './place.controller';
+import { PlaceService } from './place.service'
+import { PlaceController } from './place.controller'
+import { Module } from '@nestjs/common/decorators/modules/module.decorator'
 
 @Module({
   controllers: [PlaceController],

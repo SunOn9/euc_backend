@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { CreateClubDto } from './dto/create-club.dto'
 import { UpdateClubDto } from './dto/update-club.dto'
 

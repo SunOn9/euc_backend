@@ -4,25 +4,51 @@ package euc_backend;
 
 import "common.proto";
 import "enumps.proto";
+import "area/area.proto";
+import "area/area.request.proto";
+import "area/area.reply.proto";
 import "auth/auth.proto";
 import "auth/auth.request.proto";
 import "auth/auth.reply.proto";
-import "user/user.proto";
-import "user/user.request.proto";
-import "user/user.reply.proto";
-import "event/event.proto";
+import "club/club.proto";
+import "club/club.request.proto";
+import "club/club.reply.proto";
 import "club-fee/club-fee.proto";
+import "club-fee/club-fee.request.proto";
+import "club-fee/club-fee.reply.proto";
+import "event/event.proto";
+import "event/event.request.proto";
+import "event/event.reply.proto";
 import "guest/guest.proto";
+import "guest/guest.request.proto";
+import "guest/guest.reply.proto";
 import "log/log.proto";
+import "log/log.request.proto";
+import "log/log.reply.proto";
 import "member/member.proto";
+import "member/member.request.proto";
+import "member/member.reply.proto";
 import "payment/payment.proto";
+import "payment/payment.request.proto";
+import "payment/payment.reply.proto";
 import "payment-session/payment-session.proto";
+import "payment-session/payment-session.request.proto";
+import "payment-session/payment-session.reply.proto";
 import "permission/permission.proto";
 import "permission/permission.request.proto";
 import "permission/permission.reply.proto";
 import "place/place.proto";
+import "place/place.request.proto";
+import "place/place.reply.proto";
 import "receipt/receipt.proto";
+import "receipt/receipt.request.proto";
+import "receipt/receipt.reply.proto";
 import "receipt-session/receipt-session.proto";
+import "receipt-session/receipt-session.request.proto";
+import "receipt-session/receipt-session.reply.proto";
+import "user/user.proto";
+import "user/user.request.proto";
+import "user/user.reply.proto";
 import "session/session.proto";
 
 service AuthService {
@@ -34,9 +60,7 @@ service AuthService {
 service UserService {
   rpc CreateUser (CreateUserRequest) returns (UserReply) {}
   rpc GetDetail (GetUserConditionRequest) returns (UserReply) {}
-  // rpc GetDetailWithExtraData (GetUserConditionRequest) returns (UserReply) {}
   rpc GetList (GetUserConditionRequest) returns (UserListReply) {}
-  // rpc GetListWithExtraData (GetUserConditionRequest) returns (UserListReply) {}
   rpc UpdateUser (UpdateUserRequest) returns (UserReply) {}
   rpc RemoveUser (RemoveUserRequest) returns (SimpleReply) {}
 }

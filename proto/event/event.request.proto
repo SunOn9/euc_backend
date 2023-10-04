@@ -4,12 +4,12 @@ package euc_backend;
 import "google/protobuf/timestamp.proto";
 import "enumps.proto";
 
-message GetUserConditionRequest {
+message GetEventConditionRequest {
   optional int32 id = 1;
   optional string name = 2;
-  optional google.protobuf.Timestamp start_event_date = 8;
-  optional google.protobuf.Timestamp end_event_date = 9;
-  optional EnumProto.EventType type =10;
+  optional google.protobuf.Timestamp start_event_date = 3;
+  optional google.protobuf.Timestamp end_event_date = 4;
+  optional EnumProto.EventType type =5;
   // google.protobuf.Timestamp created_at = 11;
   // google.protobuf.Timestamp updated_at = 12;
   // optional google.protobuf.Timestamp deleted_at = 13;
@@ -24,25 +24,25 @@ message GetUserConditionRequest {
   optional bool is_extra_place = 19;
 }
 
-message CreateUserRequest {
+message CreateEventRequest {
   string name = 2;
   google.protobuf.Timestamp start_event_date = 8;
   optional google.protobuf.Timestamp end_event_date = 9;
   EnumProto.EventType type =10;
 }
 
-message UpdateUserDataRequest {
+message UpdateEventDataRequest {
   optional string name = 2;
   optional google.protobuf.Timestamp start_event_date = 8;
   optional google.protobuf.Timestamp end_event_date = 9;
   optional EnumProto.EventType type =10;
 }
 
-message UpdateUserRequest {
-  GetUserConditionRequest conditions =1;
-  UpdateUserDataRequest data =2;
+message UpdateEventRequest {
+  GetEventConditionRequest conditions =1;
+  UpdateEventDataRequest data =2;
 }
 
-message RemoveUserRequest {
+message RemoveEventRequest {
   int32 id = 1;
 }

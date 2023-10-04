@@ -4,8 +4,7 @@ import { Result, err, ok } from 'neverthrow'
 import CustomException from 'lib/utils/custom.exception'
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
 import { InMemoryDBService } from '@nestjs-addons/in-memory-db/src/services/in-memory-db.service'
-import { SessionEntity } from '../entities/session.entity'
-import { UserEntity } from '/user/entities/user.entity'
+
 import { Session } from '/generated/session/session'
 import { User } from '/generated/user/user'
 

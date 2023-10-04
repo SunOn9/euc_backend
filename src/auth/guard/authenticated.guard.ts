@@ -1,6 +1,8 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { SessionService } from '/session/session.service'
 import { Reflector } from '@nestjs/core'
+import { CanActivate } from '@nestjs/common/interfaces/features/can-activate.interface'
+import { ExecutionContext } from '@nestjs/common/interfaces/features/execution-context.interface'
 
 @Injectable()
 export class AthenticatedGuard implements CanActivate {

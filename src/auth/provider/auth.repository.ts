@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { DataSource, Repository, SelectQueryBuilder } from 'typeorm'
 import { AuthEntity } from '../entities/auth.entity'
 import { AuthReflect } from './auth.proto'
@@ -7,6 +7,7 @@ import { Auth } from 'src/generated/auth/auth'
 import { GetAuthConditionRequestDto } from '../dto/get-condition-auth.dto'
 import { UtilsService } from 'lib/utils'
 import CustomException from 'lib/utils/custom.exception'
+import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
 
 @Injectable()
 export class AuthRepository extends Repository<AuthEntity> {

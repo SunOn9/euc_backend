@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { Reflector } from '@nestjs/core'
 import { PERMISSION_CHECKER_KEY } from './permission.decorator'
 import { CaslAbilityFactory } from './../casl/casl-ability.factory'
@@ -6,6 +6,8 @@ import { MongoAbility } from '@casl/ability/dist/types/Ability'
 import { AbilityTuple } from '@casl/ability/dist/types/types'
 import { MongoQuery } from '@casl/ability/dist/types/matchers/conditions'
 import { RawRule } from '../casl/rules'
+import { CanActivate } from '@nestjs/common/interfaces/features/can-activate.interface'
+import { ExecutionContext } from '@nestjs/common/interfaces/features/execution-context.interface'
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -36,7 +38,6 @@ export class PermissionsGuard implements CanActivate {
     ability: MongoAbility<AbilityTuple, MongoQuery>,
     permission: RawRule,
   ): boolean {
-    console.log(permission.subject)
     if (permission.fields.length === 0) {
       return permission.action.every(action =>
         permission.subject.every(subject => ability.can(action, subject)),

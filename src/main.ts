@@ -23,7 +23,7 @@ async function bootstrap() {
       secret: configService.get('SECRET'),
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: oneMonth },
+      cookie: { maxAge: oneMonth, sameSite: 'strict' },
     }),
   )
   httpApp.use(passport.initialize())
@@ -41,9 +41,8 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('EUC')
-    .setDescription('EUC')
+    .setDescription('Only for developer')
     .setVersion('1.0')
-    .addTag('euc')
     .build()
 
   const document = SwaggerModule.createDocument(httpApp, config)

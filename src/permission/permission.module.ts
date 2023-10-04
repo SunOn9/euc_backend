@@ -1,4 +1,3 @@
-import { Module } from '@nestjs/common'
 import { PermissionService } from './permission.service'
 import { PermissionController } from './permission.controller'
 import { TypeOrmModule } from '@nestjs/typeorm'
@@ -10,12 +9,13 @@ import { PermissionReflect } from './provider/permission.proto'
 import { CaslAbilityFactory } from './casl/casl-ability.factory'
 import { SessionModule } from '/session/session.module'
 import { PermissionsGuard } from './guard/permission.guard'
+import { Module } from '@nestjs/common/decorators/modules/module.decorator'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([PermissionEntity]),
     InMemoryDBModule.forFeature('permission', {}),
-    SessionModule
+    SessionModule,
   ],
   controllers: [PermissionController],
   providers: [
@@ -24,8 +24,8 @@ import { PermissionsGuard } from './guard/permission.guard'
     PermissionInMemoryRepository,
     PermissionReflect,
     CaslAbilityFactory,
-    PermissionsGuard
+    PermissionsGuard,
   ],
-  exports: [PermissionsGuard, CaslAbilityFactory]
+  exports: [PermissionsGuard, CaslAbilityFactory],
 })
-export class PermissionModule { }
+export class PermissionModule {}

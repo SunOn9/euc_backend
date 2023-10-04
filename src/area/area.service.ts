@@ -1,26 +1,56 @@
-import { Injectable } from '@nestjs/common'
-import { CreateAreaDto } from './dto/create-area.dto'
-import { UpdateAreaDto } from './dto/update-area.dto'
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
+import { err } from 'neverthrow'
+import { CreateAreaRequestDto } from './dto/create-area.dto'
+import { GetAreaConditionRequestDto } from './dto/get-area-condition-request.dto'
+import { RemoveAreaRequestDto } from './dto/remove-area.dto'
+import { UpdateAreaRequestDto } from './dto/update-area.dto'
+import { AreaRepository } from './provider/area.repository'
 
 @Injectable()
 export class AreaService {
-  create(createAreaDto: CreateAreaDto) {
-    return 'This action adds a new area'
+  constructor(private readonly repo: AreaRepository) {}
+
+  async create(requestData: CreateAreaRequestDto) {
+    //Check area exits
+    const areaReply = await this.getDetail({
+      name: requestData.name,
+    })
+
+    if (areaReply.isOk()) {
+      return err(
+        new Error(`Area already exits with name: [${requestData.name}]`),
+      )
+    }
+
+    return await this.repo.createArea(requestData)
   }
 
-  findAll() {
-    return `This action returns all area`
+  async getDetail(requestData: GetAreaConditionRequestDto) {
+    return await this.repo.getDetail(requestData)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} area`
+  async getList(requestData: GetAreaConditionRequestDto) {
+    return await this.repo.getList(requestData)
   }
 
-  update(id: number, updateAreaDto: UpdateAreaDto) {
-    return `This action updates a #${id} area`
+  async update(requestData: UpdateAreaRequestDto) {
+    return await this.repo.updateArea(requestData)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} area`
+  async remove(requestData: RemoveAreaRequestDto) {
+    //Check area
+    const areaReply = await this.getDetail({
+      id: requestData.id,
+    })
+
+    if (areaReply.isErr()) {
+      return err(areaReply.error)
+    }
+
+    if (areaReply.value.deletedAt) {
+      return err(new Error(`Area with id [${requestData.id}] is deleted`))
+    }
+
+    return await this.repo.removeArea(requestData)
   }
 }

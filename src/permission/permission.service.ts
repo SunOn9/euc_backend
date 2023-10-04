@@ -1,5 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common'
-
+import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { PermissionRepository } from './provider/permission.repository'
 import { PermissionInMemoryRepository } from './provider/permission.in-memory-repo'
 import { Permission } from '/generated/permission/permission'
@@ -17,32 +16,6 @@ export class PermissionService {
     private readonly repo: PermissionRepository,
     private readonly repoIMDB: PermissionInMemoryRepository,
   ) {}
-
-  // async onModuleInit() {
-  //   console.log(`=== Start load Permission from Database ===`)
-  //   const data = await this.repo.getList({})
-
-  //   if (data.isErr()) {
-  //     throw new CustomException(
-  //       'ERROR',
-  //       data.error.message,
-  //       HttpStatus.BAD_REQUEST,
-  //     )
-  //   }
-
-  //   const reply = await this.repoIMDB.createListPermission(
-  //     data.value.permissionList,
-  //   )
-
-  //   if (reply.isErr()) {
-  //     throw new CustomException(
-  //       'ERROR',
-  //       reply.error.message,
-  //       HttpStatus.BAD_REQUEST,
-  //     )
-  //   }
-  //   console.log(`=== End load Permission from Database ===`)
-  // }
 
   async create(
     createData: CreatePermissionRequestDto,

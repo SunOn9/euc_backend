@@ -1,0 +1,46 @@
+syntax = "proto3";
+package euc_backend;
+
+import "google/protobuf/timestamp.proto";
+import "enumps.proto";
+
+message GetReceiptSessionConditionRequest {
+  optional int32 id = 1;
+  optional string title = 2;
+  optional string description = 3;
+  optional EnumProto.SessionStatus status = 6;
+  optional google.protobuf.Timestamp date_confirm = 7;
+  optional google.protobuf.Timestamp date_done = 9;
+  // google.protobuf.Timestamp created_at = 11;
+  // google.protobuf.Timestamp updated_at = 12;
+  // optional google.protobuf.Timestamp deleted_at = 13;
+  optional int32 page =10;
+  optional int32 limit =11;
+  optional bool is_deleted =13;
+  optional string user_name =14;
+  optional bool is_extra_receipt =15;
+  optional bool is_extra_event =16;
+  optional bool is_extra_user_done =17;
+  optional bool is_extra_user_confirm =18;
+}
+
+message CreateReceiptSessionRequest {
+  string title = 2;
+  optional string description = 3;
+  EnumProto.SessionStatus status = 6;
+}
+
+message UpdateReceiptSessionDataRequest {
+  optional string title = 2;
+  optional string description = 3;
+  optional EnumProto.SessionStatus status = 6;
+}
+
+message UpdateReceiptSessionRequest {
+  GetReceiptSessionConditionRequest conditions =1;
+  UpdateReceiptSessionDataRequest data =2;
+}
+
+message RemoveReceiptSessionRequest {
+  int32 id = 1;
+}
