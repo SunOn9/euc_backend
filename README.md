@@ -9,7 +9,8 @@
 ### Create Database
 
 `echo "CREATE DATABASE <YOUR_DATABASE_NAME> CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" | docker exec -i mysql /usr/bin/mysql -u root --password=<YOUR_PASSWORD>
-` or ...
+`
+or ...
 
 ### Install yarn & nestjs
 
@@ -45,14 +46,14 @@ Via NPM : `npm i -g @nestjs/cli`
 
 ### Env
 
-`Copy file 'env.example' to new file name '.env'`
-`Add SECRET`
-`Add Database Name, Password, Username , ...`
+Copy file 'env.example' to new file name '.env'
+Add SECRET`
+Add Database Name, Password, Username , ...
 
 ### Data
 
-`Open folder data`
-`Copy file 'sessions.example.json' to new file name 'sessions.json'`
+Open folder data
+Copy file 'sessions.example.json' to new file name 'sessions.json'
 
 ### RUN
 
