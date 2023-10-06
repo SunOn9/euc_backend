@@ -11,6 +11,7 @@ import { ClubFeeReflect } from './club-fee.proto'
 import { CreateClubFeeRequestDto } from '../dto/create-club-fee.dto'
 import { GetClubFeeConditionRequestDto } from '../dto/get-club-fee-condition-request.dto'
 import { RemoveClubFeeRequestDto } from '../dto/remove-club-fee.dto'
+import { ClubEntity } from '/club/entities/club.entity'
 
 @Injectable()
 export class ClubFeeRepository extends Repository<ClubFeeEntity> {
@@ -26,10 +27,12 @@ export class ClubFeeRepository extends Repository<ClubFeeEntity> {
 
   async createClubFee(
     createData: CreateClubFeeRequestDto,
+    clubId: number,
   ): Promise<Result<ClubFee, Error>> {
     try {
       const saveData: Partial<ClubFeeEntity> = {
         ...createData,
+        club: { id: clubId } as ClubEntity,
       }
 
       const dataReply = await this.save(saveData)
@@ -111,10 +114,8 @@ export class ClubFeeRepository extends Repository<ClubFeeEntity> {
     }
   }
 
-  async removeClubFee(
-    removeData: RemoveClubFeeRequestDto,
-  ): Promise<Result<boolean, Error>> {
-    const dataReply = await this.softDelete(removeData)
+  async removeClubFee(id: number): Promise<Result<boolean, Error>> {
+    const dataReply = await this.softDelete(id)
 
     if (this.utilService.isObjectEmpty(dataReply)) {
       return err(new Error(`Error when remove club-fee`))
@@ -149,6 +150,12 @@ export class ClubFeeRepository extends Repository<ClubFeeEntity> {
     if (conditions.monthlyFee !== undefined) {
       queryBuilder.andWhere(`monthly_fee = :monthlyFee`, {
         monthlyFee: `${conditions.monthlyFee}`,
+      })
+    }
+
+    if (conditions.clubId !== undefined) {
+      queryBuilder.andWhere(`club_id = :clubId`, {
+        clubId: `${conditions.clubId}`,
       })
     }
 

@@ -17,9 +17,13 @@ import { InferSubjects } from '@casl/ability/dist/types'
 
 export enum Action {
   READ = 'read',
+  READ_SELF = 'read-self',
   CREATE = 'create',
+  CREATE_SELF = 'create-self',
   UPDATE = 'update',
+  UPDATE_SELF = 'update-self',
   DELETE = 'delete',
+  DELETE_SELF = 'delete-self',
   MANAGE = 'manage',
 }
 

@@ -11,12 +11,15 @@ export class ClubFeeService {
 
   async create(clubId: number, requestData: CreateClubFeeRequestDto) {
     //Check clubFee exits
+    const clubFeeReply = await this.repo.getDetail({
+      clubId: clubId,
+    })
 
-    // if (clubFeeReply.isOk()) {
-    //   return err(new Error(`ClubFee already exits in: [${``}]`))
-    // }
+    if (clubFeeReply.isOk() && clubFeeReply.value) {
+      await this.repo.removeClubFee(clubFeeReply.value.id)
+    }
 
-    return await this.repo.createClubFee(requestData)
+    return await this.repo.createClubFee(requestData, clubId)
   }
 
   async getDetail(requestData: GetClubFeeConditionRequestDto) {
@@ -30,7 +33,8 @@ export class ClubFeeService {
   async remove(requestData: RemoveClubFeeRequestDto) {
     //Check clubFee
     const clubFeeReply = await this.getDetail({
-      id: requestData.id,
+      clubId: requestData.clubId,
+      isExtraClub: true,
     })
 
     if (clubFeeReply.isErr()) {
@@ -38,9 +42,11 @@ export class ClubFeeService {
     }
 
     if (clubFeeReply.value.deletedAt) {
-      return err(new Error(`ClubFee with id [${requestData.id}] is deleted`))
+      return err(
+        new Error(`ClubFee of [${clubFeeReply.value.club.name}] is deleted`),
+      )
     }
 
-    return await this.repo.removeClubFee(requestData)
+    return await this.repo.removeClubFee(clubFeeReply.value.id)
   }
 }

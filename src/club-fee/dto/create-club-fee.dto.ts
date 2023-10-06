@@ -24,4 +24,10 @@ export class CreateClubFeeRequestDto implements CreateClubFeeRequest {
   @IsNumber()
   @Type(() => Number)
   monthlyFee?: number
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  clubId?: number
 }

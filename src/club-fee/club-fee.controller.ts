@@ -27,6 +27,7 @@ import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
 import { ClubFeeEntity } from './entities/club-fee.entity'
+import { EnumProto_UserRole } from '/generated/enumps'
 
 @UseGuards(PermissionsGuard)
 @Controller('clubFee')
@@ -44,7 +45,13 @@ export class ClubFeeController {
     @Req() req: Request,
     @Body() bodyData: CreateClubFeeRequestDto,
   ): Promise<ClubFeeReply> {
-    const data = await this.service.create(req['userInfo'].id, bodyData)
+    let { clubId, ...other } = bodyData
+
+    if (req['userInfo'].role !== EnumProto_UserRole.ADMIN) {
+      clubId = req['userInfo'].club.id
+    }
+
+    const data = await this.service.create(clubId, other)
 
     if (data.isErr()) {
       throw new CustomException(
@@ -68,9 +75,13 @@ export class ClubFeeController {
     fields: [],
   })
   async getDetail(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Query() request: GetClubFeeConditionRequestDto,
   ): Promise<ClubFeeReply> {
+    if (req['userInfo'].role !== EnumProto_UserRole.ADMIN) {
+      request.clubId = req['userInfo'].club.id
+    }
+
     const response = {} as ClubFeeReply
     const data = await this.service.getDetail(request)
 
@@ -96,9 +107,13 @@ export class ClubFeeController {
     fields: [],
   })
   async getList(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Query() request: GetClubFeeConditionRequestDto,
   ): Promise<ClubFeeListReply> {
+    if (req['userInfo'].role !== EnumProto_UserRole.ADMIN) {
+      request.clubId = req['userInfo'].club.id
+    }
+
     const response = {} as ClubFeeListReply
     const listData = await this.service.getList(request)
 
@@ -116,11 +131,19 @@ export class ClubFeeController {
     return response
   }
 
+  @CheckPermissions({
+    action: [Action.DELETE],
+    subject: [ClubFeeEntity],
+    fields: [],
+  })
   @Get('remove/:id')
   async removeClubFee(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Param() request: RemoveClubFeeRequestDto,
   ): Promise<SimpleReply> {
+    if (req['userInfo'].role !== EnumProto_UserRole.ADMIN) {
+      request.clubId = req['userInfo'].club.id
+    }
     const response = {} as SimpleReply
     const data = await this.service.remove(request)
 

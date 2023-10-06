@@ -25,5 +25,5 @@ message CreateClubFeeRequest {
 }
 
 message RemoveClubFeeRequest {
-  int32 id = 1;
+  optional int32 club_id = 1;
 }
