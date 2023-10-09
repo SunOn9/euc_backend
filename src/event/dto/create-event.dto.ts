@@ -1,5 +1,6 @@
 import {
   IsDate,
+  IsDateString,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -20,12 +21,12 @@ export class CreateEventRequestDto implements CreateEventRequest {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsDate()
+  @IsDateString()
   startEventDate: Date
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsDate()
+  @IsDateString()
   endEventDate?: Date
 
   @ApiProperty()

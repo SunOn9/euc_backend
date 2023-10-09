@@ -4,12 +4,20 @@ import { CreateClubFeeRequestDto } from './dto/create-club-fee.dto'
 import { GetClubFeeConditionRequestDto } from './dto/get-club-fee-condition-request.dto'
 import { RemoveClubFeeRequestDto } from './dto/remove-club-fee.dto'
 import { ClubFeeRepository } from './provider/club-fee.repository'
+import { User } from '/generated/user/user'
+import { EnumProto_UserRole } from '/generated/enumps'
 
 @Injectable()
 export class ClubFeeService {
   constructor(private readonly repo: ClubFeeRepository) {}
 
-  async create(clubId: number, requestData: CreateClubFeeRequestDto) {
+  async create(userInfo: User, requestData: CreateClubFeeRequestDto) {
+    let { clubId, ...other } = requestData
+
+    if (userInfo.role === EnumProto_UserRole.ADMIN) {
+      clubId = userInfo.club.id
+    }
+
     //Check clubFee exits
     const clubFeeReply = await this.repo.getDetail({
       clubId: clubId,
@@ -19,7 +27,7 @@ export class ClubFeeService {
       await this.repo.removeClubFee(clubFeeReply.value.id)
     }
 
-    return await this.repo.createClubFee(requestData, clubId)
+    return await this.repo.createClubFee(other, clubId)
   }
 
   async getDetail(requestData: GetClubFeeConditionRequestDto) {

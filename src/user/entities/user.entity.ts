@@ -1,6 +1,5 @@
-import { AuthEntity } from 'src/auth/entities/auth.entity';
+import { AuthEntity } from 'src/auth/entities/auth.entity'
 import {
-  BeforeInsert,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -11,35 +10,35 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { PermissionEntity } from '/permission/entities/permission.entity';
-import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity';
-import { ClubEntity } from '/club/entities/club.entity';
-import { LogEntity } from '/log/entities/log.entity';
-import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity';
-import { EnumProto_UserRole } from '/generated/enumps';
+} from 'typeorm'
+import { PermissionEntity } from '/permission/entities/permission.entity'
+import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity'
+import { ClubEntity } from '/club/entities/club.entity'
+import { LogEntity } from '/log/entities/log.entity'
+import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity'
+import { EnumProto_UserRole } from '/generated/enumps'
 
 @Entity({ name: 'user' })
 export class UserEntity {
-  static tableName = 'user';
+  static tableName = 'user'
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column()
-  name: string;
+  name: string
 
   @Column({ unique: true })
-  email: string;
+  email: string
 
   @Column({ length: 60 })
-  password: string;
+  password: string
 
   @Column({ unique: true, nullable: true, length: 10 })
-  phone?: string | null;
+  phone?: string | null
 
   @Column()
-  role: EnumProto_UserRole;
+  role: EnumProto_UserRole
 
   @ManyToMany(() => PermissionEntity, { cascade: true })
   @JoinTable({
@@ -47,51 +46,51 @@ export class UserEntity {
     joinColumn: { name: 'user_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'permission_id', referencedColumnName: 'id' },
   })
-  permission: PermissionEntity[];
+  permission: PermissionEntity[]
 
-  @OneToMany(() => LogEntity, (log) => log.user)
-  log: LogEntity[];
+  @OneToMany(() => LogEntity, log => log.user)
+  log: LogEntity[]
 
-  @ManyToOne(() => ClubEntity, (club) => club.user)
-  club: ClubEntity;
-
-  @OneToMany(
-    () => ReceiptSessionEntity,
-    (receiptSession) => receiptSession.userConfirm,
-  )
-  receiptSessionConfirm: ReceiptSessionEntity[];
+  @ManyToOne(() => ClubEntity, club => club.user)
+  club: ClubEntity
 
   @OneToMany(
     () => ReceiptSessionEntity,
-    (receiptSession) => receiptSession.userDone,
+    receiptSession => receiptSession.userConfirm,
   )
-  receiptSessionDone: ReceiptSessionEntity[];
+  receiptSessionConfirm: ReceiptSessionEntity[]
+
+  @OneToMany(
+    () => ReceiptSessionEntity,
+    receiptSession => receiptSession.userDone,
+  )
+  receiptSessionDone: ReceiptSessionEntity[]
 
   @OneToMany(
     () => PaymentSessionEntity,
-    (paymentSession) => paymentSession.userConfirm,
+    paymentSession => paymentSession.userConfirm,
   )
-  paymentSessionConfirm: PaymentSessionEntity[];
+  paymentSessionConfirm: PaymentSessionEntity[]
 
   @OneToMany(
     () => PaymentSessionEntity,
-    (paymentSession) => paymentSession.userDone,
+    paymentSession => paymentSession.userDone,
   )
-  paymentSessionDone: PaymentSessionEntity[];
+  paymentSessionDone: PaymentSessionEntity[]
 
-  @OneToMany(() => AuthEntity, (auth) => auth.user)
-  auth: AuthEntity[];
+  @OneToMany(() => AuthEntity, auth => auth.user)
+  auth: AuthEntity[]
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn()
-  deletedAt?: Date | null;
+  deletedAt?: Date | null
 
   constructor(partial: Partial<UserEntity>) {
-    Object.assign(this, partial);
+    Object.assign(this, partial)
   }
 }

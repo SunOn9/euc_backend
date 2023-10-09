@@ -4,10 +4,8 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm'
-import { LogEntity } from '/log/entities/log.entity'
 
 @Entity({ name: 'auth' })
 export class AuthEntity {
@@ -39,9 +37,6 @@ export class AuthEntity {
 
   @Column({ nullable: true })
   latitude?: number | null
-
-  @OneToMany(() => LogEntity, log => log.auth)
-  log: LogEntity[]
 
   @CreateDateColumn()
   createdAt: Date

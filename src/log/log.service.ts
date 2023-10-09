@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
-import { CreateLogDto } from './dto/create-log.dto'
-import { UpdateLogDto } from './dto/update-log.dto'
+import { LogRepository } from './provider/log.repository'
+import { CreateLogRequestDto } from './dto/create-log.dto'
+import { GetLogConditionRequestDto } from './dto/get-log-condition-request.dto'
+import { User } from '/generated/user/user'
+import { EnumProto_UserRole } from '/generated/enumps'
+import CustomException from 'lib/utils/custom.exception'
+import { HttpStatus } from '@nestjs/common'
 
 @Injectable()
 export class LogService {
-  create(createLogDto: CreateLogDto) {
-    return 'This action adds a new log'
+  constructor(private readonly repo: LogRepository) {}
+
+  async create(requestData: CreateLogRequestDto) {
+    return await this.repo.createLog(requestData)
   }
 
-  findAll() {
-    return `This action returns all log`
+  async getDetail(requestData: GetLogConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN) {
+      throw new CustomException('', `Forbidden resource`, HttpStatus.FORBIDDEN)
+    }
+    return await this.repo.getDetail(requestData)
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} log`
-  }
-
-  update(id: number, updateLogDto: UpdateLogDto) {
-    return `This action updates a #${id} log`
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} log`
+  async getList(requestData: GetLogConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN) {
+      throw new CustomException('', `Forbidden resource`, HttpStatus.FORBIDDEN)
+    }
+    return await this.repo.getList(requestData)
   }
 }

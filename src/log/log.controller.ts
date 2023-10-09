@@ -1,34 +1,57 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { LogService } from './log.service';
-import { CreateLogDto } from './dto/create-log.dto';
-import { UpdateLogDto } from './dto/update-log.dto';
+import { Controller, Get, HttpStatus, Query, Req } from '@nestjs/common'
+import { LogService } from './log.service'
+
+import { LogListReply, LogReply } from '/generated/log/log.reply'
+import { GetLogConditionRequestDto } from './dto/get-log-condition-request.dto'
+import CustomException from 'lib/utils/custom.exception'
+import * as CONST from '../prelude/constant'
 
 @Controller('log')
 export class LogController {
-  constructor(private readonly logService: LogService) {}
+  constructor(private readonly service: LogService) {}
 
-  @Post()
-  create(@Body() createLogDto: CreateLogDto) {
-    return this.logService.create(createLogDto);
+  @Get('list')
+  async getList(
+    @Req() req: Request,
+    @Query() request: GetLogConditionRequestDto,
+  ): Promise<LogListReply> {
+    const response = {} as LogListReply
+    const listData = await this.service.getList(request, req['userInfo'])
+
+    if (listData.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        listData.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = listData.value
+    return response
   }
 
-  @Get()
-  findAll() {
-    return this.logService.findAll();
-  }
+  @Get('detail')
+  async getDetail(
+    @Req() req: Request,
+    @Query() request: GetLogConditionRequestDto,
+  ): Promise<LogReply> {
+    const response = {} as LogReply
+    const data = await this.service.getDetail(request, req['userInfo'])
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.logService.findOne(+id);
-  }
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLogDto: UpdateLogDto) {
-    return this.logService.update(+id, updateLogDto);
-  }
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = data.value
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.logService.remove(+id);
+    return response
   }
 }

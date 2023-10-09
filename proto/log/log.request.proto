@@ -3,24 +3,26 @@ package euc_backend;
 
 import "google/protobuf/timestamp.proto";
 import "enumps.proto";
+import "google/protobuf/struct.proto";
 
-message GetdLogConditionRequest {
+
+message GetLogConditionRequest {
   optional int32 id = 1;
-  optional string target = 4;
+  optional google.protobuf.Value subject = 4;
   optional string action = 5;
-  optional string old_data =6;
-  optional string new_data =7;
+  optional google.protobuf.Value old_data =6;
+  optional google.protobuf.Value new_data =7;
+  optional string sessionId = 8;
   // google.protobuf.Timestamp created_at = 8;
   optional int32 page =10;
   optional int32 limit =11;
-  optional bool is_deleted =13;
   optional bool is_extra_user =15;
-  optional bool is_extra_auth =18;
 }
 
-message CreatedLogRequest {
-  string target = 4;
+message CreateLogRequest {
+  google.protobuf.Value subject = 4;
   string action = 5;
-  optional string old_data =6;
-  string new_data =7;
+  optional google.protobuf.Value old_data =6;
+  optional google.protobuf.Value new_data =7;
+  string sessionId = 8;
 }

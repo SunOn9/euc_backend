@@ -45,13 +45,9 @@ export class ClubFeeController {
     @Req() req: Request,
     @Body() bodyData: CreateClubFeeRequestDto,
   ): Promise<ClubFeeReply> {
-    let { clubId, ...other } = bodyData
+    const response = {} as ClubFeeReply
 
-    if (req['userInfo'].role !== EnumProto_UserRole.ADMIN) {
-      clubId = req['userInfo'].club.id
-    }
-
-    const data = await this.service.create(clubId, other)
+    const data = await this.service.create(req['userInfo'], bodyData)
 
     if (data.isErr()) {
       throw new CustomException(
@@ -60,7 +56,6 @@ export class ClubFeeController {
         HttpStatus.BAD_REQUEST,
       )
     }
-    const response = {} as ClubFeeReply
 
     response.statusCode = CONST.DEFAULT_SUCCESS_CODE
     response.message = CONST.DEFAULT_SUCCESS_MESSAGE

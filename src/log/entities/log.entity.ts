@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { UserEntity } from '/user/entities/user.entity'
-import { AuthEntity } from '/auth/entities/auth.entity'
+import { Action, Subject } from '/permission/casl/casl.type'
 
 @Entity({ name: 'log' })
 export class LogEntity {
@@ -18,14 +18,14 @@ export class LogEntity {
   @ManyToOne(() => UserEntity, user => user.log)
   user: UserEntity
 
-  @ManyToOne(() => AuthEntity, auth => auth.log)
-  auth: AuthEntity
+  @Column()
+  sessionId: string
+
+  @Column('json')
+  subject: Subject
 
   @Column()
-  target: string
-
-  @Column()
-  action: string
+  action: Action
 
   @Column('json', { nullable: true })
   oldData?: JSON
