@@ -31,6 +31,28 @@ message CreateEventRequest {
   google.protobuf.Timestamp start_event_date = 8;
   optional google.protobuf.Timestamp end_event_date = 9;
   EnumProto.EventType type =10;
+  optional int32 place_id = 11;
+  optional int32 club_id = 12;
+}
+
+message AddMemberToEventRequest {
+  int32 event_id =1;
+  int32 member_id = 2;
+}
+
+message RemoveMemberFromEventRequest {
+  int32 event_id =1;
+  int32 member_id = 2;
+}
+
+message AddGuestToEventRequest {
+  int32 event_id =1;
+  int32 guest_id = 2;
+}
+
+message RemoveGuestFromEventRequest {
+  int32 event_id =1;
+  int32 guest_id = 2;
 }
 
 message UpdateEventDataRequest {

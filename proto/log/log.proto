@@ -8,7 +8,7 @@ import "google/protobuf/struct.proto";
 
 message Log {
   int32 id = 1;
-  google.protobuf.Value subject = 4;
+  string subject = 4;
   string action = 5;
   optional google.protobuf.Value old_data =6;
   optional google.protobuf.Value new_data =7;

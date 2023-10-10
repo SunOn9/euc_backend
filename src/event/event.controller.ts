@@ -10,6 +10,7 @@ import {
   Body,
   Param,
   Query,
+  Req,
   // Req,
 } from '@nestjs/common/decorators/http/route-params.decorator'
 import { EventListReply, EventReply } from '/generated/event/event.reply'
@@ -39,10 +40,14 @@ export class EventController {
     fields: [],
   })
   async createEvent(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Body() bodyData: CreateEventRequestDto,
   ): Promise<EventReply> {
-    const data = await this.service.create(bodyData)
+    const data = await this.service.create(
+      bodyData,
+      req['sessionID'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(

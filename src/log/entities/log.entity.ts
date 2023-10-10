@@ -21,8 +21,8 @@ export class LogEntity {
   @Column()
   sessionId: string
 
-  @Column('json')
-  subject: Subject
+  @Column()
+  subject: string
 
   @Column()
   action: Action

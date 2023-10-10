@@ -12,7 +12,7 @@ export class LogReflect {
     reflect.oldData = entity.oldData ?? null
     reflect.newData = entity.newData ?? null
     reflect.createdAt = entity.createdAt ?? null
-    reflect.sessionId = entity.sessionId = ''
+    reflect.sessionId = entity.sessionId ?? ''
     reflect.user = entity.user ?? null
     return reflect
   }

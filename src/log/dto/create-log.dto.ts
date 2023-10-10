@@ -1,43 +1,17 @@
-import {
-  IsArray,
-  IsEnum,
-  IsJSON,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator'
-import {
-  ApiProperty,
-  ApiPropertyOptional,
-} from '@nestjs/swagger/dist/decorators/api-property.decorator'
 import { CreateLogRequest } from '/generated/log/log.request'
-import { Action, Subject } from '/permission/casl/casl.type'
+import { User } from '/generated/user/user'
+import { Action } from '/permission/casl/casl.type'
 
 export class CreateLogRequestDto implements CreateLogRequest {
-  @ApiProperty({ type: [String] })
-  @IsOptional()
-  @IsArray()
-  @IsEnum({ each: true })
-  subject: Subject
+  subject: string
 
-  @ApiPropertyOptional({ type: [String] })
-  @IsOptional()
-  @IsArray()
-  @IsEnum({ each: true })
   action: Action
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsJSON()
-  oldData: JSON
+  oldData?: any
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsJSON()
-  newData: JSON
+  newData?: any
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
   sessionId: string
+
+  user: User
 }

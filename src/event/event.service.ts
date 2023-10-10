@@ -5,24 +5,39 @@ import { CreateEventRequestDto } from './dto/create-event.dto'
 import { GetEventConditionRequestDto } from './dto/get-event-condition-request.dto'
 import { UpdateEventRequestDto } from './dto/update-event.dto'
 import { RemoveEventRequestDto } from './dto/remove-event.dto'
+import { LogService } from '/log/log.service'
+import { Action } from '/permission/casl/casl.type'
+import { User } from '/generated/user/user'
 
 @Injectable()
 export class EventService {
-  constructor(private readonly repo: EventRepository) {}
+  constructor(
+    private readonly repo: EventRepository,
+    private readonly logService: LogService,
+  ) {}
 
-  async create(requestData: CreateEventRequestDto) {
-    //Check area exits
-    const areaReply = await this.getDetail({
-      name: requestData.name,
-    })
+  async create(
+    requestData: CreateEventRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
+    //TODO: Check event type -> Create Payment Session and Reiceipt Session
 
-    if (areaReply.isOk()) {
-      return err(
-        new Error(`Event already exits with name: [${requestData.name}]`),
-      )
+    //TODO: Check place fee -> Create Payment Session
+
+    const createReply = await this.repo.createEvent(requestData)
+
+    if (createReply.isOk()) {
+      await this.logService.create({
+        action: Action.CREATE,
+        subject: 'event',
+        sessionId: sessionId,
+        newData: JSON.stringify(createReply.value),
+        user: userInfo,
+      })
     }
 
-    return await this.repo.createEvent(requestData)
+    return createReply
   }
 
   async getDetail(requestData: GetEventConditionRequestDto) {
@@ -38,16 +53,16 @@ export class EventService {
   }
 
   async remove(requestData: RemoveEventRequestDto) {
-    //Check area
-    const areaReply = await this.getDetail({
+    //Check event
+    const eventReply = await this.getDetail({
       id: requestData.id,
     })
 
-    if (areaReply.isErr()) {
-      return err(areaReply.error)
+    if (eventReply.isErr()) {
+      return err(eventReply.error)
     }
 
-    if (areaReply.value.deletedAt) {
+    if (eventReply.value.deletedAt) {
       return err(new Error(`Event with id [${requestData.id}] is deleted`))
     }
 

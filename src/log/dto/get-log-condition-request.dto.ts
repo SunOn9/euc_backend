@@ -19,32 +19,29 @@ export class GetLogConditionRequestDto implements GetLogConditionRequest {
   @Type(() => Number)
   id?: number
 
-  @ApiPropertyOptional({ type: [String] })
+  @ApiPropertyOptional()
   @IsOptional()
-  @IsArray()
-  @IsEnum({ each: true })
-  subject: Subject
+  subject?: string
 
-  @ApiPropertyOptional({ type: [String] })
+  @ApiPropertyOptional()
   @IsOptional()
-  @IsArray()
-  @IsEnum({ each: true })
-  action: Action
+  @IsEnum(Action)
+  action?: Action
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsJSON()
-  oldData: JSON
+  oldData?: JSON
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsJSON()
-  newData: JSON
+  newData?: JSON
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  sessionId: string
+  sessionId?: string
 
   @ApiPropertyOptional()
   @IsOptional()
