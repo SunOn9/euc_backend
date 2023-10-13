@@ -187,6 +187,10 @@ export class EventRepository extends Repository<EventEntity> {
       )
     }
 
+    if (conditions.isDeleted) {
+      queryBuilder.withDeleted()
+    }
+
     queryBuilder.setFindOptions({
       relationLoadStrategy: 'query',
       relations: {

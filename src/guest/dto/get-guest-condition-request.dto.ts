@@ -1,9 +1,16 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
+import {
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator'
 import { ApiPropertyOptional } from '@nestjs/swagger/dist/decorators/api-property.decorator'
 import { Transform, Type } from 'class-transformer'
-import { GetAreaConditionRequest } from '/generated/area/area.request'
+import { GetGuestConditionRequest } from '/generated/guest/guest.request'
+import { EnumProto_MemberType } from '/generated/enumps'
 
-export class GetAreaConditionRequestDto implements GetAreaConditionRequest {
+export class GetGuestConditionRequestDto implements GetGuestConditionRequest {
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
@@ -18,7 +25,12 @@ export class GetAreaConditionRequestDto implements GetAreaConditionRequest {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  slug?: string
+  nickName?: string
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsEnum(EnumProto_MemberType)
+  type?: EnumProto_MemberType
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -36,11 +48,17 @@ export class GetAreaConditionRequestDto implements GetAreaConditionRequest {
   @IsOptional()
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
+  isDeleted?: boolean
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
   isExtraClub?: boolean
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
-  isExtraMember?: boolean
+  isExtraEvent?: boolean
 }

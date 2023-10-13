@@ -4,40 +4,39 @@ import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { Result, err, ok } from 'neverthrow'
 import CustomException from 'lib/utils/custom.exception'
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
-import { AreaReflect } from './area.proto'
-import { AreaEntity } from '../entities/area.entity'
-import { Area } from '/generated/area/area'
-import { AreaListDataReply } from '/generated/area/area.reply'
-import { CreateAreaRequestDto } from '../dto/create-area.dto'
-import { GetAreaConditionRequestDto } from '../dto/get-area-condition-request.dto'
-import { RemoveAreaRequestDto } from '../dto/remove-area.dto'
-import { UpdateAreaRequestDto } from '../dto/update-area.dto'
+import { CreateGuestRequestDto } from '../dto/create-guest.dto'
+import { GetGuestConditionRequestDto } from '../dto/get-guest-condition-request.dto'
+import { RemoveGuestRequestDto } from '../dto/remove-guest.dto'
+import { UpdateGuestRequestDto } from '../dto/update-guest.dto'
+import { GuestEntity } from '../entities/guest.entity'
+import { GuestReflect } from './guest.proto'
+import { Guest } from '/generated/guest/guest'
+import { GuestListDataReply } from '/generated/guest/guest.reply'
 
 @Injectable()
-export class AreaRepository extends Repository<AreaEntity> {
+export class GuestRepository extends Repository<GuestEntity> {
   constructor(
     // @Inject(CACHE_MANAGER)
     // private cache: Cache,
     private dataSource: DataSource,
-    private proto: AreaReflect,
+    private proto: GuestReflect,
     private utilService: UtilsService,
   ) {
-    super(AreaEntity, dataSource.createEntityManager())
+    super(GuestEntity, dataSource.createEntityManager())
   }
 
-  async createArea(
-    createData: CreateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
+  async createGuest(
+    createData: CreateGuestRequestDto,
+  ): Promise<Result<Guest, Error>> {
     try {
       const saveData = {
         ...createData,
-        slug: this.utilService.convertToSlug(createData.name),
-      } as AreaEntity
+      } as GuestEntity
 
       const dataReply = await this.save(saveData)
 
       if (this.utilService.isObjectEmpty(dataReply)) {
-        return err(new Error(`Cannot create area in database`))
+        return err(new Error(`Cannot create guest in database`))
       }
 
       return ok(this.proto.reflect(dataReply))
@@ -46,9 +45,9 @@ export class AreaRepository extends Repository<AreaEntity> {
     }
   }
 
-  async updateArea(
-    updateData: UpdateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
+  async updateGuest(
+    updateData: UpdateGuestRequestDto,
+  ): Promise<Result<Guest, Error>> {
     try {
       if (this.utilService.isObjectEmpty(updateData.conditions)) {
         return err(new Error(`Empty conditions`))
@@ -63,8 +62,8 @@ export class AreaRepository extends Repository<AreaEntity> {
   }
 
   async getDetail(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<Area, Error>> {
+    conditions: GetGuestConditionRequestDto,
+  ): Promise<Result<Guest, Error>> {
     try {
       if (this.utilService.isObjectEmpty(conditions)) {
         return err(new Error(`Empty conditions`))
@@ -76,7 +75,7 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get area with conditions: [${conditions}]`),
+          new Error(`Cannot get guest with conditions: [${conditions}]`),
         )
       }
 
@@ -87,8 +86,8 @@ export class AreaRepository extends Repository<AreaEntity> {
   }
 
   async getList(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<AreaListDataReply, Error>> {
+    conditions: GetGuestConditionRequestDto,
+  ): Promise<Result<GuestListDataReply, Error>> {
     try {
       // if (!conditions) {
       //   return err(new Error(`Empty conditions`));
@@ -108,11 +107,11 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get list area with conditions: [${conditions}]`),
+          new Error(`Cannot get list guest with conditions: [${conditions}]`),
         )
       }
 
-      const areaList: Area[] = dataReply.map(each => {
+      const guestList: Guest[] = dataReply.map(each => {
         return this.proto.reflect(each)
       })
 
@@ -120,29 +119,29 @@ export class AreaRepository extends Repository<AreaEntity> {
         total,
         page,
         limit,
-        areaList,
+        guestList,
       })
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async removeArea(
-    removeData: RemoveAreaRequestDto,
+  async removeGuest(
+    removeData: RemoveGuestRequestDto,
   ): Promise<Result<boolean, Error>> {
     const dataReply = await this.softDelete(removeData)
 
     if (this.utilService.isObjectEmpty(dataReply)) {
-      return err(new Error(`Error when remove area`))
+      return err(new Error(`Error when remove guest`))
     }
 
     return ok(true)
   }
 
   setupQueryCondition(
-    conditions: GetAreaConditionRequestDto,
-  ): SelectQueryBuilder<AreaEntity> {
-    const queryBuilder = this.createQueryBuilder(AreaEntity.tableName)
+    conditions: GetGuestConditionRequestDto,
+  ): SelectQueryBuilder<GuestEntity> {
+    const queryBuilder = this.createQueryBuilder(GuestEntity.tableName)
 
     if (conditions.id !== undefined) {
       queryBuilder.andWhere(`id = :id`, {
@@ -156,21 +155,27 @@ export class AreaRepository extends Repository<AreaEntity> {
       })
     }
 
-    if (conditions.slug !== undefined) {
-      queryBuilder.andWhere(`slug LIKE :slug`, {
-        slug: `%${conditions.slug}%`,
+    if (conditions.nickName !== undefined) {
+      queryBuilder.andWhere(`nickName LIKE :nickName`, {
+        nickName: `%${conditions.nickName}%`,
       })
+    }
+
+    if (conditions.type !== undefined) {
+      queryBuilder.andWhere(`type = :type`, {
+        type: `${conditions.type}`,
+      })
+    }
+
+    if (conditions.isDeleted) {
+      queryBuilder.withDeleted()
     }
 
     queryBuilder.setFindOptions({
       relationLoadStrategy: 'query',
       relations: {
-        club: {
-          area: {
-            club: true,
-          },
-        },
-        member: conditions.isExtraMember ?? false,
+        club: conditions.isExtraClub ?? false,
+        event: conditions.isExtraEvent ?? false,
       },
     })
 
