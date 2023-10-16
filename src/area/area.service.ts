@@ -5,14 +5,25 @@ import { GetAreaConditionRequestDto } from './dto/get-area-condition-request.dto
 import { RemoveAreaRequestDto } from './dto/remove-area.dto'
 import { UpdateAreaRequestDto } from './dto/update-area.dto'
 import { AreaRepository } from './provider/area.repository'
+import { User } from '/generated/user/user'
+import { LogService } from '/log/log.service'
+import { Action } from '/permission/casl/casl.type'
+import { AreaEntity } from './entities/area.entity'
 
 @Injectable()
 export class AreaService {
-  constructor(private readonly repo: AreaRepository) {}
+  constructor(
+    private readonly repo: AreaRepository,
+    private readonly logService: LogService,
+  ) {}
 
-  async create(requestData: CreateAreaRequestDto) {
+  async create(
+    requestData: CreateAreaRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
     //Check area exits
-    const areaReply = await this.getDetail({
+    const areaReply = await this.repo.getDetail({
       name: requestData.name,
     })
 
@@ -22,24 +33,65 @@ export class AreaService {
       )
     }
 
-    return await this.repo.createArea(requestData)
+    const createReply = await this.repo.createArea(requestData)
+
+    if (createReply.isOk()) {
+      await this.logService.create({
+        action: Action.CREATE,
+        subject: AreaEntity.tableName,
+        newData: createReply.value,
+        sessionId: sessionId,
+        user: userInfo,
+      })
+    }
+
+    return createReply
   }
 
   async getDetail(requestData: GetAreaConditionRequestDto) {
-    return await this.repo.getDetail(requestData)
+    const updateReply = await this.repo.getDetail(requestData)
+
+    return updateReply
   }
 
   async getList(requestData: GetAreaConditionRequestDto) {
     return await this.repo.getList(requestData)
   }
 
-  async update(requestData: UpdateAreaRequestDto) {
-    return await this.repo.updateArea(requestData)
+  async update(
+    requestData: UpdateAreaRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
+    const areaReply = await this.repo.getDetail(requestData.conditions)
+
+    if (areaReply.isErr()) {
+      return err(areaReply.error)
+    }
+
+    const updateReply = await this.repo.updateArea(requestData)
+
+    if (updateReply.isOk()) {
+      await this.logService.create({
+        action: Action.UPDATE,
+        subject: AreaEntity.tableName,
+        oldData: areaReply.value,
+        newData: updateReply.value,
+        sessionId: sessionId,
+        user: userInfo,
+      })
+    }
+
+    return updateReply
   }
 
-  async remove(requestData: RemoveAreaRequestDto) {
+  async remove(
+    requestData: RemoveAreaRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
     //Check area
-    const areaReply = await this.getDetail({
+    const areaReply = await this.repo.getDetail({
       id: requestData.id,
     })
 
@@ -47,10 +99,17 @@ export class AreaService {
       return err(areaReply.error)
     }
 
-    if (areaReply.value.deletedAt) {
-      return err(new Error(`Area with id [${requestData.id}] is deleted`))
-    }
+    const removeReply = await this.repo.removeArea(requestData)
 
-    return await this.repo.removeArea(requestData)
+    if (removeReply.isOk()) {
+      await this.logService.create({
+        action: Action.DELETE,
+        subject: AreaEntity.tableName,
+        oldData: areaReply.value,
+        sessionId: sessionId,
+        user: userInfo,
+      })
+    }
+    return removeReply
   }
 }

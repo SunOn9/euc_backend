@@ -47,7 +47,11 @@ export class ClubFeeController {
   ): Promise<ClubFeeReply> {
     const response = {} as ClubFeeReply
 
-    const data = await this.service.create(req['userInfo'], bodyData)
+    const data = await this.service.create(
+      bodyData,
+      req['sessionId'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(
@@ -140,7 +144,11 @@ export class ClubFeeController {
       request.clubId = req['userInfo'].club.id
     }
     const response = {} as SimpleReply
-    const data = await this.service.remove(request)
+    const data = await this.service.remove(
+      request,
+      req['sessionId'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(

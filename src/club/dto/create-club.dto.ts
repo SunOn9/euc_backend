@@ -16,7 +16,7 @@ export class CreateClubRequestDto implements CreateClubRequest {
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
-  fund?: number
+  fund?: number = 0
 
   @ApiProperty()
   @IsNotEmpty()

@@ -6,15 +6,24 @@ import { GetClubConditionRequestDto } from './dto/get-club-condition-request.dto
 import { RemoveClubRequestDto } from './dto/remove-club.dto'
 import { UpdateClubRequestDto } from './dto/update-club.dto'
 import { AreaService } from '/area/area.service'
+import { LogService } from '/log/log.service'
+import { Action } from '/permission/casl/casl.type'
+import { ClubEntity } from './entities/club.entity'
+import { User } from '/generated/user/user'
 
 @Injectable()
 export class ClubService {
   constructor(
     private readonly repo: ClubRepository,
     private readonly areaService: AreaService,
+    private readonly logService: LogService,
   ) {}
 
-  async create(requestData: CreateClubRequestDto) {
+  async create(
+    requestData: CreateClubRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
     //Check club exits
     const clubReply = await this.getDetail({
       name: requestData.name,
@@ -34,11 +43,19 @@ export class ClubService {
       return err(areaReply.error)
     }
 
-    if (requestData.fund === undefined) {
-      requestData.fund = 0
+    const createReply = await this.repo.createClub(requestData)
+
+    if (createReply.isOk()) {
+      await this.logService.create({
+        action: Action.CREATE,
+        subject: ClubEntity.tableName,
+        newData: createReply.value,
+        sessionId: sessionId,
+        user: userInfo,
+      })
     }
 
-    return await this.repo.createClub(requestData)
+    return createReply
   }
 
   async getDetail(requestData: GetClubConditionRequestDto) {
@@ -49,11 +66,38 @@ export class ClubService {
     return await this.repo.getList(requestData)
   }
 
-  async update(requestData: UpdateClubRequestDto) {
-    return await this.repo.updateClub(requestData)
+  async update(
+    requestData: UpdateClubRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
+    const clubReply = await this.repo.getDetail(requestData.conditions)
+
+    if (clubReply.isErr()) {
+      return err(clubReply.error)
+    }
+
+    const updateReply = await this.repo.updateClub(requestData)
+
+    if (updateReply.isOk()) {
+      await this.logService.create({
+        action: Action.UPDATE,
+        subject: ClubEntity.tableName,
+        oldData: clubReply.value,
+        newData: updateReply.value,
+        sessionId: sessionId,
+        user: userInfo,
+      })
+    }
+
+    return updateReply
   }
 
-  async remove(requestData: RemoveClubRequestDto) {
+  async remove(
+    requestData: RemoveClubRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
     //Check club
     const clubReply = await this.getDetail({
       id: requestData.id,
@@ -63,10 +107,18 @@ export class ClubService {
       return err(clubReply.error)
     }
 
-    if (clubReply.value.deletedAt) {
-      return err(new Error(`Club with id [${requestData.id}] is deleted`))
+    const removeReply = await this.repo.removeClub(requestData)
+
+    if (removeReply.isOk()) {
+      await this.logService.create({
+        action: Action.DELETE,
+        subject: ClubEntity.tableName,
+        oldData: clubReply.value,
+        sessionId: sessionId,
+        user: userInfo,
+      })
     }
 
-    return await this.repo.removeClub(requestData)
+    return removeReply
   }
 }

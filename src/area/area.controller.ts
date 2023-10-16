@@ -10,7 +10,7 @@ import {
   Body,
   Param,
   Query,
-  // Req,
+  Req,
 } from '@nestjs/common/decorators/http/route-params.decorator'
 import { AreaListReply, AreaReply } from '/generated/area/area.reply'
 import CustomException from 'lib/utils/custom.exception'
@@ -39,10 +39,14 @@ export class AreaController {
     fields: [],
   })
   async createArea(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Body() bodyData: CreateAreaRequestDto,
   ): Promise<AreaReply> {
-    const data = await this.service.create(bodyData)
+    const data = await this.service.create(
+      bodyData,
+      req['sessionID'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(
@@ -67,11 +71,15 @@ export class AreaController {
   })
   @HttpCode(HttpStatus.CREATED)
   async updateArea(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Body() bodyData: UpdateAreaRequestDto,
   ): Promise<SimpleReply> {
     const response = {} as SimpleReply
-    const data = await this.service.update(bodyData)
+    const data = await this.service.update(
+      bodyData,
+      req['sessionID'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(
@@ -144,11 +152,15 @@ export class AreaController {
 
   @Get('remove/:id')
   async removeArea(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Param() request: RemoveAreaRequestDto,
   ): Promise<SimpleReply> {
     const response = {} as SimpleReply
-    const data = await this.service.remove(request)
+    const data = await this.service.remove(
+      request,
+      req['sessionID'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(

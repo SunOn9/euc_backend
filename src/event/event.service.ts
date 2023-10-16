@@ -8,6 +8,7 @@ import { RemoveEventRequestDto } from './dto/remove-event.dto'
 import { LogService } from '/log/log.service'
 import { Action } from '/permission/casl/casl.type'
 import { User } from '/generated/user/user'
+import { EventEntity } from './entities/event.entity'
 
 @Injectable()
 export class EventService {
@@ -30,9 +31,9 @@ export class EventService {
     if (createReply.isOk()) {
       await this.logService.create({
         action: Action.CREATE,
-        subject: 'event',
+        subject: EventEntity.tableName,
         sessionId: sessionId,
-        newData: JSON.stringify(createReply.value),
+        newData: createReply.value,
         user: userInfo,
       })
     }

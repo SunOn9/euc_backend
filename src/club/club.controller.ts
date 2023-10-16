@@ -10,7 +10,7 @@ import {
   Body,
   Param,
   Query,
-  // Req,
+  Req,
 } from '@nestjs/common/decorators/http/route-params.decorator'
 import { ClubListReply, ClubReply } from '/generated/club/club.reply'
 import CustomException from 'lib/utils/custom.exception'
@@ -39,10 +39,14 @@ export class ClubController {
     fields: [],
   })
   async createClub(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Body() bodyData: CreateClubRequestDto,
   ): Promise<ClubReply> {
-    const data = await this.service.create(bodyData)
+    const data = await this.service.create(
+      bodyData,
+      req['sessionID'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(
@@ -67,11 +71,15 @@ export class ClubController {
   })
   @HttpCode(HttpStatus.CREATED)
   async updateClub(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Body() bodyData: UpdateClubRequestDto,
   ): Promise<SimpleReply> {
     const response = {} as SimpleReply
-    const data = await this.service.update(bodyData)
+    const data = await this.service.update(
+      bodyData,
+      req['sessionID'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(
@@ -144,11 +152,15 @@ export class ClubController {
 
   @Get('remove/:id')
   async removeClub(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Param() request: RemoveClubRequestDto,
   ): Promise<SimpleReply> {
     const response = {} as SimpleReply
-    const data = await this.service.remove(request)
+    const data = await this.service.remove(
+      request,
+      req['sessionID'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(

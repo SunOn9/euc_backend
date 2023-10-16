@@ -165,11 +165,7 @@ export class AreaRepository extends Repository<AreaEntity> {
     queryBuilder.setFindOptions({
       relationLoadStrategy: 'query',
       relations: {
-        club: {
-          area: {
-            club: true,
-          },
-        },
+        club: conditions.isExtraClub ?? false,
         member: conditions.isExtraMember ?? false,
       },
     })

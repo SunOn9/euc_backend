@@ -6,15 +6,25 @@ import { RemoveClubFeeRequestDto } from './dto/remove-club-fee.dto'
 import { ClubFeeRepository } from './provider/club-fee.repository'
 import { User } from '/generated/user/user'
 import { EnumProto_UserRole } from '/generated/enumps'
+import { LogService } from '/log/log.service'
+import { Action } from '/permission/casl/casl.type'
+import { ClubFeeEntity } from './entities/club-fee.entity'
 
 @Injectable()
 export class ClubFeeService {
-  constructor(private readonly repo: ClubFeeRepository) {}
+  constructor(
+    private readonly repo: ClubFeeRepository,
+    private readonly logService: LogService,
+  ) {}
 
-  async create(userInfo: User, requestData: CreateClubFeeRequestDto) {
+  async create(
+    requestData: CreateClubFeeRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
     let { clubId, ...other } = requestData
 
-    if (userInfo.role === EnumProto_UserRole.ADMIN) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN) {
       clubId = userInfo.club.id
     }
 
@@ -27,7 +37,19 @@ export class ClubFeeService {
       await this.repo.removeClubFee(clubFeeReply.value.id)
     }
 
-    return await this.repo.createClubFee(other, clubId)
+    const createReply = await this.repo.createClubFee(other, clubId)
+
+    if (createReply.isOk()) {
+      await this.logService.create({
+        action: Action.CREATE,
+        subject: ClubFeeEntity.tableName,
+        newData: createReply.value,
+        sessionId: sessionId,
+        user: userInfo,
+      })
+    }
+
+    return createReply
   }
 
   async getDetail(requestData: GetClubFeeConditionRequestDto) {
@@ -38,7 +60,11 @@ export class ClubFeeService {
     return await this.repo.getList(requestData)
   }
 
-  async remove(requestData: RemoveClubFeeRequestDto) {
+  async remove(
+    requestData: RemoveClubFeeRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
     //Check clubFee
     const clubFeeReply = await this.getDetail({
       clubId: requestData.clubId,
@@ -49,12 +75,18 @@ export class ClubFeeService {
       return err(clubFeeReply.error)
     }
 
-    if (clubFeeReply.value.deletedAt) {
-      return err(
-        new Error(`ClubFee of [${clubFeeReply.value.club.name}] is deleted`),
-      )
+    const removeReply = await this.repo.removeClubFee(clubFeeReply.value.id)
+
+    if (removeReply.isOk()) {
+      await this.logService.create({
+        action: Action.DELETE,
+        subject: ClubFeeEntity.tableName,
+        oldData: clubFeeReply.value,
+        sessionId: sessionId,
+        user: userInfo,
+      })
     }
 
-    return await this.repo.removeClubFee(clubFeeReply.value.id)
+    return removeReply
   }
 }
