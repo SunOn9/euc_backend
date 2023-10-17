@@ -10,10 +10,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { GuestEntity } from '/guest/entities/guest.entity'
-import { MemberInClubEntity } from '/member-in-club/entities/member-in-club.entity'
 import { ClubFeeEntity } from '/club-fee/entities/club-fee.entity'
 import { UserEntity } from '/user/entities/user.entity'
 import { EventEntity } from '/event/entities/event.entity'
+import { MemberInClubEntity } from '/member/entities/member-in-club.entity'
 
 @Entity({ name: 'club' })
 export class ClubEntity {
@@ -34,7 +34,9 @@ export class ClubEntity {
   @Column()
   totalMember: number
 
-  @OneToMany(() => MemberInClubEntity, memberInClub => memberInClub.club)
+  @OneToMany(() => MemberInClubEntity, memberInClub => memberInClub.club, {
+    cascade: true,
+  })
   memberInClub: MemberInClubEntity[]
 
   @OneToMany(() => ClubFeeEntity, fee => fee.club)

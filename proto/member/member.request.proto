@@ -8,7 +8,7 @@ message GetMemberConditionRequest {
   optional int32 id = 1;
   optional string name = 2;
   optional string nick_name = 3;
-  optional google.protobuf.Timestamp birthday = 4;
+  // optional google.protobuf.Timestamp birthday = 4;
   optional EnumProto.MemberStatus status = 5;
   optional EnumProto.MemberType type = 6;
   optional string monthly_fee = 7;
@@ -21,6 +21,9 @@ message GetMemberConditionRequest {
   optional bool is_extra_hometown =15;
   optional bool is_extra_event =16;
   optional bool is_extra_club =17;
+  optional bool is_extra_area =18;
+  optional google.protobuf.Timestamp birthday_from = 19;
+  optional google.protobuf.Timestamp birthday_to = 20;
 }
 
 message CreateMemberRequest {
@@ -30,6 +33,7 @@ message CreateMemberRequest {
   EnumProto.MemberStatus status = 5;
   EnumProto.MemberType type = 6;
   optional string monthly_fee = 7;
+  optional int32 club_id = 8;
 }
 
 message UpdateMemberDataRequest {
@@ -39,6 +43,7 @@ message UpdateMemberDataRequest {
   optional EnumProto.MemberStatus status = 5;
   optional EnumProto.MemberType type = 6;
   optional string monthly_fee = 7;
+  // optional int32 club_id = 8;
 }
 
 message UpdateMemberRequest {
@@ -48,4 +53,9 @@ message UpdateMemberRequest {
 
 message RemoveMemberRequest {
   int32 id = 1;
+}
+
+message UpdateClubOfMemberRequest {
+  int32 member_id =1;
+  int32 new_club_id =2;
 }

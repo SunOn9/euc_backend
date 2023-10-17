@@ -12,8 +12,8 @@ import {
 } from 'typeorm'
 import { EventEntity } from 'src/event/entities/event.entity'
 import { AreaEntity } from '/area/entities/area.entity'
-import { MemberInClubEntity } from '/member-in-club/entities/member-in-club.entity'
 import { EnumProto_MemberStatus, EnumProto_MemberType } from '/generated/enumps'
+import { MemberInClubEntity } from './member-in-club.entity'
 
 @Entity({ name: 'member' })
 export class MemberEntity {
@@ -43,7 +43,9 @@ export class MemberEntity {
   @ManyToOne(() => AreaEntity, area => area.member)
   hometown: AreaEntity
 
-  @OneToMany(() => MemberInClubEntity, memberInClub => memberInClub.member)
+  @OneToMany(() => MemberInClubEntity, memberInClub => memberInClub.member, {
+    cascade: true,
+  })
   memberInClub: MemberInClubEntity[]
 
   @ManyToMany(() => EventEntity)

@@ -17,7 +17,7 @@ message Member {
   google.protobuf.Timestamp updated_at = 12;
   optional google.protobuf.Timestamp deleted_at = 13;
   Area hometown =14;
-  repeated Club club =15;
+  repeated MemberInClub member_in_club =15;
   repeated Event event =16;
 
   message Area {
@@ -26,18 +26,25 @@ message Member {
     string slug = 3;
     google.protobuf.Timestamp created_at = 5;
     google.protobuf.Timestamp updated_at = 6;
-    google.protobuf.Timestamp deleted_at = 7;
+    optional google.protobuf.Timestamp deleted_at = 7;
   }
 
-  message Club {
+  message MemberInClub {
     int32 id = 1;
-    string name = 2;
-    optional string abbreviation = 3;
-    int32 fund =4;
-    int32 total_member = 5;
-    google.protobuf.Timestamp created_at = 6;
-    google.protobuf.Timestamp updated_at = 7;
-    optional google.protobuf.Timestamp deleted_at = 8;
+    Club club = 2;
+    google.protobuf.Timestamp created_at = 5;
+    optional google.protobuf.Timestamp deleted_at = 7;
+
+    message Club {
+      int32 id = 1;
+      string name = 2;
+      optional string abbreviation = 3;
+      // int32 fund =4;
+      int32 total_member = 5;
+      google.protobuf.Timestamp created_at = 6;
+      google.protobuf.Timestamp updated_at = 7;
+      optional google.protobuf.Timestamp deleted_at = 8;
+    }
   }
 
   message Event {

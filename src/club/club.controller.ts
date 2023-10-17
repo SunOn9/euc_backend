@@ -44,7 +44,7 @@ export class ClubController {
   ): Promise<ClubReply> {
     const data = await this.service.create(
       bodyData,
-      req['sessionID'],
+      req['sessionId'],
       req['userInfo'],
     )
 
@@ -77,7 +77,7 @@ export class ClubController {
     const response = {} as SimpleReply
     const data = await this.service.update(
       bodyData,
-      req['sessionID'],
+      req['sessionId'],
       req['userInfo'],
     )
 
@@ -158,7 +158,7 @@ export class ClubController {
     const response = {} as SimpleReply
     const data = await this.service.remove(
       request,
-      req['sessionID'],
+      req['sessionId'],
       req['userInfo'],
     )
 

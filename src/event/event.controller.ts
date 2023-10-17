@@ -45,7 +45,7 @@ export class EventController {
   ): Promise<EventReply> {
     const data = await this.service.create(
       bodyData,
-      req['sessionID'],
+      req['sessionId'],
       req['userInfo'],
     )
 
@@ -72,11 +72,15 @@ export class EventController {
   })
   @HttpCode(HttpStatus.CREATED)
   async updateEvent(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Body() bodyData: UpdateEventRequestDto,
   ): Promise<SimpleReply> {
     const response = {} as SimpleReply
-    const data = await this.service.update(bodyData)
+    const data = await this.service.update(
+      bodyData,
+      req['sessionId'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(
@@ -149,11 +153,15 @@ export class EventController {
 
   @Get('remove/:id')
   async removeEvent(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Param() request: RemoveEventRequestDto,
   ): Promise<SimpleReply> {
     const response = {} as SimpleReply
-    const data = await this.service.remove(request)
+    const data = await this.service.remove(
+      request,
+      req['sessionId'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(

@@ -22,7 +22,6 @@ import { AreaModule } from './area/area.module'
 import { UtilsModule } from 'lib/utils'
 import { PaymentSessionModule } from './payment-session/payment-session.module'
 import { ReceiptSessionModule } from './receipt-session/receipt-session.module'
-import { MemberInClubModule } from './member-in-club/member-in-club.module'
 import { ClubFeeModule } from './club-fee/club-fee.module'
 import { LogModule } from './log/log.module'
 import { PlaceModule } from './place/place.module'
@@ -113,7 +112,6 @@ import { SessionModule } from './session/session.module'
     AreaModule,
     PaymentSessionModule,
     ReceiptSessionModule,
-    MemberInClubModule,
     ClubFeeModule,
     LogModule,
     PlaceModule,

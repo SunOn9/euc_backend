@@ -26,19 +26,19 @@ export class EventService {
 
     //TODO: Check place fee -> Create Payment Session
 
-    const createReply = await this.repo.createEvent(requestData)
+    const updateReply = await this.repo.createEvent(requestData)
 
-    if (createReply.isOk()) {
+    if (updateReply.isOk()) {
       await this.logService.create({
         action: Action.CREATE,
         subject: EventEntity.tableName,
+        newData: updateReply.value,
         sessionId: sessionId,
-        newData: createReply.value,
         user: userInfo,
       })
     }
 
-    return createReply
+    return updateReply
   }
 
   async getDetail(requestData: GetEventConditionRequestDto) {
@@ -49,11 +49,38 @@ export class EventService {
     return await this.repo.getList(requestData)
   }
 
-  async update(requestData: UpdateEventRequestDto) {
-    return await this.repo.updateEvent(requestData)
+  async update(
+    requestData: UpdateEventRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
+    const eventReply = await this.repo.getDetail(requestData.conditions)
+
+    if (eventReply.isErr()) {
+      return err(eventReply.error)
+    }
+
+    const updateReply = await this.repo.updateEvent(requestData)
+
+    if (updateReply.isOk()) {
+      await this.logService.create({
+        action: Action.UPDATE,
+        subject: EventEntity.tableName,
+        oldData: eventReply.value,
+        newData: updateReply.value,
+        sessionId: sessionId,
+        user: userInfo,
+      })
+    }
+
+    return updateReply
   }
 
-  async remove(requestData: RemoveEventRequestDto) {
+  async remove(
+    requestData: RemoveEventRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
     //Check event
     const eventReply = await this.getDetail({
       id: requestData.id,
@@ -63,10 +90,19 @@ export class EventService {
       return err(eventReply.error)
     }
 
-    if (eventReply.value.deletedAt) {
-      return err(new Error(`Event with id [${requestData.id}] is deleted`))
-    }
+    const removeReply = await this.repo.removeEvent(requestData)
 
-    return await this.repo.removeEvent(requestData)
+    if (removeReply.isOk()) {
+      await this.logService.create({
+        action: Action.DELETE,
+        subject: EventEntity.tableName,
+        oldData: eventReply.value,
+        sessionId: sessionId,
+        user: userInfo,
+      })
+    }
+    return removeReply
   }
+
+  // TODO: Add member, and guest
 }

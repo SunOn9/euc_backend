@@ -32,6 +32,7 @@ export class AthenticatedGuard implements CanActivate {
     }
 
     request['userInfo'] = session.value
+    request['sessionId'] = sessionID
 
     return true
   }
