@@ -29,8 +29,13 @@ export class GuestRepository extends Repository<GuestEntity> {
     createData: CreateGuestRequestDto,
   ): Promise<Result<Guest, Error>> {
     try {
+      const { clubId, ...other } = createData
+
       const saveData = {
-        ...createData,
+        ...other,
+        club: {
+          id: clubId,
+        },
       } as GuestEntity
 
       const dataReply = await this.save(saveData)
@@ -156,7 +161,7 @@ export class GuestRepository extends Repository<GuestEntity> {
     }
 
     if (conditions.nickName !== undefined) {
-      queryBuilder.andWhere(`nickName LIKE :nickName`, {
+      queryBuilder.andWhere(`nick_name LIKE :nickName`, {
         nickName: `%${conditions.nickName}%`,
       })
     }

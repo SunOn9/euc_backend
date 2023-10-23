@@ -10,7 +10,7 @@ message GetClubConditionRequest {
   optional string abbreviation = 3;
   optional int32 fund =4;
   optional int32 total_member = 5;
-
+  optional int32 total_guest = 6;
   optional int32 page =10;
   optional int32 limit =11;
   optional bool is_deleted =13;
@@ -31,7 +31,8 @@ message UpdateClubDataRequest {
   optional string abbreviation = 3;
   optional int32 fund =4;
   optional int32 total_member = 5;
-  optional int32 area_id = 6;
+  optional int32 total_guest = 6;
+  optional int32 area_id = 7;
 }
 
 message UpdateClubRequest {

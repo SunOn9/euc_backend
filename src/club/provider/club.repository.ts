@@ -34,7 +34,6 @@ export class ClubRepository extends Repository<ClubEntity> {
 
       const saveData: Partial<ClubEntity> = {
         ...other,
-        totalMember: 0,
         area: { id: areaId } as AreaEntity,
       }
 

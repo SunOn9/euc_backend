@@ -31,8 +31,11 @@ export class ClubEntity {
   @Column()
   fund: number
 
-  @Column()
+  @Column({ default: 0 })
   totalMember: number
+
+  @Column({ default: 0 })
+  totalGuest: number
 
   @OneToMany(() => MemberInClubEntity, memberInClub => memberInClub.club, {
     cascade: true,

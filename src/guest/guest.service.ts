@@ -10,12 +10,15 @@ import { GuestEntity } from './entities/guest.entity'
 import { GetGuestConditionRequestDto } from './dto/get-guest-condition-request.dto'
 import { UpdateGuestRequestDto } from './dto/update-guest.dto'
 import { RemoveGuestRequestDto } from './dto/remove-guest.dto'
+import { ClubService } from '/club/club.service'
+import { EnumProto_UserRole } from '/generated/enumps'
 
 @Injectable()
 export class GuestService {
   constructor(
     private readonly repo: GuestRepository,
     private readonly logService: LogService,
+    private readonly clubService: ClubService,
   ) {}
 
   async create(
@@ -23,16 +26,38 @@ export class GuestService {
     sessionId: string,
     userInfo: User,
   ) {
-    // // Check guest exits
-    // const guestReply = await this.repo.getDetail({
-    //   name: requestData.name,
-    // })
+    if (userInfo.role !== EnumProto_UserRole.ADMIN) {
+      requestData.clubId = userInfo.club.id
+    }
 
-    // if (guestReply.isOk()) {
-    //   return err(
-    //     new Error(`Guest already exits with name: [${requestData.name}]`),
-    //   )
-    // }
+    // Check name and nickname guest exits
+    const guestReply = await this.repo.getDetail({
+      name: requestData.name,
+      nickName: requestData.nickName,
+    })
+
+    if (guestReply.isOk()) {
+      if (requestData.nickName === undefined) {
+        return err(
+          new Error(`Guest already exits with name: [${requestData.name}]`),
+        )
+      } else {
+        return err(
+          new Error(
+            `Guest already exits with name: [${requestData.name}] and nickname: [${requestData.nickName}]`,
+          ),
+        )
+      }
+    }
+
+    //Check club
+    const clubReply = await this.clubService.getDetail({
+      id: requestData.clubId,
+    })
+
+    if (clubReply.isErr()) {
+      return err(new Error(`Club with id: [${requestData.clubId}] don't exits`))
+    }
 
     const createReply = await this.repo.createGuest(requestData)
 
@@ -44,6 +69,19 @@ export class GuestService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      await this.clubService.update(
+        {
+          conditions: {
+            id: requestData.clubId,
+          },
+          data: {
+            totalGuest: ++clubReply.value.totalGuest,
+          },
+        },
+        sessionId,
+        userInfo,
+      )
     }
 
     return createReply
@@ -94,6 +132,7 @@ export class GuestService {
     //Check guest
     const guestReply = await this.repo.getDetail({
       id: requestData.id,
+      isExtraClub: true,
     })
 
     if (guestReply.isErr()) {
@@ -110,7 +149,30 @@ export class GuestService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      //Check club
+      const clubReply = await this.clubService.getDetail({
+        id: guestReply.value.club.id,
+      })
+
+      if (clubReply.isErr()) {
+        return err(clubReply.error)
+      }
+
+      await this.clubService.update(
+        {
+          conditions: {
+            id: guestReply.value.club.id,
+          },
+          data: {
+            totalGuest: --clubReply.value.totalGuest,
+          },
+        },
+        sessionId,
+        userInfo,
+      )
     }
+
     return removeReply
   }
 }

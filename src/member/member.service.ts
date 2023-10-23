@@ -14,17 +14,17 @@ import { UpdateClubOfMemberRequestDto } from './dto/update-club-of-member.dto'
 import { MemberInClubEntity } from './entities/member-in-club.entity'
 import { Repository } from 'typeorm/repository/Repository'
 import { InjectRepository } from '@nestjs/typeorm/dist/common/typeorm.decorators'
+import { ClubService } from '/club/club.service'
 
 @Injectable()
 export class MemberService {
   constructor(
     private readonly repo: MemberRepository,
     private readonly logService: LogService,
+    private readonly clubService: ClubService,
     @InjectRepository(MemberInClubEntity)
     private memberInClubRepo: Repository<MemberInClubEntity>,
   ) {}
-
-  //TODO: update total member in Club
 
   async create(
     requestData: CreateMemberRequestDto,
@@ -35,16 +35,34 @@ export class MemberService {
       requestData.clubId = userInfo.club.id
     }
 
-    // //Check member exits
-    // const memberReply = await this.repo.getDetail({
-    //   name: requestData.name,
-    // })
+    //Check club
+    const clubReply = await this.clubService.getDetail({
+      id: requestData.clubId,
+    })
 
-    // if (memberReply.isOk()) {
-    //   return err(
-    //     new Error(`Member already exits with name: [${requestData.name}]`),
-    //   )
-    // }
+    if (clubReply.isErr()) {
+      return err(new Error(`Club with id: [${requestData.clubId}] don't exits`))
+    }
+
+    // Check name and nickname member exits
+    const memberReply = await this.repo.getDetail({
+      name: requestData.name,
+      nickName: requestData.nickName,
+    })
+
+    if (memberReply.isOk()) {
+      if (requestData.nickName === undefined) {
+        return err(
+          new Error(`Member already exits with name: [${requestData.name}]`),
+        )
+      } else {
+        return err(
+          new Error(
+            `Member already exits with name: [${requestData.name}] and nickname: [${requestData.nickName}]`,
+          ),
+        )
+      }
+    }
 
     const createReply = await this.repo.createMember(requestData)
 
@@ -56,6 +74,19 @@ export class MemberService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      await this.clubService.update(
+        {
+          conditions: {
+            id: requestData.clubId,
+          },
+          data: {
+            totalMember: ++clubReply.value.totalMember,
+          },
+        },
+        sessionId,
+        userInfo,
+      )
     }
 
     return createReply
@@ -103,6 +134,7 @@ export class MemberService {
     sessionId: string,
     userInfo: User,
   ) {
+    //Check member
     const memberReply = await this.repo.getDetail({
       id: requestData.memberId,
       isExtraClub: true,
@@ -112,7 +144,40 @@ export class MemberService {
       return err(memberReply.error)
     }
 
-    await this.memberInClubRepo.softDelete(memberReply.value.memberInClub[0].id)
+    //Check old club
+    const oldClub = await this.clubService.getDetail({
+      id: memberReply.value.memberInClub[0].club.id,
+    })
+
+    if (oldClub.isErr()) {
+      return err(oldClub.error)
+    }
+
+    //Check new club
+    const newClub = await this.clubService.getDetail({
+      id: requestData.newClubId,
+    })
+
+    if (newClub.isErr()) {
+      return err(newClub.error)
+    }
+
+    // Delete old memberInClub
+    await this.memberInClubRepo.softDelete(
+      memberReply.value.memberInClub[0].club.id,
+    )
+
+    // Update old club
+    await this.clubService.update(
+      {
+        conditions: { id: memberReply.value.memberInClub[0].club.id },
+        data: {
+          totalMember: --memberReply.value.memberInClub[0].club.totalMember,
+        },
+      },
+      sessionId,
+      userInfo,
+    )
 
     const createReply = await this.memberInClubRepo.save({
       club: { id: requestData.newClubId },
@@ -133,6 +198,17 @@ export class MemberService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      await this.clubService.update(
+        {
+          conditions: { id: requestData.newClubId },
+          data: {
+            totalMember: ++memberReply.value.memberInClub[0].club.totalMember,
+          },
+        },
+        sessionId,
+        userInfo,
+      )
     }
 
     return ok(true)
@@ -146,6 +222,7 @@ export class MemberService {
     //Check member
     const memberReply = await this.repo.getDetail({
       id: requestData.id,
+      isExtraClub: true,
     })
 
     if (memberReply.isErr()) {
@@ -162,6 +239,32 @@ export class MemberService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      console.log(memberReply.value.memberInClub[0].club)
+
+      //Check club
+      const clubReply = await this.clubService.getDetail({
+        id: memberReply.value.memberInClub[0].club.id,
+      })
+
+      if (clubReply.isErr()) {
+        return err(clubReply.error)
+      }
+
+      console.log(clubReply.value.totalMember)
+
+      await this.clubService.update(
+        {
+          conditions: {
+            id: memberReply.value.memberInClub[0].club.id,
+          },
+          data: {
+            totalMember: --clubReply.value.totalMember,
+          },
+        },
+        sessionId,
+        userInfo,
+      )
     }
     return removeReply
   }

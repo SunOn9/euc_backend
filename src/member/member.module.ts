@@ -7,11 +7,13 @@ import { PermissionModule } from '/permission/permission.module'
 import { MemberRepository } from './provider/member.repository'
 import { MemberReflect } from './provider/member.proto'
 import { MemberInClubEntity } from './entities/member-in-club.entity'
+import { ClubModule } from '/club/club.module'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([MemberEntity, MemberInClubEntity]),
     PermissionModule,
+    ClubModule,
   ],
   controllers: [MemberController],
   providers: [MemberService, MemberRepository, MemberReflect],

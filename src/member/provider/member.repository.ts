@@ -12,6 +12,7 @@ import { MemberEntity } from '../entities/member.entity'
 import { MemberReflect } from './member.proto'
 import { Member } from '/generated/member/member'
 import { MemberListDataReply } from '/generated/member/member.reply'
+import { ClubEntity } from '/club/entities/club.entity'
 
 @Injectable()
 export class MemberRepository extends Repository<MemberEntity> {
@@ -34,7 +35,7 @@ export class MemberRepository extends Repository<MemberEntity> {
 
       const saveData = {
         ...other,
-        memberInClub: [{ club: { id: clubId } }],
+        memberInClub: [{ club: { id: clubId } as ClubEntity }],
       } as MemberEntity
 
       const dataReply = await this.save(saveData)
@@ -160,7 +161,7 @@ export class MemberRepository extends Repository<MemberEntity> {
     }
 
     if (conditions.nickName !== undefined) {
-      queryBuilder.andWhere(`nickName LIKE :nickName`, {
+      queryBuilder.andWhere(`nick_name LIKE :nickName`, {
         nickName: `%${conditions.nickName}%`,
       })
     }

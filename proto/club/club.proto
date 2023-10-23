@@ -10,11 +10,12 @@ message Club {
   optional string abbreviation = 3;
   optional int32 fund =4;
   int32 total_member = 5;
-  google.protobuf.Timestamp created_at = 6;
-  google.protobuf.Timestamp updated_at = 7;
-  optional google.protobuf.Timestamp deleted_at = 8;
-  repeated ClubFee fee =9;
-  Area area =10;
+  int32 total_guest = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+  optional google.protobuf.Timestamp deleted_at = 9;
+  repeated ClubFee fee =10;
+  Area area =11;
 
   message Area {
     int32 id = 1;

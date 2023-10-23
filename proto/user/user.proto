@@ -45,10 +45,11 @@ message User {
     int32 id = 1;
     string name = 2;
     optional string abbreviation = 3;
-    int32 fund =4;
+    // optional int32 fund =4;
     int32 total_member = 5;
-    google.protobuf.Timestamp created_at = 6;
-    google.protobuf.Timestamp updated_at = 7;
-    optional google.protobuf.Timestamp deleted_at = 8;
+    int32 total_guest = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+    optional google.protobuf.Timestamp deleted_at = 9;
   }
 }
