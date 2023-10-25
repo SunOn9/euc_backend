@@ -4,40 +4,39 @@ import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { Result, err, ok } from 'neverthrow'
 import CustomException from 'lib/utils/custom.exception'
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
-import { AreaReflect } from './area.proto'
-import { AreaEntity } from '../entities/area.entity'
-import { Area } from '/generated/area/area'
-import { AreaListDataReply } from '/generated/area/area.reply'
-import { CreateAreaRequestDto } from '../dto/create-area.dto'
-import { GetAreaConditionRequestDto } from '../dto/get-area-condition-request.dto'
-import { RemoveAreaRequestDto } from '../dto/remove-area.dto'
-import { UpdateAreaRequestDto } from '../dto/update-area.dto'
+import { PlaceReflect } from './place.proto'
+import { PlaceEntity } from '../entities/place.entity'
+import { Place } from '/generated/place/place'
+import { PlaceListDataReply } from '/generated/place/place.reply'
+import { CreatePlaceRequestDto } from '../dto/create-place.dto'
+import { GetPlaceConditionRequestDto } from '../dto/get-place-condition-request.dto'
+import { RemovePlaceRequestDto } from '../dto/remove-place.dto'
+import { UpdatePlaceRequestDto } from '../dto/update-place.dto'
 
 @Injectable()
-export class AreaRepository extends Repository<AreaEntity> {
+export class PlaceRepository extends Repository<PlaceEntity> {
   constructor(
     // @Inject(CACHE_MANAGER)
     // private cache: Cache,
     private dataSource: DataSource,
-    private proto: AreaReflect,
+    private proto: PlaceReflect,
     private utilService: UtilsService,
   ) {
-    super(AreaEntity, dataSource.createEntityManager())
+    super(PlaceEntity, dataSource.createEntityManager())
   }
 
-  async createArea(
-    createData: CreateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
+  async createPlace(
+    createData: CreatePlaceRequestDto,
+  ): Promise<Result<Place, Error>> {
     try {
       const saveData = {
         ...createData,
-        slug: this.utilService.convertToSlug(createData.name),
-      } as AreaEntity
+      } as PlaceEntity
 
       const dataReply = await this.save(saveData)
 
       if (this.utilService.isObjectEmpty(dataReply)) {
-        return err(new Error(`Cannot create area in database`))
+        return err(new Error(`Cannot create place in database`))
       }
 
       return ok(this.proto.reflect(dataReply))
@@ -46,9 +45,9 @@ export class AreaRepository extends Repository<AreaEntity> {
     }
   }
 
-  async updateArea(
-    updateData: UpdateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
+  async updatePlace(
+    updateData: UpdatePlaceRequestDto,
+  ): Promise<Result<Place, Error>> {
     try {
       if (this.utilService.isObjectEmpty(updateData.conditions)) {
         return err(new Error(`Empty conditions`))
@@ -63,8 +62,8 @@ export class AreaRepository extends Repository<AreaEntity> {
   }
 
   async getDetail(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<Area, Error>> {
+    conditions: GetPlaceConditionRequestDto,
+  ): Promise<Result<Place, Error>> {
     try {
       if (this.utilService.isObjectEmpty(conditions)) {
         return err(new Error(`Empty conditions`))
@@ -76,7 +75,7 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get area with conditions: [${conditions}]`),
+          new Error(`Cannot get place with conditions: [${conditions}]`),
         )
       }
 
@@ -87,8 +86,8 @@ export class AreaRepository extends Repository<AreaEntity> {
   }
 
   async getList(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<AreaListDataReply, Error>> {
+    conditions: GetPlaceConditionRequestDto,
+  ): Promise<Result<PlaceListDataReply, Error>> {
     try {
       // if (!conditions) {
       //   return err(new Error(`Empty conditions`));
@@ -108,11 +107,11 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get list area with conditions: [${conditions}]`),
+          new Error(`Cannot get list place with conditions: [${conditions}]`),
         )
       }
 
-      const areaList: Area[] = dataReply.map(each => {
+      const placeList: Place[] = dataReply.map(each => {
         return this.proto.reflect(each)
       })
 
@@ -120,29 +119,29 @@ export class AreaRepository extends Repository<AreaEntity> {
         total,
         page,
         limit,
-        areaList,
+        placeList,
       })
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async removeArea(
-    removeData: RemoveAreaRequestDto,
+  async removePlace(
+    removeData: RemovePlaceRequestDto,
   ): Promise<Result<boolean, Error>> {
     const dataReply = await this.softDelete(removeData)
 
     if (this.utilService.isObjectEmpty(dataReply)) {
-      return err(new Error(`Error when remove area`))
+      return err(new Error(`Error when remove place`))
     }
 
     return ok(true)
   }
 
   setupQueryCondition(
-    conditions: GetAreaConditionRequestDto,
-  ): SelectQueryBuilder<AreaEntity> {
-    const queryBuilder = this.createQueryBuilder(AreaEntity.tableName)
+    conditions: GetPlaceConditionRequestDto,
+  ): SelectQueryBuilder<PlaceEntity> {
+    const queryBuilder = this.createQueryBuilder(PlaceEntity.tableName)
 
     if (conditions.id !== undefined) {
       queryBuilder.andWhere(`id = :id`, {
@@ -156,9 +155,15 @@ export class AreaRepository extends Repository<AreaEntity> {
       })
     }
 
-    if (conditions.slug !== undefined) {
-      queryBuilder.andWhere(`slug LIKE :slug`, {
-        slug: `%${conditions.slug}%`,
+    if (conditions.fee !== undefined) {
+      queryBuilder.andWhere(`fee = :fee`, {
+        fee: `${conditions.fee}`,
+      })
+    }
+
+    if (conditions.address !== undefined) {
+      queryBuilder.andWhere(`address LIKE :address`, {
+        address: `%${conditions.address}%`,
       })
     }
 
@@ -166,14 +171,12 @@ export class AreaRepository extends Repository<AreaEntity> {
       queryBuilder.withDeleted()
     }
 
+    // queryBuilder.setFindOptions({
+    //   relationLoadStrategy: 'query',
+    //   relations: {
 
-    queryBuilder.setFindOptions({
-      relationLoadStrategy: 'query',
-      relations: {
-        club: conditions.isExtraClub ?? false,
-        member: conditions.isExtraMember ?? false,
-      },
-    })
+    //   },
+    // })
 
     return queryBuilder
   }

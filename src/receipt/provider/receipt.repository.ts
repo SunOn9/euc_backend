@@ -4,40 +4,39 @@ import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { Result, err, ok } from 'neverthrow'
 import CustomException from 'lib/utils/custom.exception'
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
-import { AreaReflect } from './area.proto'
-import { AreaEntity } from '../entities/area.entity'
-import { Area } from '/generated/area/area'
-import { AreaListDataReply } from '/generated/area/area.reply'
-import { CreateAreaRequestDto } from '../dto/create-area.dto'
-import { GetAreaConditionRequestDto } from '../dto/get-area-condition-request.dto'
-import { RemoveAreaRequestDto } from '../dto/remove-area.dto'
-import { UpdateAreaRequestDto } from '../dto/update-area.dto'
+import { CreateReceiptRequestDto } from '../dto/create-receipt.dto'
+import { GetReceiptConditionRequestDto } from '../dto/get-receipt-condition-request.dto'
+import { RemoveReceiptRequestDto } from '../dto/remove-receipt.dto'
+import { UpdateReceiptRequestDto } from '../dto/update-receipt.dto'
+import { ReceiptEntity } from '../entities/receipt.entity'
+import { ReceiptReflect } from './receipt.proto'
+import { Receipt } from '/generated/receipt/receipt'
+import { ReceiptListDataReply } from '/generated/receipt/receipt.reply'
 
 @Injectable()
-export class AreaRepository extends Repository<AreaEntity> {
+export class ReceiptRepository extends Repository<ReceiptEntity> {
   constructor(
     // @Inject(CACHE_MANAGER)
     // private cache: Cache,
     private dataSource: DataSource,
-    private proto: AreaReflect,
+    private proto: ReceiptReflect,
     private utilService: UtilsService,
   ) {
-    super(AreaEntity, dataSource.createEntityManager())
+    super(ReceiptEntity, dataSource.createEntityManager())
   }
 
-  async createArea(
-    createData: CreateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
+  async createReceipt(
+    createData: CreateReceiptRequestDto,
+  ): Promise<Result<Receipt, Error>> {
     try {
       const saveData = {
         ...createData,
-        slug: this.utilService.convertToSlug(createData.name),
-      } as AreaEntity
+      } as ReceiptEntity
 
       const dataReply = await this.save(saveData)
 
       if (this.utilService.isObjectEmpty(dataReply)) {
-        return err(new Error(`Cannot create area in database`))
+        return err(new Error(`Cannot create receipt in database`))
       }
 
       return ok(this.proto.reflect(dataReply))
@@ -46,9 +45,9 @@ export class AreaRepository extends Repository<AreaEntity> {
     }
   }
 
-  async updateArea(
-    updateData: UpdateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
+  async updateReceipt(
+    updateData: UpdateReceiptRequestDto,
+  ): Promise<Result<Receipt, Error>> {
     try {
       if (this.utilService.isObjectEmpty(updateData.conditions)) {
         return err(new Error(`Empty conditions`))
@@ -63,8 +62,8 @@ export class AreaRepository extends Repository<AreaEntity> {
   }
 
   async getDetail(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<Area, Error>> {
+    conditions: GetReceiptConditionRequestDto,
+  ): Promise<Result<Receipt, Error>> {
     try {
       if (this.utilService.isObjectEmpty(conditions)) {
         return err(new Error(`Empty conditions`))
@@ -76,7 +75,7 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get area with conditions: [${conditions}]`),
+          new Error(`Cannot get receipt with conditions: [${conditions}]`),
         )
       }
 
@@ -87,8 +86,8 @@ export class AreaRepository extends Repository<AreaEntity> {
   }
 
   async getList(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<AreaListDataReply, Error>> {
+    conditions: GetReceiptConditionRequestDto,
+  ): Promise<Result<ReceiptListDataReply, Error>> {
     try {
       // if (!conditions) {
       //   return err(new Error(`Empty conditions`));
@@ -108,11 +107,11 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get list area with conditions: [${conditions}]`),
+          new Error(`Cannot get list receipt with conditions: [${conditions}]`),
         )
       }
 
-      const areaList: Area[] = dataReply.map(each => {
+      const receiptList: Receipt[] = dataReply.map(each => {
         return this.proto.reflect(each)
       })
 
@@ -120,29 +119,29 @@ export class AreaRepository extends Repository<AreaEntity> {
         total,
         page,
         limit,
-        areaList,
+        receiptList,
       })
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async removeArea(
-    removeData: RemoveAreaRequestDto,
+  async removeReceipt(
+    removeData: RemoveReceiptRequestDto,
   ): Promise<Result<boolean, Error>> {
     const dataReply = await this.softDelete(removeData)
 
     if (this.utilService.isObjectEmpty(dataReply)) {
-      return err(new Error(`Error when remove area`))
+      return err(new Error(`Error when remove receipt`))
     }
 
     return ok(true)
   }
 
   setupQueryCondition(
-    conditions: GetAreaConditionRequestDto,
-  ): SelectQueryBuilder<AreaEntity> {
-    const queryBuilder = this.createQueryBuilder(AreaEntity.tableName)
+    conditions: GetReceiptConditionRequestDto,
+  ): SelectQueryBuilder<ReceiptEntity> {
+    const queryBuilder = this.createQueryBuilder(ReceiptEntity.tableName)
 
     if (conditions.id !== undefined) {
       queryBuilder.andWhere(`id = :id`, {
@@ -150,17 +149,31 @@ export class AreaRepository extends Repository<AreaEntity> {
       })
     }
 
-    if (conditions.name !== undefined) {
-      queryBuilder.andWhere(`name LIKE :name`, {
-        name: `%${conditions.name}%`,
+
+    if (conditions.title !== undefined) {
+      queryBuilder.andWhere(`title LIKE :title`, {
+        title: `%${conditions.title}%`,
       })
     }
 
-    if (conditions.slug !== undefined) {
-      queryBuilder.andWhere(`slug LIKE :slug`, {
-        slug: `%${conditions.slug}%`,
+    if (conditions.description !== undefined) {
+      queryBuilder.andWhere(`description LIKE :description`, {
+        description: `%${conditions.description}%`,
       })
     }
+
+    if (conditions.amount !== undefined) {
+      queryBuilder.andWhere(`amount = :amount`, {
+        amount: `${conditions.amount}`,
+      })
+    }
+
+    if (conditions.method !== undefined) {
+      queryBuilder.andWhere(`method = :method`, {
+        method: `${conditions.method}`,
+      })
+    }
+
 
     if (conditions.isDeleted) {
       queryBuilder.withDeleted()
@@ -170,8 +183,7 @@ export class AreaRepository extends Repository<AreaEntity> {
     queryBuilder.setFindOptions({
       relationLoadStrategy: 'query',
       relations: {
-        club: conditions.isExtraClub ?? false,
-        member: conditions.isExtraMember ?? false,
+        receiptSession: conditions.isExtraReceiptSession ?? false
       },
     })
 

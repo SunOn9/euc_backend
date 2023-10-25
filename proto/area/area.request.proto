@@ -12,6 +12,7 @@ message GetAreaConditionRequest {
   optional int32 limit =11;
   optional bool is_extra_club =12;
   optional bool is_extra_member =13;
+  optional bool is_deleted =14;
 }
 
 message CreateAreaRequest {

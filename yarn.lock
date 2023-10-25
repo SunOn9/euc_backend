@@ -1278,6 +1278,11 @@
   dependencies:
     "@types/superagent" "*"
 
+"@types/unidecode@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@types/unidecode/-/unidecode-0.1.2.tgz#fc3a5f08cfa1bc93c050a22c0f376fe6dd90c1de"
+  integrity sha512-sUz8YFeSjLgKkxvriqwPQZMjiEuoWfqUn79EOVEfs2lUurl7WY4GRJpoy6DWrooVn4bJrm6Uzv186rFzSTSdZg==
+
 "@types/validator@^13.7.10":
   version "13.11.1"
   resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.11.1.tgz#6560af76ed54490e68c42f717ab4e742ba7be74b"

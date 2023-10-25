@@ -35,7 +35,10 @@ export class PaymentSessionEntity {
   status: EnumProto_SessionStatus
 
   @Column()
-  name: string
+  title: string;
+
+  @Column({ nullable: true })
+  description?: string | null;
 
   @Column({ nullable: true })
   dateConfirm?: Date | null

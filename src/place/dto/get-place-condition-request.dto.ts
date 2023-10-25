@@ -1,9 +1,9 @@
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
 import { ApiPropertyOptional } from '@nestjs/swagger/dist/decorators/api-property.decorator'
 import { Transform, Type } from 'class-transformer'
-import { GetAreaConditionRequest } from '/generated/area/area.request'
+import { GetPlaceConditionRequest } from '/generated/place/place.request'
 
-export class GetAreaConditionRequestDto implements GetAreaConditionRequest {
+export class GetPlaceConditionRequestDto implements GetPlaceConditionRequest {
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
@@ -17,8 +17,14 @@ export class GetAreaConditionRequestDto implements GetAreaConditionRequest {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  fee?: number
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
-  slug?: string
+  address?: string
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -32,22 +38,10 @@ export class GetAreaConditionRequestDto implements GetAreaConditionRequest {
   @Type(() => Number)
   limit?: number
 
-
   @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
   isDeleted?: boolean
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsBoolean()
-  @Transform(({ value }) => value === 'true')
-  isExtraClub?: boolean
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsBoolean()
-  @Transform(({ value }) => value === 'true')
-  isExtraMember?: boolean
 }

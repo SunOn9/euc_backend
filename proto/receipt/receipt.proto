@@ -21,8 +21,8 @@ message Receipt {
     string title = 2;
     optional string description = 3;
     EnumProto.SessionStatus status = 6;
-    google.protobuf.Timestamp date_confirm = 7;
-    google.protobuf.Timestamp date_done = 9;
+    optional google.protobuf.Timestamp date_confirm = 7;
+    optional google.protobuf.Timestamp date_done = 9;
     google.protobuf.Timestamp created_at = 11;
     google.protobuf.Timestamp updated_at = 12;
     optional google.protobuf.Timestamp deleted_at = 13;

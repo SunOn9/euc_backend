@@ -4,40 +4,42 @@ import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { Result, err, ok } from 'neverthrow'
 import CustomException from 'lib/utils/custom.exception'
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
-import { AreaReflect } from './area.proto'
-import { AreaEntity } from '../entities/area.entity'
-import { Area } from '/generated/area/area'
-import { AreaListDataReply } from '/generated/area/area.reply'
-import { CreateAreaRequestDto } from '../dto/create-area.dto'
-import { GetAreaConditionRequestDto } from '../dto/get-area-condition-request.dto'
-import { RemoveAreaRequestDto } from '../dto/remove-area.dto'
-import { UpdateAreaRequestDto } from '../dto/update-area.dto'
+import { CreatePaymentRequestDto } from '../dto/create-payment.dto'
+import { GetPaymentConditionRequestDto } from '../dto/get-payment-condition-request.dto'
+import { RemovePaymentRequestDto } from '../dto/remove-payment.dto'
+import { UpdatePaymentRequestDto } from '../dto/update-payment.dto'
+import { PaymentEntity } from '../entities/payment.entity'
+import { PaymentReflect } from './payment.proto'
+import { Payment } from '/generated/payment/payment'
+import { PaymentListDataReply } from '/generated/payment/payment.reply'
+
 
 @Injectable()
-export class AreaRepository extends Repository<AreaEntity> {
+export class PaymentRepository extends Repository<PaymentEntity> {
   constructor(
     // @Inject(CACHE_MANAGER)
     // private cache: Cache,
     private dataSource: DataSource,
-    private proto: AreaReflect,
+    private proto: PaymentReflect,
     private utilService: UtilsService,
   ) {
-    super(AreaEntity, dataSource.createEntityManager())
+    super(PaymentEntity, dataSource.createEntityManager())
   }
 
-  async createArea(
-    createData: CreateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
+  async createPayment(
+    createData: CreatePaymentRequestDto,
+  ): Promise<Result<Payment, Error>> {
     try {
+      const { ...other } = createData
+
       const saveData = {
-        ...createData,
-        slug: this.utilService.convertToSlug(createData.name),
-      } as AreaEntity
+        ...other,
+      } as PaymentEntity
 
       const dataReply = await this.save(saveData)
 
       if (this.utilService.isObjectEmpty(dataReply)) {
-        return err(new Error(`Cannot create area in database`))
+        return err(new Error(`Cannot create payment in database`))
       }
 
       return ok(this.proto.reflect(dataReply))
@@ -46,9 +48,9 @@ export class AreaRepository extends Repository<AreaEntity> {
     }
   }
 
-  async updateArea(
-    updateData: UpdateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
+  async updatePayment(
+    updateData: UpdatePaymentRequestDto,
+  ): Promise<Result<Payment, Error>> {
     try {
       if (this.utilService.isObjectEmpty(updateData.conditions)) {
         return err(new Error(`Empty conditions`))
@@ -63,8 +65,8 @@ export class AreaRepository extends Repository<AreaEntity> {
   }
 
   async getDetail(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<Area, Error>> {
+    conditions: GetPaymentConditionRequestDto,
+  ): Promise<Result<Payment, Error>> {
     try {
       if (this.utilService.isObjectEmpty(conditions)) {
         return err(new Error(`Empty conditions`))
@@ -76,7 +78,7 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get area with conditions: [${conditions}]`),
+          new Error(`Cannot get payment with conditions: [${conditions}]`),
         )
       }
 
@@ -87,8 +89,8 @@ export class AreaRepository extends Repository<AreaEntity> {
   }
 
   async getList(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<AreaListDataReply, Error>> {
+    conditions: GetPaymentConditionRequestDto,
+  ): Promise<Result<PaymentListDataReply, Error>> {
     try {
       // if (!conditions) {
       //   return err(new Error(`Empty conditions`));
@@ -108,11 +110,11 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get list area with conditions: [${conditions}]`),
+          new Error(`Cannot get list payment with conditions: [${conditions}]`),
         )
       }
 
-      const areaList: Area[] = dataReply.map(each => {
+      const paymentList: Payment[] = dataReply.map(each => {
         return this.proto.reflect(each)
       })
 
@@ -120,29 +122,29 @@ export class AreaRepository extends Repository<AreaEntity> {
         total,
         page,
         limit,
-        areaList,
+        paymentList,
       })
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async removeArea(
-    removeData: RemoveAreaRequestDto,
+  async removePayment(
+    removeData: RemovePaymentRequestDto,
   ): Promise<Result<boolean, Error>> {
     const dataReply = await this.softDelete(removeData)
 
     if (this.utilService.isObjectEmpty(dataReply)) {
-      return err(new Error(`Error when remove area`))
+      return err(new Error(`Error when remove payment`))
     }
 
     return ok(true)
   }
 
   setupQueryCondition(
-    conditions: GetAreaConditionRequestDto,
-  ): SelectQueryBuilder<AreaEntity> {
-    const queryBuilder = this.createQueryBuilder(AreaEntity.tableName)
+    conditions: GetPaymentConditionRequestDto,
+  ): SelectQueryBuilder<PaymentEntity> {
+    const queryBuilder = this.createQueryBuilder(PaymentEntity.tableName)
 
     if (conditions.id !== undefined) {
       queryBuilder.andWhere(`id = :id`, {
@@ -150,15 +152,27 @@ export class AreaRepository extends Repository<AreaEntity> {
       })
     }
 
-    if (conditions.name !== undefined) {
-      queryBuilder.andWhere(`name LIKE :name`, {
-        name: `%${conditions.name}%`,
+    if (conditions.title !== undefined) {
+      queryBuilder.andWhere(`title LIKE :title`, {
+        title: `%${conditions.title}%`,
       })
     }
 
-    if (conditions.slug !== undefined) {
-      queryBuilder.andWhere(`slug LIKE :slug`, {
-        slug: `%${conditions.slug}%`,
+    if (conditions.description !== undefined) {
+      queryBuilder.andWhere(`description LIKE :description`, {
+        description: `%${conditions.description}%`,
+      })
+    }
+
+    if (conditions.amount !== undefined) {
+      queryBuilder.andWhere(`amount = :amount`, {
+        amount: `${conditions.amount}`,
+      })
+    }
+
+    if (conditions.method !== undefined) {
+      queryBuilder.andWhere(`method = :method`, {
+        method: `${conditions.method}`,
       })
     }
 
@@ -166,12 +180,10 @@ export class AreaRepository extends Repository<AreaEntity> {
       queryBuilder.withDeleted()
     }
 
-
     queryBuilder.setFindOptions({
       relationLoadStrategy: 'query',
       relations: {
-        club: conditions.isExtraClub ?? false,
-        member: conditions.isExtraMember ?? false,
+        paymentSession: conditions.isExtraPaymentSession ?? false
       },
     })
 

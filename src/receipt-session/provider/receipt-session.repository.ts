@@ -4,40 +4,43 @@ import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
 import { Result, err, ok } from 'neverthrow'
 import CustomException from 'lib/utils/custom.exception'
 import { HttpStatus } from '@nestjs/common/enums/http-status.enum'
-import { AreaReflect } from './area.proto'
-import { AreaEntity } from '../entities/area.entity'
-import { Area } from '/generated/area/area'
-import { AreaListDataReply } from '/generated/area/area.reply'
-import { CreateAreaRequestDto } from '../dto/create-area.dto'
-import { GetAreaConditionRequestDto } from '../dto/get-area-condition-request.dto'
-import { RemoveAreaRequestDto } from '../dto/remove-area.dto'
-import { UpdateAreaRequestDto } from '../dto/update-area.dto'
+import { CreateReceiptSessionRequestDto } from '../dto/create-receipt-session.dto'
+import { ReceiptSessionEntity } from '../entities/receipt-session.entity'
+import { ReceiptSessionReflect } from './receipt-session.proto'
+import { ReceiptSession } from '/generated/receipt-session/receipt-session'
+import { ReceiptSessionListDataReply } from '/generated/receipt-session/receipt-session.reply'
+import { GetReceiptSessionConditionRequestDto } from '../dto/get-receipt-session-condition-request.dto'
+import { RemoveReceiptSessionRequestDto } from '../dto/remove-receipt-session.dto'
+import { UpdateReceiptSessionRequestDto } from '../dto/update-receipt-session.dto'
+
+
 
 @Injectable()
-export class AreaRepository extends Repository<AreaEntity> {
+export class ReceiptSessionRepository extends Repository<ReceiptSessionEntity> {
   constructor(
     // @Inject(CACHE_MANAGER)
     // private cache: Cache,
     private dataSource: DataSource,
-    private proto: AreaReflect,
+    private proto: ReceiptSessionReflect,
     private utilService: UtilsService,
   ) {
-    super(AreaEntity, dataSource.createEntityManager())
+    super(ReceiptSessionEntity, dataSource.createEntityManager())
   }
 
-  async createArea(
-    createData: CreateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
+  async createReceiptSession(
+    createData: CreateReceiptSessionRequestDto,
+  ): Promise<Result<ReceiptSession, Error>> {
     try {
+      const { ...other } = createData
+
       const saveData = {
-        ...createData,
-        slug: this.utilService.convertToSlug(createData.name),
-      } as AreaEntity
+        ...other,
+      } as ReceiptSessionEntity
 
       const dataReply = await this.save(saveData)
 
       if (this.utilService.isObjectEmpty(dataReply)) {
-        return err(new Error(`Cannot create area in database`))
+        return err(new Error(`Cannot create receiptSession in database`))
       }
 
       return ok(this.proto.reflect(dataReply))
@@ -46,9 +49,9 @@ export class AreaRepository extends Repository<AreaEntity> {
     }
   }
 
-  async updateArea(
-    updateData: UpdateAreaRequestDto,
-  ): Promise<Result<Area, Error>> {
+  async updateReceiptSession(
+    updateData: UpdateReceiptSessionRequestDto,
+  ): Promise<Result<ReceiptSession, Error>> {
     try {
       if (this.utilService.isObjectEmpty(updateData.conditions)) {
         return err(new Error(`Empty conditions`))
@@ -63,8 +66,8 @@ export class AreaRepository extends Repository<AreaEntity> {
   }
 
   async getDetail(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<Area, Error>> {
+    conditions: GetReceiptSessionConditionRequestDto,
+  ): Promise<Result<ReceiptSession, Error>> {
     try {
       if (this.utilService.isObjectEmpty(conditions)) {
         return err(new Error(`Empty conditions`))
@@ -76,7 +79,7 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get area with conditions: [${conditions}]`),
+          new Error(`Cannot get receiptSession with conditions: [${conditions}]`),
         )
       }
 
@@ -87,8 +90,8 @@ export class AreaRepository extends Repository<AreaEntity> {
   }
 
   async getList(
-    conditions: GetAreaConditionRequestDto,
-  ): Promise<Result<AreaListDataReply, Error>> {
+    conditions: GetReceiptSessionConditionRequestDto,
+  ): Promise<Result<ReceiptSessionListDataReply, Error>> {
     try {
       // if (!conditions) {
       //   return err(new Error(`Empty conditions`));
@@ -108,11 +111,11 @@ export class AreaRepository extends Repository<AreaEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get list area with conditions: [${conditions}]`),
+          new Error(`Cannot get list receiptSession with conditions: [${conditions}]`),
         )
       }
 
-      const areaList: Area[] = dataReply.map(each => {
+      const receiptSessionList: ReceiptSession[] = dataReply.map(each => {
         return this.proto.reflect(each)
       })
 
@@ -120,29 +123,29 @@ export class AreaRepository extends Repository<AreaEntity> {
         total,
         page,
         limit,
-        areaList,
+        receiptSessionList,
       })
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async removeArea(
-    removeData: RemoveAreaRequestDto,
+  async removeReceiptSession(
+    removeData: RemoveReceiptSessionRequestDto,
   ): Promise<Result<boolean, Error>> {
     const dataReply = await this.softDelete(removeData)
 
     if (this.utilService.isObjectEmpty(dataReply)) {
-      return err(new Error(`Error when remove area`))
+      return err(new Error(`Error when removereceiptSession`))
     }
 
     return ok(true)
   }
 
   setupQueryCondition(
-    conditions: GetAreaConditionRequestDto,
-  ): SelectQueryBuilder<AreaEntity> {
-    const queryBuilder = this.createQueryBuilder(AreaEntity.tableName)
+    conditions: GetReceiptSessionConditionRequestDto,
+  ): SelectQueryBuilder<ReceiptSessionEntity> {
+    const queryBuilder = this.createQueryBuilder(ReceiptSessionEntity.tableName)
 
     if (conditions.id !== undefined) {
       queryBuilder.andWhere(`id = :id`, {
@@ -150,28 +153,45 @@ export class AreaRepository extends Repository<AreaEntity> {
       })
     }
 
-    if (conditions.name !== undefined) {
-      queryBuilder.andWhere(`name LIKE :name`, {
-        name: `%${conditions.name}%`,
+    if (conditions.title !== undefined) {
+      queryBuilder.andWhere(`title LIKE :title`, {
+        title: `%${conditions.title}%`,
       })
     }
 
-    if (conditions.slug !== undefined) {
-      queryBuilder.andWhere(`slug LIKE :slug`, {
-        slug: `%${conditions.slug}%`,
+    if (conditions.description !== undefined) {
+      queryBuilder.andWhere(`description LIKE :description`, {
+        description: `%${conditions.description}%`,
       })
     }
+
+
+    if (conditions.status !== undefined) {
+      queryBuilder.andWhere(`status = :status`, {
+        status: `${conditions.status}`,
+      })
+    }
+
+    //TODO: date confirm, date done (from date - to date)
+
+    // if (conditions.status !== undefined) {
+    //   queryBuilder.andWhere(`status = :status`, {
+    //     status: `${conditions.status}`,
+    //   })
+    // }
+
 
     if (conditions.isDeleted) {
       queryBuilder.withDeleted()
     }
 
-
     queryBuilder.setFindOptions({
       relationLoadStrategy: 'query',
       relations: {
-        club: conditions.isExtraClub ?? false,
-        member: conditions.isExtraMember ?? false,
+        userDone: conditions.isExtraUserDone ?? false,
+        userConfirm: conditions.isExtraUserConfirm ?? false,
+        event: conditions.isExtraEvent ?? false,
+        receipt: conditions.isExtraReceipt ?? false,
       },
     })
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
-import * as unidecode from 'unidecode'
+import unidecode from 'unidecode'
 
 @Injectable()
 export class UtilsService {

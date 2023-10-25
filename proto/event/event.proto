@@ -46,7 +46,8 @@ message Event {
 
   message PaymentSession {
     int32 id = 1;
-    string name =2;
+    string title = 2;
+    optional string description = 3;
     EnumProto.SessionStatus status = 4;
     optional google.protobuf.Timestamp date_confirm = 5;
     optional google.protobuf.Timestamp date_done = 7;

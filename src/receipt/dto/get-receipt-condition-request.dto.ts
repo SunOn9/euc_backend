@@ -1,9 +1,17 @@
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator'
+import {
+  IsBoolean,
+  IsDateString,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator'
 import { ApiPropertyOptional } from '@nestjs/swagger/dist/decorators/api-property.decorator'
 import { Transform, Type } from 'class-transformer'
-import { GetAreaConditionRequest } from '/generated/area/area.request'
+import { EnumProto_MoneyMethod } from '/generated/enumps'
+import { GetReceiptConditionRequest } from '/generated/receipt/receipt.request'
 
-export class GetAreaConditionRequestDto implements GetAreaConditionRequest {
+export class GetReceiptConditionRequestDto implements GetReceiptConditionRequest {
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
@@ -13,12 +21,23 @@ export class GetAreaConditionRequestDto implements GetAreaConditionRequest {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  name?: string
+  title?: string
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  slug?: string
+  description?: string
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  amount?: number
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsEnum(EnumProto_MoneyMethod)
+  method?: EnumProto_MoneyMethod
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -32,7 +51,6 @@ export class GetAreaConditionRequestDto implements GetAreaConditionRequest {
   @Type(() => Number)
   limit?: number
 
-
   @ApiPropertyOptional()
   @IsOptional()
   @IsBoolean()
@@ -43,11 +61,5 @@ export class GetAreaConditionRequestDto implements GetAreaConditionRequest {
   @IsOptional()
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
-  isExtraClub?: boolean
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsBoolean()
-  @Transform(({ value }) => value === 'true')
-  isExtraMember?: boolean
+  isExtraReceiptSession?: boolean
 }
