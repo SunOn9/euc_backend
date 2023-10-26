@@ -93,6 +93,7 @@ export class ClubService {
     return updateReply
   }
 
+  //TODO: soft delete club -> soft delete member-in-club too
   async remove(
     requestData: RemoveClubRequestDto,
     sessionId: string,
