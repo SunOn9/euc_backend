@@ -12,7 +12,7 @@
 `
 or ...
 
-### Install yarn & nestjs
+### Install yarn & nestjs & python
 
 #### Yarn : https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable
 
@@ -21,6 +21,12 @@ Via NPM : `npm install --global yarn`
 #### NestJS : https://docs.nestjs.com/
 
 Via NPM : `npm i -g @nestjs/cli`
+
+#### Python : https://www.python.org/?downloads
+
+##### Install xltpl:
+
+`pip install xltpl`
 
 ### Install package
 
