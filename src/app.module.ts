@@ -29,6 +29,7 @@ import { APP_GUARD } from '@nestjs/core'
 import { AthenticatedGuard } from './auth/guard/authenticated.guard'
 import { ScheduleModule } from '@nestjs/schedule'
 import { SessionModule } from './session/session.module'
+import { ExcelModule } from './excel/excel.module'
 
 // const cwd = process.cwd();
 
@@ -116,6 +117,7 @@ import { SessionModule } from './session/session.module'
     LogModule,
     PlaceModule,
     SessionModule,
+    ExcelModule,
   ],
   providers: [
     {
