@@ -27,6 +27,9 @@ export class PaymentEntity {
   amount: number;
 
   @Column()
+  fundAmount: number
+
+  @Column()
   method: EnumProto_MoneyMethod;
 
   @ManyToOne(
@@ -34,6 +37,9 @@ export class PaymentEntity {
     (paymentSession) => paymentSession.payment,
   )
   paymentSession: PaymentSessionEntity;
+
+  // @ManyToOne()
+  //TODO: add club
 
   @CreateDateColumn()
   createdAt: Date;

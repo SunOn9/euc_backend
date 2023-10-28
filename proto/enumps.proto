@@ -10,6 +10,11 @@ message EnumProto {
     TREASURER = 3;
     STAFF = 4;
   }
+
+  enum Gender {
+    MALE = 0;
+    FEMALE = 1;
+  }
   
   enum MemberStatus {
     BELIEVER = 0;
@@ -40,5 +45,4 @@ message EnumProto {
     STUDENT = 0;
     WORKER = 1;
   }
-  
 }

@@ -23,6 +23,9 @@ export class PaymentSessionEntity {
   @OneToMany(() => PaymentEntity, payment => payment.paymentSession)
   payment: PaymentEntity[]
 
+  @Column()
+  fundAmount: number
+
   @ManyToOne(() => EventEntity, event => event.paymentSession)
   event?: EventEntity | null
 
@@ -55,6 +58,9 @@ export class PaymentSessionEntity {
     nullable: true,
   })
   userDone?: UserEntity | null
+
+  //TODO: add club
+
 
   @CreateDateColumn()
   createdAt: Date

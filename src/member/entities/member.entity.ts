@@ -13,7 +13,7 @@ import {
 } from 'typeorm'
 import { EventEntity } from 'src/event/entities/event.entity'
 import { AreaEntity } from '/area/entities/area.entity'
-import { EnumProto_MemberStatus, EnumProto_MemberType } from '/generated/enumps'
+import { EnumProto_Gender, EnumProto_MemberStatus, EnumProto_MemberType } from '/generated/enumps'
 import { MemberInClubEntity } from './member-in-club.entity'
 
 @Entity({ name: 'member' })
@@ -28,6 +28,9 @@ export class MemberEntity {
 
   @Column()
   nickName: string
+
+  @Column()
+  gender: EnumProto_Gender
 
   @Column()
   birthday: Date

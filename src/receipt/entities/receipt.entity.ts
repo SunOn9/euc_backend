@@ -20,6 +20,9 @@ export class ReceiptEntity {
   @Column()
   title: string;
 
+  @Column()
+  fundAmount: number
+
   @Column({ nullable: true })
   description?: string | null;
 
@@ -34,6 +37,9 @@ export class ReceiptEntity {
     (receiptSession) => receiptSession.receipt,
   )
   receiptSession: ReceiptSessionEntity;
+
+  //TODO: add club
+
 
   @CreateDateColumn()
   createdAt: Date;

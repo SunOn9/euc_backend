@@ -11,7 +11,7 @@ const cwd = process.cwd()
 
 @Injectable()
 export class ExcelService {
-  constructor(private readonly memberService: MemberService) {}
+  constructor(private readonly memberService: MemberService) { }
 
   async generateFile<T>(
     list: T,
@@ -49,6 +49,11 @@ export class ExcelService {
       ...request,
       isExtraClub: true,
     })
+
+    //TODO: totalEvent - search with from date - to date
+
+    //TODO: memberType | if student -> check, worker -> uncheck 
+
 
     if (reply.isErr()) {
       return err(reply.error)

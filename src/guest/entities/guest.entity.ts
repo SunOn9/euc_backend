@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { ClubEntity } from '/club/entities/club.entity';
 import { EventEntity } from '/event/entities/event.entity';
-import { EnumProto_MemberType } from '/generated/enumps';
+import { EnumProto_Gender, EnumProto_MemberType } from '/generated/enumps';
 
 @Entity({ name: 'guest' })
 export class GuestEntity {
@@ -25,6 +25,9 @@ export class GuestEntity {
 
   @Column()
   nickName: string;
+
+  @Column()
+  gender: EnumProto_Gender
 
   @Column()
   type: EnumProto_MemberType;
