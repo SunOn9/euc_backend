@@ -39,7 +39,6 @@ message UpdateUserDataRequest {
   string password = 3;
   optional string phone = 4;
   EnumProto.UserRole role =5;
-  repeated int32 permission_list =6;
 }
 
 message UpdateUserRequest {
@@ -49,4 +48,9 @@ message UpdateUserRequest {
 
 message RemoveUserRequest {
   int32 id = 1;
+}
+
+message UpdateUserPermissionRequest {
+  int32 id = 1;
+  repeated int32 permission_id_list =2;
 }

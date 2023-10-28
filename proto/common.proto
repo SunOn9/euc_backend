@@ -4,6 +4,7 @@ import "google/protobuf/any.proto";
 
 package euc_backend;
 
+message Null {}
 
 message File {
   string url = 1;

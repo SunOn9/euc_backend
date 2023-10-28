@@ -29,7 +29,7 @@ import { ClubEntity } from './entities/club.entity'
 @UseGuards(PermissionsGuard)
 @Controller('club')
 export class ClubController {
-  constructor(private readonly service: ClubService) {}
+  constructor(private readonly service: ClubService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')

@@ -12,6 +12,8 @@ import { GetUserConditionRequestDto } from '../dto/get-user-condition-request.dt
 import { UserListDataReply } from '/generated/user/user.reply'
 import { UpdateUserRequestDto } from '../dto/update-user.dto'
 import { RemoveUserRequestDto } from '../dto/remove-user.dto'
+import { UpdateUserPermissionRequestDto } from '../dto/update-user-permission.dto'
+import { PermissionEntity } from '/permission/entities/permission.entity'
 
 @Injectable()
 export class UserRepository extends Repository<UserEntity> {
@@ -60,6 +62,36 @@ export class UserRepository extends Repository<UserEntity> {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
   }
+
+
+  async updateUserPermission(
+    updateData: UpdateUserPermissionRequestDto,
+  ): Promise<Result<User, Error>> {
+    try {
+      const listPermissionUpdateData: PermissionEntity[] = []
+
+      for (const each of updateData.permissionIdList) {
+        listPermissionUpdateData.push({
+          id: each
+        } as PermissionEntity)
+      }
+
+      await this.update(
+        {
+          id: updateData.id
+        }
+        , {
+          permission: listPermissionUpdateData
+        }
+      )
+
+      return await this.getDetail({ id: updateData.id })
+    } catch (e) {
+      throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
+    }
+  }
+
+
 
   async getDetail(
     conditions: GetUserConditionRequestDto,

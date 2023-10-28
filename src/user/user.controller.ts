@@ -10,7 +10,7 @@ import {
   Body,
   Param,
   Query,
-  // Req,
+  Req,
 } from '@nestjs/common/decorators/http/route-params.decorator'
 import { UserListReply, UserReply } from '/generated/user/user.reply'
 import CustomException from 'lib/utils/custom.exception'
@@ -29,7 +29,7 @@ import { UserEntity } from './entities/user.entity'
 @UseGuards(PermissionsGuard)
 @Controller('user')
 export class UserController {
-  constructor(private readonly service: UserService) {}
+  constructor(private readonly service: UserService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
@@ -163,6 +163,37 @@ export class UserController {
     response.statusCode = CONST.DEFAULT_SUCCESS_CODE
     response.message = CONST.DEFAULT_SUCCESS_MESSAGE
     response.payload = CONST.DEFAULT_REMOVE_SUCCESS_MESSAGE
+    return response
+  }
+
+  @Post('update-permission')
+  @CheckPermissions({
+    action: [Action.UPDATE],
+    subject: [UserEntity],
+    fields: [],
+    conditions: {
+      club: 'user.club',
+    },
+  })
+  @HttpCode(HttpStatus.CREATED)
+  async updateUserPermission(
+    @Req() req: Request,
+    @Body() bodyData: UpdateUserRequestDto,
+  ): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    const data = await this.service.update(bodyData)
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = CONST.DEFAULT_UPDATE_SUCCESS_MESSAGE
     return response
   }
 }

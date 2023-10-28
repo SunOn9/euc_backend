@@ -6,10 +6,11 @@ import { GetUserConditionRequestDto } from './dto/get-user-condition-request.dto
 import { UpdateUserRequestDto } from './dto/update-user.dto'
 import { RemoveUserRequestDto } from './dto/remove-user.dto'
 import { err } from 'neverthrow'
+import { UpdateUserPermissionRequestDto } from './dto/update-user-permission.dto'
 
 @Injectable()
 export class UserService {
-  constructor(private readonly repo: UserRepository) {}
+  constructor(private readonly repo: UserRepository) { }
 
   async create(requestData: CreateUserRequestDto) {
     //Check user exits
@@ -37,7 +38,6 @@ export class UserService {
   }
 
   async update(requestData: UpdateUserRequestDto) {
-    // if(requestData.data.permissionList.length !== undefined)
     return await this.repo.updateUser(requestData)
   }
 
@@ -51,10 +51,20 @@ export class UserService {
       return err(userReply.error)
     }
 
-    if (userReply.value.deletedAt) {
-      return err(new Error(`User with id [${requestData.id}] is deleted`))
-    }
-
     return await this.repo.removeUser(requestData)
   }
+
+  async updateUserPermission(requestData: UpdateUserPermissionRequestDto) {
+    const userReply = await this.repo.getDetail({
+      id: requestData.id
+    })
+
+    if (userReply.isErr()) {
+      return err(userReply.error)
+    }
+
+    return await this.repo.updateUserPermission(requestData)
+  }
+
+  //TODO: Log
 }

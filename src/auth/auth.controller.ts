@@ -26,7 +26,7 @@ export class AuthController {
   constructor(
     private readonly service: AuthService,
     private readonly sessionService: SessionService,
-  ) {}
+  ) { }
 
   @UseGuards(LoginGuard)
   @Post('/login')
@@ -74,7 +74,11 @@ export class AuthController {
   }
 
   @Get('check')
-  async check(): Promise<boolean> {
-    return true
+  async check(): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = 'success'
+    return response
   }
 }
