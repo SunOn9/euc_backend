@@ -12,6 +12,7 @@ import { PaymentEntity } from '/payment/entities/payment.entity'
 import { EventEntity } from '/event/entities/event.entity'
 import { UserEntity } from '/user/entities/user.entity'
 import { EnumProto_SessionStatus } from '/generated/enumps'
+import { ClubEntity } from '/club/entities/club.entity'
 
 @Entity({ name: 'payment_session' })
 export class PaymentSessionEntity {
@@ -26,6 +27,9 @@ export class PaymentSessionEntity {
   @Column()
   fundAmount: number
 
+  @Column()
+  amount: number
+
   @ManyToOne(() => EventEntity, event => event.paymentSession)
   event?: EventEntity | null
 
@@ -38,10 +42,10 @@ export class PaymentSessionEntity {
   status: EnumProto_SessionStatus
 
   @Column()
-  title: string;
+  title: string
 
   @Column({ nullable: true })
-  description?: string | null;
+  description?: string | null
 
   @Column({ nullable: true })
   dateConfirm?: Date | null
@@ -59,8 +63,8 @@ export class PaymentSessionEntity {
   })
   userDone?: UserEntity | null
 
-  //TODO: add club
-
+  @ManyToOne(() => ClubEntity, club => club.paymentSession)
+  club: ClubEntity
 
   @CreateDateColumn()
   createdAt: Date

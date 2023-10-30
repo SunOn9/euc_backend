@@ -43,3 +43,11 @@ message UpdatePaymentSessionRequest {
 message RemovePaymentSessionRequest {
   int32 id = 1;
 }
+
+message ConfirmPaymentSessionRequest {
+  int32 id = 1;
+}
+
+message DonePaymentSessionRequest {
+  int32 id = 1;
+}

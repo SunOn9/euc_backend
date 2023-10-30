@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
-
+import "enumps.proto";
 package euc_backend;
 
 message Club {
@@ -16,6 +16,20 @@ message Club {
   optional google.protobuf.Timestamp deleted_at = 9;
   repeated ClubFee fee =10;
   Area area =11;
+  repeated PaymentSession payment_session = 12;
+  repeated ReceiptSession receipt_session = 13;
+  repeated Event event = 14;
+
+  message Event {
+    int32 id = 1;
+    string name = 2;
+    google.protobuf.Timestamp start_event_date = 8;
+    google.protobuf.Timestamp end_event_date = 9;
+    EnumProto.EventType type =10;
+    google.protobuf.Timestamp created_at = 11;
+    google.protobuf.Timestamp updated_at = 12;
+    optional google.protobuf.Timestamp deleted_at = 13;
+  }
 
   message Area {
     int32 id = 1;
@@ -35,5 +49,33 @@ message Club {
     int32 monthly_fee = 5;
     google.protobuf.Timestamp created_at = 6;
     optional google.protobuf.Timestamp deleted_at = 7;
+  }
+
+  message PaymentSession{
+    int32 id = 1;
+    string title = 2;
+    optional string description = 3;
+    EnumProto.SessionStatus status = 4;
+    optional google.protobuf.Timestamp date_confirm = 5;
+    optional google.protobuf.Timestamp date_done = 7;
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp updated_at = 10;
+    optional google.protobuf.Timestamp deleted_at = 11;
+    int32 fund_amount = 17;
+    int32 amount = 18;
+  }
+
+  message ReceiptSession {
+    int32 id = 1;
+    string title = 2;
+    optional string description = 3;
+    EnumProto.SessionStatus status = 4;
+    optional google.protobuf.Timestamp date_confirm = 5;
+    optional google.protobuf.Timestamp date_done = 7;
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp updated_at = 10;
+    optional google.protobuf.Timestamp deleted_at = 11;
+    int32 fund_amount = 17;
+    int32 amount = 18;
   }
 }

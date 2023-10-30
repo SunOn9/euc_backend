@@ -10,20 +10,27 @@ import { RemoveReceiptSessionRequestDto } from './dto/remove-receipt-session.dto
 import { UpdateReceiptSessionRequestDto } from './dto/update-receipt-session.dto'
 import { ReceiptSessionEntity } from './entities/receipt-session.entity'
 import { ReceiptSessionRepository } from './provider/receipt-session.repository'
+import { ConfirmReceiptSessionRequestDto } from './dto/confirm-receipt-session.dto'
+import { Club } from '/generated/club/club'
+import { EnumProto_SessionStatus, EnumProto_UserRole } from '/generated/enumps'
+import { Receipt } from '/generated/receipt/receipt'
+import { ClubService } from '/club/club.service'
+import { ReceiptService } from '/receipt/receipt.service'
 
 @Injectable()
 export class ReceiptSessionService {
   constructor(
     private readonly repo: ReceiptSessionRepository,
     private readonly logService: LogService,
-  ) { }
+    private readonly receiptService: ReceiptService,
+    private readonly clubService: ClubService,
+  ) {}
 
   async create(
     requestData: CreateReceiptSessionRequestDto,
     sessionId: string,
     userInfo: User,
   ) {
-
     const createReply = await this.repo.createReceiptSession(requestData)
 
     if (createReply.isOk()) {
@@ -54,7 +61,9 @@ export class ReceiptSessionService {
     sessionId: string,
     userInfo: User,
   ) {
-    const receiptSessionReply = await this.repo.getDetail(requestData.conditions)
+    const receiptSessionReply = await this.repo.getDetail(
+      requestData.conditions,
+    )
 
     if (receiptSessionReply.isErr()) {
       return err(receiptSessionReply.error)
@@ -102,5 +111,139 @@ export class ReceiptSessionService {
       })
     }
     return removeReply
+  }
+
+  async confirm(
+    requestData: ConfirmReceiptSessionRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
+    const receiptSessionReply = await this.repo.getDetail(requestData)
+
+    if (receiptSessionReply.isErr()) {
+      return err(receiptSessionReply.error)
+    }
+
+    await this.repo.update(
+      {
+        id: requestData.id,
+      },
+      {
+        status: EnumProto_SessionStatus.CONFIRMED,
+        dateConfirm: new Date(),
+        userConfirm: userInfo,
+      },
+    )
+
+    const updateReply = await this.repo.getDetail(requestData)
+
+    if (updateReply.isErr()) {
+      return err(updateReply.error)
+    }
+
+    await this.logService.create({
+      action: Action.UPDATE,
+      subject: ReceiptSessionEntity.tableName,
+      oldData: receiptSessionReply.value,
+      newData: updateReply.value,
+      sessionId: sessionId,
+      user: userInfo,
+    })
+
+    return updateReply
+  }
+
+  async done(
+    requestData: ConfirmReceiptSessionRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
+    if (
+      userInfo.role !== EnumProto_UserRole.TREASURER &&
+      userInfo.role !== EnumProto_UserRole.ADMIN
+    ) {
+      return err(new Error(`Forbidden Resource`))
+    }
+
+    const receiptSessionReply = await this.repo.getDetail(requestData)
+
+    const clubReply = await this.clubService.getDetail({
+      id: userInfo.club.id,
+    })
+
+    if (clubReply.isErr()) {
+      return err(clubReply.error)
+    }
+
+    if (receiptSessionReply.isErr()) {
+      return err(receiptSessionReply.error)
+    }
+
+    await this.repo.update(
+      {
+        id: requestData.id,
+      },
+      {
+        status: EnumProto_SessionStatus.DONE,
+        dateDone: new Date(),
+        userDone: userInfo,
+        fundAmount: clubReply.value.fund + receiptSessionReply.value.amount,
+      },
+    )
+
+    const updateReply = await this.repo.getDetail({
+      id: requestData.id,
+      isExtraReceipt: true,
+    })
+
+    if (updateReply.isErr()) {
+      return err(updateReply.error)
+    }
+
+    const { receipt, ...other } = updateReply.value
+
+    await this.handleUpdateReceiptAmount(
+      receipt,
+      clubReply.value,
+      userInfo,
+      sessionId,
+    )
+
+    await this.logService.create({
+      action: Action.UPDATE,
+      subject: ReceiptSessionEntity.tableName,
+      oldData: receiptSessionReply.value,
+      newData: other,
+      sessionId: sessionId,
+      user: userInfo,
+    })
+
+    return updateReply
+  }
+
+  async handleUpdateReceiptAmount(
+    listReceipt: Receipt[],
+    club: Club,
+    userInfo: User,
+    sessionId: string,
+  ) {
+    let fund = club.fund
+
+    for (const receipt of listReceipt) {
+      await this.receiptService.update(
+        {
+          conditions: {
+            id: receipt.id,
+          },
+          data: {
+            fundAmount: fund + receipt.amount,
+          },
+        },
+        sessionId,
+        userInfo,
+      )
+
+      fund += receipt.amount
+    }
   }
 }

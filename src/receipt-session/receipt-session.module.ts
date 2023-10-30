@@ -7,13 +7,25 @@ import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module'
 import { ReceiptSessionEntity } from './entities/receipt-session.entity'
 import { ReceiptSessionReflect } from './provider/receipt-session.proto'
 import { ReceiptSessionRepository } from './provider/receipt-session.repository'
+import { ClubModule } from '/club/club.module'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ReceiptSessionEntity]),
+  imports: [
+    TypeOrmModule.forFeature([ReceiptSessionEntity]),
     PermissionModule,
-    ReceiptModule,],
+    ReceiptModule,
+    ClubModule,
+  ],
   controllers: [ReceiptSessionController],
-  providers: [ReceiptSessionService, ReceiptSessionReflect, ReceiptSessionRepository],
-  exports: [ReceiptSessionService, ReceiptSessionReflect, ReceiptSessionRepository],
+  providers: [
+    ReceiptSessionService,
+    ReceiptSessionReflect,
+    ReceiptSessionRepository,
+  ],
+  exports: [
+    ReceiptSessionService,
+    ReceiptSessionReflect,
+    ReceiptSessionRepository,
+  ],
 })
-export class ReceiptSessionModule { }
+export class ReceiptSessionModule {}

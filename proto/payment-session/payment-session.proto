@@ -20,6 +20,21 @@ message PaymentSession {
   optional User user_done = 13;
   repeated Payment payment = 14;
   optional Event event = 15;
+  Club club = 16;
+  int32 fund_amount = 17;
+  int32 amount = 18;
+
+  message Club {
+    int32 id = 1;
+    string name = 2;
+    optional string abbreviation = 3;
+    optional int32 fund =4;
+    int32 total_member = 5;
+    int32 total_guest = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+    optional google.protobuf.Timestamp deleted_at = 9;
+  }
 
   message User {
     int32 id = 1;
@@ -43,6 +58,8 @@ message PaymentSession {
     google.protobuf.Timestamp created_at = 7;
     google.protobuf.Timestamp updated_at = 8;
     optional google.protobuf.Timestamp deleted_at = 9;
+    int32 fund_amount = 10;
+
   }
 
   message Event {

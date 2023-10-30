@@ -20,7 +20,20 @@ message Event {
   repeated PaymentSession payment_session =16;
   repeated ReceiptSession receipt_session =17;
   optional Place place = 18;
+  Club club = 19;
 
+  message Club {
+    int32 id = 1;
+    string name = 2;
+    optional string abbreviation = 3;
+    optional int32 fund =4;
+    int32 total_member = 5;
+    int32 total_guest = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+    optional google.protobuf.Timestamp deleted_at = 9;
+  }
+  
   message Member {
     int32 id = 1;
     string name = 2;
@@ -54,6 +67,8 @@ message Event {
     google.protobuf.Timestamp created_at = 9;
     google.protobuf.Timestamp updated_at = 10;
     optional google.protobuf.Timestamp deleted_at = 11;
+    int32 fund_amount = 17;
+    int32 amount = 18;
     optional User user_confirm = 12;
     optional User user_done = 13;
     repeated Payment payment = 14;
@@ -87,12 +102,14 @@ message Event {
     int32 id = 1;
     string title = 2;
     optional string description = 3;
-    EnumProto.SessionStatus status = 6;
-    optional google.protobuf.Timestamp date_confirm = 7;
-    optional google.protobuf.Timestamp date_done = 9;
-    google.protobuf.Timestamp created_at = 11;
-    google.protobuf.Timestamp updated_at = 12;
-    optional google.protobuf.Timestamp deleted_at = 13;
+    EnumProto.SessionStatus status = 4;
+    optional google.protobuf.Timestamp date_confirm = 5;
+    optional google.protobuf.Timestamp date_done = 7;
+    google.protobuf.Timestamp created_at = 9;
+    google.protobuf.Timestamp updated_at = 10;
+    optional google.protobuf.Timestamp deleted_at = 11;
+    int32 fund_amount = 18;
+    int32 amount = 19;
     repeated Receipt receipt = 15;
     optional User user_done = 16;
     optional User user_confirm = 17;

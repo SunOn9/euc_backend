@@ -7,13 +7,25 @@ import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module'
 import { PaymentSessionEntity } from './entities/payment-session.entity'
 import { PaymentSessionReflect } from './provider/payment-session.proto'
 import { PaymentSessionRepository } from './provider/payment-session.repository'
+import { ClubModule } from '/club/club.module'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PaymentSessionEntity]),
+  imports: [
+    TypeOrmModule.forFeature([PaymentSessionEntity]),
     PermissionModule,
-    PaymentModule,],
+    PaymentModule,
+    ClubModule,
+  ],
   controllers: [PaymentSessionController],
-  providers: [PaymentSessionService, PaymentSessionReflect, PaymentSessionRepository],
-  exports: [PaymentSessionService, PaymentSessionReflect, PaymentSessionRepository],
+  providers: [
+    PaymentSessionService,
+    PaymentSessionReflect,
+    PaymentSessionRepository,
+  ],
+  exports: [
+    PaymentSessionService,
+    PaymentSessionReflect,
+    PaymentSessionRepository,
+  ],
 })
-export class PaymentSessionModule { }
+export class PaymentSessionModule {}

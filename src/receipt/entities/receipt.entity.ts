@@ -6,51 +6,48 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity';
-import { EnumProto_MoneyMethod } from '/generated/enumps';
+} from 'typeorm'
+import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity'
+import { EnumProto_MoneyMethod } from '/generated/enumps'
 
 @Entity('receipt')
 export class ReceiptEntity {
-  static tableName = 'receipt';
+  static tableName = 'receipt'
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column()
-  title: string;
+  title: string
 
   @Column()
   fundAmount: number
 
   @Column({ nullable: true })
-  description?: string | null;
+  description?: string | null
 
   @Column()
-  amount: number;
+  amount: number
 
   @Column()
-  method: EnumProto_MoneyMethod;
+  method: EnumProto_MoneyMethod
 
   @ManyToOne(
     () => ReceiptSessionEntity,
-    (receiptSession) => receiptSession.receipt,
+    receiptSession => receiptSession.receipt,
   )
-  receiptSession: ReceiptSessionEntity;
-
-  //TODO: add club
-
+  receiptSession: ReceiptSessionEntity
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date;
+  deletedAt?: Date
 
   constructor(partial: Partial<ReceiptEntity>) {
-    Object.assign(this, partial);
+    Object.assign(this, partial)
   }
 }

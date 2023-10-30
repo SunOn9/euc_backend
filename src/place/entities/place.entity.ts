@@ -3,11 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 import { EventEntity } from '/event/entities/event.entity'
+import { ClubEntity } from '/club/entities/club.entity'
 
 @Entity({ name: 'place' })
 export class PlaceEntity {
@@ -27,6 +29,9 @@ export class PlaceEntity {
 
   @OneToMany(() => EventEntity, event => event.place)
   event: EventEntity[]
+
+  @ManyToOne(() => ClubEntity, club => club.place)
+  club: ClubEntity
 
   @CreateDateColumn()
   createdAt: Date

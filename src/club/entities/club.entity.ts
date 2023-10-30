@@ -14,6 +14,9 @@ import { ClubFeeEntity } from '/club-fee/entities/club-fee.entity'
 import { UserEntity } from '/user/entities/user.entity'
 import { EventEntity } from '/event/entities/event.entity'
 import { MemberInClubEntity } from '/member/entities/member-in-club.entity'
+import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity'
+import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity'
+import { PlaceEntity } from '/place/entities/place.entity'
 
 @Entity({ name: 'club' })
 export class ClubEntity {
@@ -56,6 +59,15 @@ export class ClubEntity {
 
   @OneToMany(() => UserEntity, user => user.club)
   user: UserEntity[]
+
+  @OneToMany(() => PaymentSessionEntity, paymentSession => paymentSession.club)
+  paymentSession: PaymentSessionEntity[]
+
+  @OneToMany(() => ReceiptSessionEntity, receiptSession => receiptSession.club)
+  receiptSession: ReceiptSessionEntity[]
+
+  @OneToMany(() => PlaceEntity, place => place.club)
+  place: PlaceEntity[]
 
   @CreateDateColumn()
   createdAt: Date

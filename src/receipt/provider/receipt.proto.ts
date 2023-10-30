@@ -4,7 +4,6 @@ import { EnumProto_MoneyMethod } from '/generated/enumps'
 import { ReceiptEntity } from '../entities/receipt.entity'
 import { Receipt } from '/generated/receipt/receipt'
 
-
 @Injectable()
 export class ReceiptReflect {
   reflect(entity: ReceiptEntity): Receipt {
@@ -13,6 +12,7 @@ export class ReceiptReflect {
     reflect.title = entity.title ?? ''
     reflect.description = entity.description ?? ''
     reflect.amount = entity.amount ?? 0
+    reflect.fundAmount = entity.fundAmount ?? 0
     reflect.method = entity.method ?? EnumProto_MoneyMethod.UNRECOGNIZED
     reflect.receiptSession = entity.receiptSession ?? null
     reflect.createdAt = entity.createdAt ?? null

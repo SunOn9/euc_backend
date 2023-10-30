@@ -44,3 +44,11 @@ message UpdateReceiptSessionRequest {
 message RemoveReceiptSessionRequest {
   int32 id = 1;
 }
+
+message ConfirmReceiptSessionRequest {
+  int32 id = 1;
+}
+
+message DoneReceiptSessionRequest {
+  int32 id = 1;
+}

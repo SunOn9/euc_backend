@@ -6,51 +6,48 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity';
-import { EnumProto_MoneyMethod } from '/generated/enumps';
+} from 'typeorm'
+import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity'
+import { EnumProto_MoneyMethod } from '/generated/enumps'
 
 @Entity('payment')
 export class PaymentEntity {
-  static tableName = 'payment';
+  static tableName = 'payment'
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column()
-  title: string;
+  title: string
 
   @Column({ nullable: true })
-  description?: string | null;
+  description?: string | null
 
   @Column()
-  amount: number;
+  amount: number
 
   @Column()
   fundAmount: number
 
   @Column()
-  method: EnumProto_MoneyMethod;
+  method: EnumProto_MoneyMethod
 
   @ManyToOne(
     () => PaymentSessionEntity,
-    (paymentSession) => paymentSession.payment,
+    paymentSession => paymentSession.payment,
   )
-  paymentSession: PaymentSessionEntity;
-
-  // @ManyToOne()
-  //TODO: add club
+  paymentSession: PaymentSessionEntity
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date;
+  deletedAt?: Date
 
   constructor(partial: Partial<PaymentEntity>) {
-    Object.assign(this, partial);
+    Object.assign(this, partial)
   }
 }

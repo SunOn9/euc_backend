@@ -30,7 +30,8 @@ message UpdateReceiptDataRequest {
   optional string title = 2;
   optional string description = 3;
   optional int32 amount = 4;
-  optional EnumProto.MoneyMethod method = 5;
+  optional int32 fund_amount = 5;
+  optional EnumProto.MoneyMethod method = 6;
 }
 
 message UpdateReceiptRequest {
