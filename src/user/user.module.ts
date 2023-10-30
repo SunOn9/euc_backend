@@ -6,9 +6,14 @@ import { UserEntity } from './entities/user.entity'
 import { UserReflect } from './provider/user.proto'
 import { UserRepository } from './provider/user.repository'
 import { PermissionModule } from '/permission/permission.module'
+import { LogModule } from '/log/log.module'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity]), PermissionModule],
+  imports: [
+    TypeOrmModule.forFeature([UserEntity]),
+    PermissionModule,
+    LogModule,
+  ],
   controllers: [UserController],
   providers: [UserService, UserReflect, UserRepository],
   exports: [UserService, UserReflect, UserRepository],

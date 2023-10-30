@@ -29,7 +29,7 @@ import { UserEntity } from './entities/user.entity'
 @UseGuards(PermissionsGuard)
 @Controller('user')
 export class UserController {
-  constructor(private readonly service: UserService) { }
+  constructor(private readonly service: UserService) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
@@ -39,10 +39,14 @@ export class UserController {
     fields: [],
   })
   async createUser(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Body() bodyData: CreateUserRequestDto,
   ): Promise<UserReply> {
-    const data = await this.service.create(bodyData)
+    const data = await this.service.create(
+      bodyData,
+      req['sessionId'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(
@@ -70,11 +74,15 @@ export class UserController {
   })
   @HttpCode(HttpStatus.CREATED)
   async updateUser(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Body() bodyData: UpdateUserRequestDto,
   ): Promise<SimpleReply> {
     const response = {} as SimpleReply
-    const data = await this.service.update(bodyData)
+    const data = await this.service.update(
+      bodyData,
+      req['sessionId'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(
@@ -146,11 +154,15 @@ export class UserController {
 
   @Get('remove/:id')
   async removeUser(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Param() request: RemoveUserRequestDto,
   ): Promise<SimpleReply> {
     const response = {} as SimpleReply
-    const data = await this.service.remove(request)
+    const data = await this.service.remove(
+      request,
+      req['sessionId'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(
@@ -181,7 +193,11 @@ export class UserController {
     @Body() bodyData: UpdateUserRequestDto,
   ): Promise<SimpleReply> {
     const response = {} as SimpleReply
-    const data = await this.service.update(bodyData)
+    const data = await this.service.update(
+      bodyData,
+      req['sessionId'],
+      req['userInfo'],
+    )
 
     if (data.isErr()) {
       throw new CustomException(
