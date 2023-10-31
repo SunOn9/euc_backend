@@ -16,6 +16,7 @@ message Guest {
   optional google.protobuf.Timestamp deleted_at = 9;
   Club club = 10;
   repeated Event event = 11;
+  EnumProto.Gender gender = 12;
 
   message Club {
     int32 id = 1;

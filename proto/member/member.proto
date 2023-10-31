@@ -19,6 +19,8 @@ message Member {
   Area hometown =14;
   repeated MemberInClub member_in_club =15;
   repeated Event event =16;
+  EnumProto.Gender gender = 17;
+
 
   message Area {
     int32 id = 1;

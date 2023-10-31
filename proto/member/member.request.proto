@@ -59,3 +59,13 @@ message UpdateClubOfMemberRequest {
   int32 member_id =1;
   int32 new_club_id =2;
 }
+
+message ExportMemberRequest {
+  GetMemberConditionRequest conditions = 1;
+  ExportOption options = 2;
+}
+
+message ExportOption {
+  optional google.protobuf.Timestamp from_date = 1;
+  optional google.protobuf.Timestamp to_date = 2;
+}

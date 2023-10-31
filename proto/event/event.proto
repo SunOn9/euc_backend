@@ -45,6 +45,7 @@ message Event {
     google.protobuf.Timestamp created_at = 11;
     google.protobuf.Timestamp updated_at = 12;
     optional google.protobuf.Timestamp deleted_at = 13;
+    EnumProto.Gender gender = 17;
   }
   
   message Guest {
@@ -55,6 +56,7 @@ message Event {
     google.protobuf.Timestamp created_at = 7;
     google.protobuf.Timestamp updated_at = 8;
     optional google.protobuf.Timestamp deleted_at = 9;
+    EnumProto.Gender gender = 12;
   }
 
   message PaymentSession {
