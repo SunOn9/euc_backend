@@ -18,25 +18,25 @@ export class AuthEntity {
   user: UserEntity
 
   @Column({ nullable: true })
-  ipAddress?: string | null
+  ipAddress?: string
 
   @Column({ nullable: true })
-  authToken?: string | null
+  authToken?: string
 
   @Column({ nullable: true })
-  sessionId?: string | null
+  sessionId?: string
 
   @Column({ nullable: true })
-  userAgent?: string | null
+  userAgent?: string
 
   @Column({ nullable: true })
-  platform?: string | null
+  platform?: string
 
   @Column({ nullable: true })
-  longtitude?: number | null
+  longtitude?: number
 
   @Column({ nullable: true })
-  latitude?: number | null
+  latitude?: number
 
   @CreateDateColumn()
   createdAt: Date

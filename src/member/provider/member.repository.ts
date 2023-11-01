@@ -201,9 +201,11 @@ export class MemberRepository extends Repository<MemberEntity> {
     queryBuilder.setFindOptions({
       relationLoadStrategy: 'query',
       relations: {
-        memberInClub: {
-          club: conditions.isExtraClub ?? false,
-        },
+        memberInClub: conditions.isExtraClub
+          ? {
+              club: true,
+            }
+          : false,
         event: conditions.isExtraEvent ?? false,
         hometown: conditions.isExtraArea ?? false,
       },

@@ -21,6 +21,7 @@ message Event {
   repeated ReceiptSession receipt_session =17;
   optional Place place = 18;
   Club club = 19;
+  optional google.protobuf.Timestamp actual_end_event_date = 20;
 
   message Club {
     int32 id = 1;

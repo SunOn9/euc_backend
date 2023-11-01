@@ -13,8 +13,6 @@ import { GetReceiptSessionConditionRequestDto } from '../dto/get-receipt-session
 import { RemoveReceiptSessionRequestDto } from '../dto/remove-receipt-session.dto'
 import { UpdateReceiptSessionRequestDto } from '../dto/update-receipt-session.dto'
 
-
-
 @Injectable()
 export class ReceiptSessionRepository extends Repository<ReceiptSessionEntity> {
   constructor(
@@ -79,7 +77,9 @@ export class ReceiptSessionRepository extends Repository<ReceiptSessionEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get receiptSession with conditions: [${conditions}]`),
+          new Error(
+            `Cannot get receiptSession with conditions: [${conditions}]`,
+          ),
         )
       }
 
@@ -111,7 +111,9 @@ export class ReceiptSessionRepository extends Repository<ReceiptSessionEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get list receiptSession with conditions: [${conditions}]`),
+          new Error(
+            `Cannot get list receiptSession with conditions: [${conditions}]`,
+          ),
         )
       }
 
@@ -165,21 +167,34 @@ export class ReceiptSessionRepository extends Repository<ReceiptSessionEntity> {
       })
     }
 
-
     if (conditions.status !== undefined) {
       queryBuilder.andWhere(`status = :status`, {
         status: `${conditions.status}`,
       })
     }
 
-    //TODO: date confirm, date done (from date - to date)
+    if (
+      conditions.fromDateConfirm !== undefined &&
+      conditions.toDateConfirm !== undefined
+    ) {
+      queryBuilder.andWhere(
+        `date_confirm BETWEEN (:fromDateConfirm, :toDateConfirm)`,
+        {
+          fromDateConfirm: `${conditions.fromDateConfirm}`,
+          toDateConfirm: `${conditions.toDateConfirm}`,
+        },
+      )
+    }
 
-    // if (conditions.status !== undefined) {
-    //   queryBuilder.andWhere(`status = :status`, {
-    //     status: `${conditions.status}`,
-    //   })
-    // }
-
+    if (
+      conditions.fromDateDone !== undefined &&
+      conditions.toDateDone !== undefined
+    ) {
+      queryBuilder.andWhere(`date_done BETWEEN (:fromDateDone, :toDateDone)`, {
+        fromDateDone: `${conditions.fromDateDone}`,
+        toDateDone: `${conditions.toDateDone}`,
+      })
+    }
 
     if (conditions.isDeleted) {
       queryBuilder.withDeleted()

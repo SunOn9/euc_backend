@@ -3,6 +3,8 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -28,21 +30,39 @@ export class EventEntity {
   name: string
 
   @ManyToMany(() => MemberEntity, member => member.event)
+  @JoinTable({
+    name: 'member_in_event',
+    joinColumn: { name: 'event_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'member_id', referencedColumnName: 'id' },
+  })
   member: MemberEntity[]
 
   @ManyToMany(() => GuestEntity, guest => guest.event)
+  @JoinTable({
+    name: 'guest_in_event',
+    joinColumn: { name: 'event_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'guest_id', referencedColumnName: 'id' },
+  })
   guest: GuestEntity[]
 
-  @ManyToOne(() => PlaceEntity, place => place.event)
-  place?: PlaceEntity | null
+  @ManyToOne(() => PlaceEntity, place => place.event, { nullable: true })
+  place?: PlaceEntity
 
   @ManyToOne(() => ClubEntity, club => club.event)
   club: ClubEntity
 
-  @OneToMany(() => PaymentSessionEntity, paymentSession => paymentSession.event)
+  @OneToMany(
+    () => PaymentSessionEntity,
+    paymentSession => paymentSession.event,
+    { nullable: true },
+  )
   paymentSession?: PaymentSessionEntity[]
 
-  @OneToMany(() => ReceiptSessionEntity, receiptSession => receiptSession.event)
+  @OneToMany(
+    () => ReceiptSessionEntity,
+    receiptSession => receiptSession.event,
+    { nullable: true },
+  )
   receiptSession?: ReceiptSessionEntity[]
 
   @Column()
@@ -50,6 +70,9 @@ export class EventEntity {
 
   @Column()
   endEventDate: Date
+
+  @Column({ nullable: true })
+  actualEndEventDate?: Date
 
   @Column()
   type: EnumProto_EventType

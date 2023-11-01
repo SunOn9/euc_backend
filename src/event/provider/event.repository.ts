@@ -12,6 +12,9 @@ import { UpdateEventRequestDto } from '../dto/update-event.dto'
 import { GetEventConditionRequestDto } from '../dto/get-event-condition-request.dto'
 import { EventListDataReply } from '/generated/event/event.reply'
 import { RemoveEventRequestDto } from '../dto/remove-event.dto'
+import { AddMemberToEventRequestDto } from '../dto/add-member.dto'
+import { Member } from '/generated/member/member'
+import { Guest } from '/generated/guest/guest'
 
 @Injectable()
 export class EventRepository extends Repository<EventEntity> {
@@ -45,6 +48,46 @@ export class EventRepository extends Repository<EventEntity> {
     }
   }
 
+  async updateMemberInEvent(
+    eventId: number,
+    listMember: Partial<Member>[],
+  ): Promise<Result<Event, Error>> {
+    try {
+      const dataReply = await this.save({
+        id: eventId,
+        member: listMember,
+      })
+
+      if (this.utilService.isObjectEmpty(dataReply)) {
+        return err(new Error(`Cannot update member in event in database`))
+      }
+
+      return ok(this.proto.reflect(dataReply))
+    } catch (e) {
+      throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  async updateGuestInEvent(
+    eventId: number,
+    listGuest: Partial<Guest>[],
+  ): Promise<Result<Event, Error>> {
+    try {
+      const dataReply = await this.save({
+        id: eventId,
+        guest: listGuest,
+      })
+
+      if (this.utilService.isObjectEmpty(dataReply)) {
+        return err(new Error(`Cannot update guest in event in database`))
+      }
+
+      return ok(this.proto.reflect(dataReply))
+    } catch (e) {
+      throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
+    }
+  }
+
   async updateEvent(
     updateData: UpdateEventRequestDto,
   ): Promise<Result<Event, Error>> {
@@ -59,6 +102,28 @@ export class EventRepository extends Repository<EventEntity> {
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }
+  }
+
+  async checkMemberExits(eventId: number, memberId: number): Promise<boolean> {
+    return await this.exist({
+      where: {
+        id: eventId,
+        member: {
+          id: memberId,
+        },
+      },
+    })
+  }
+
+  async checkGuestExits(eventId: number, guestId: number): Promise<boolean> {
+    return await this.exist({
+      where: {
+        id: eventId,
+        guest: {
+          id: guestId,
+        },
+      },
+    })
   }
 
   async getDetail(

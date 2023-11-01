@@ -1,10 +1,19 @@
-import { IsBoolean, IsDateString, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator'
+import {
+  IsBoolean,
+  IsDateString,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator'
 import { ApiPropertyOptional } from '@nestjs/swagger/dist/decorators/api-property.decorator'
 import { Transform, Type } from 'class-transformer'
 import { EnumProto_SessionStatus } from '/generated/enumps'
 import { GetReceiptSessionConditionRequest } from '/generated/receipt-session/receipt-session.request'
 
-export class GetReceiptSessionConditionRequestDto implements GetReceiptSessionConditionRequest {
+export class GetReceiptSessionConditionRequestDto
+  implements GetReceiptSessionConditionRequest
+{
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
@@ -21,7 +30,6 @@ export class GetReceiptSessionConditionRequestDto implements GetReceiptSessionCo
   @IsString()
   description?: string
 
-
   @ApiPropertyOptional()
   @IsOptional()
   @IsEnum(EnumProto_SessionStatus)
@@ -30,12 +38,22 @@ export class GetReceiptSessionConditionRequestDto implements GetReceiptSessionCo
   @ApiPropertyOptional()
   @IsOptional()
   @IsDateString()
-  dateConfirm?: Date
+  fromDateConfirm?: Date
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsDateString()
-  dateDone?: Date
+  toDateConfirm?: Date
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  fromDateDone?: Date
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  toDateDone?: Date
 
   @ApiPropertyOptional()
   @IsOptional()

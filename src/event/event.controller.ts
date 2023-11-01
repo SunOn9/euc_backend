@@ -26,6 +26,10 @@ import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
 import { EventEntity } from './entities/event.entity'
+import { AddMemberToEventRequestDto } from './dto/add-member.dto'
+import { AddGuestToEventRequestDto } from './dto/add-guest.dto'
+import { RemoveGuestFromEventRequestDto } from './dto/remove-guest.dto'
+import { RemoveMemberFromEventRequestDto } from './dto/remove-member.dto'
 
 @UseGuards(PermissionsGuard)
 @Controller('event')
@@ -159,6 +163,134 @@ export class EventController {
     const response = {} as SimpleReply
     const data = await this.service.remove(
       request,
+      req['sessionId'],
+      req['userInfo'],
+    )
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = CONST.DEFAULT_REMOVE_SUCCESS_MESSAGE
+    return response
+  }
+
+  @Post('add-member')
+  @CheckPermissions({
+    action: [Action.UPDATE],
+    subject: [EventEntity],
+    fields: [],
+  })
+  @HttpCode(HttpStatus.CREATED)
+  async addMember(
+    @Req() req: Request,
+    @Body() bodyData: AddMemberToEventRequestDto,
+  ): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    const data = await this.service.addMember(
+      bodyData,
+      req['sessionId'],
+      req['userInfo'],
+    )
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = CONST.DEFAULT_UPDATE_SUCCESS_MESSAGE
+    return response
+  }
+
+  @Post('remove-member')
+  @CheckPermissions({
+    action: [Action.UPDATE],
+    subject: [EventEntity],
+    fields: [],
+  })
+  @HttpCode(HttpStatus.CREATED)
+  async removeMember(
+    @Req() req: Request,
+    @Body() bodyData: RemoveMemberFromEventRequestDto,
+  ): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    const data = await this.service.removeMember(
+      bodyData,
+      req['sessionId'],
+      req['userInfo'],
+    )
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = CONST.DEFAULT_REMOVE_SUCCESS_MESSAGE
+    return response
+  }
+
+  @Post('add-guest')
+  @CheckPermissions({
+    action: [Action.UPDATE],
+    subject: [EventEntity],
+    fields: [],
+  })
+  @HttpCode(HttpStatus.CREATED)
+  async addGuest(
+    @Req() req: Request,
+    @Body() bodyData: AddGuestToEventRequestDto,
+  ): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    const data = await this.service.addGuest(
+      bodyData,
+      req['sessionId'],
+      req['userInfo'],
+    )
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = CONST.DEFAULT_UPDATE_SUCCESS_MESSAGE
+    return response
+  }
+
+  @Post('remove-guest')
+  @CheckPermissions({
+    action: [Action.UPDATE],
+    subject: [EventEntity],
+    fields: [],
+  })
+  @HttpCode(HttpStatus.CREATED)
+  async removeGuest(
+    @Req() req: Request,
+    @Body() bodyData: RemoveGuestFromEventRequestDto,
+  ): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    const data = await this.service.removeGuest(
+      bodyData,
       req['sessionId'],
       req['userInfo'],
     )

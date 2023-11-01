@@ -78,7 +78,9 @@ export class PaymentSessionRepository extends Repository<PaymentSessionEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot getpaymentSession with conditions: [${conditions}]`),
+          new Error(
+            `Cannot getpaymentSession with conditions: [${conditions}]`,
+          ),
         )
       }
 
@@ -110,7 +112,9 @@ export class PaymentSessionRepository extends Repository<PaymentSessionEntity> {
 
       if (!dataReply) {
         return err(
-          new Error(`Cannot get listpaymentSession with conditions: [${conditions}]`),
+          new Error(
+            `Cannot get listpaymentSession with conditions: [${conditions}]`,
+          ),
         )
       }
 
@@ -152,7 +156,6 @@ export class PaymentSessionRepository extends Repository<PaymentSessionEntity> {
       })
     }
 
-
     if (conditions.title !== undefined) {
       queryBuilder.andWhere(`title LIKE :title`, {
         title: `%${conditions.title}%`,
@@ -165,21 +168,34 @@ export class PaymentSessionRepository extends Repository<PaymentSessionEntity> {
       })
     }
 
-
     if (conditions.status !== undefined) {
       queryBuilder.andWhere(`status = :status`, {
         status: `${conditions.status}`,
       })
     }
 
-    //TODO: date confirm, date done (from date - to date)
+    if (
+      conditions.fromDateConfirm !== undefined &&
+      conditions.toDateConfirm !== undefined
+    ) {
+      queryBuilder.andWhere(
+        `date_confirm BETWEEN (:fromDateConfirm, :toDateConfirm)`,
+        {
+          fromDateConfirm: `${conditions.fromDateConfirm}`,
+          toDateConfirm: `${conditions.toDateConfirm}`,
+        },
+      )
+    }
 
-    // if (conditions.status !== undefined) {
-    //   queryBuilder.andWhere(`status = :status`, {
-    //     status: `${conditions.status}`,
-    //   })
-    // }
-
+    if (
+      conditions.fromDateDone !== undefined &&
+      conditions.toDateDone !== undefined
+    ) {
+      queryBuilder.andWhere(`date_done BETWEEN (:fromDateDone, :toDateDone)`, {
+        fromDateDone: `${conditions.fromDateDone}`,
+        toDateDone: `${conditions.toDateDone}`,
+      })
+    }
 
     if (conditions.isDeleted) {
       queryBuilder.withDeleted()

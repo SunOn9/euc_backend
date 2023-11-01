@@ -9,8 +9,10 @@ message GetPaymentSessionConditionRequest {
   optional string title = 2;
   optional string description = 3;
   optional EnumProto.SessionStatus status = 4;
-  optional google.protobuf.Timestamp date_confirm = 5;
-  optional google.protobuf.Timestamp date_done = 6;
+  optional google.protobuf.Timestamp from_date_confirm = 5;
+  optional google.protobuf.Timestamp to_date_confirm = 6;
+  optional google.protobuf.Timestamp from_date_done = 7;
+  optional google.protobuf.Timestamp to_date_done = 8;
   // google.protobuf.Timestamp created_at = 7;
   // google.protobuf.Timestamp updated_at = 8;
   // optional google.protobuf.Timestamp deleted_at = 9;

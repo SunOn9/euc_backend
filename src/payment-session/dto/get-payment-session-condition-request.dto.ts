@@ -1,10 +1,19 @@
-import { IsBoolean, IsDateString, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator'
+import {
+  IsBoolean,
+  IsDateString,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator'
 import { ApiPropertyOptional } from '@nestjs/swagger/dist/decorators/api-property.decorator'
 import { Transform, Type } from 'class-transformer'
 import { GetPaymentSessionConditionRequest } from '/generated/payment-session/payment-session.request'
 import { EnumProto_SessionStatus } from '/generated/enumps'
 
-export class GetPaymentSessionConditionRequestDto implements GetPaymentSessionConditionRequest {
+export class GetPaymentSessionConditionRequestDto
+  implements GetPaymentSessionConditionRequest
+{
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
@@ -29,12 +38,22 @@ export class GetPaymentSessionConditionRequestDto implements GetPaymentSessionCo
   @ApiPropertyOptional()
   @IsOptional()
   @IsDateString()
-  dateConfirm?: Date
+  fromDateConfirm?: Date
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsDateString()
-  dateDone?: Date
+  toDateConfirm?: Date
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  fromDateDone?: Date
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  toDateDone?: Date
 
   @ApiPropertyOptional()
   @IsOptional()

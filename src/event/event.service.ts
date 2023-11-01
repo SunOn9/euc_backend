@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
-import { err } from 'neverthrow'
+import { err, ok } from 'neverthrow'
 import { EventRepository } from './provider/event.repository'
 import { CreateEventRequestDto } from './dto/create-event.dto'
 import { GetEventConditionRequestDto } from './dto/get-event-condition-request.dto'
@@ -9,12 +9,22 @@ import { LogService } from '/log/log.service'
 import { Action } from '/permission/casl/casl.type'
 import { User } from '/generated/user/user'
 import { EventEntity } from './entities/event.entity'
+import { AddMemberToEventRequestDto } from './dto/add-member.dto'
+import { AddGuestToEventRequestDto } from './dto/add-guest.dto'
+import { RemoveGuestFromEventRequestDto } from './dto/remove-guest.dto'
+import { RemoveMemberFromEventRequestDto } from './dto/remove-member.dto'
+import { MemberService } from '/member/member.service'
+import { GuestService } from '/guest/guest.service'
+import { MemberEntity } from '/member/entities/member.entity'
+import { GuestEntity } from '/guest/entities/guest.entity'
 
 @Injectable()
 export class EventService {
   constructor(
     private readonly repo: EventRepository,
     private readonly logService: LogService,
+    private readonly memberService: MemberService,
+    private readonly guestService: GuestService,
   ) {}
 
   async create(
@@ -104,5 +114,191 @@ export class EventService {
     return removeReply
   }
 
-  // TODO: Add member, and guest
+  async addMember(
+    requestData: AddMemberToEventRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
+    const eventReply = await this.getDetail({
+      id: requestData.eventId,
+      isExtraMember: true,
+    })
+
+    if (eventReply.isErr()) {
+      return err(eventReply.error)
+    }
+
+    const listAddMember = eventReply.value.member
+
+    for (const memberId of requestData.memberIdList) {
+      if (await this.repo.checkMemberExits(requestData.eventId, memberId)) {
+        return err(
+          new Error(`Member with id : [${memberId}] already exits in event`),
+        )
+      } else {
+        listAddMember.push({
+          id: memberId,
+        } as MemberEntity)
+      }
+    }
+
+    const updateReply = await this.repo.updateMemberInEvent(
+      requestData.eventId,
+      listAddMember,
+    )
+
+    if (updateReply.isOk()) {
+      await this.logService.create({
+        action: Action.UPDATE,
+        subject: EventEntity.tableName,
+        oldData: eventReply.value,
+        newData: updateReply,
+        sessionId: sessionId,
+        user: userInfo,
+      })
+    }
+
+    return updateReply
+  }
+
+  async removeMember(
+    requestData: RemoveMemberFromEventRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
+    const eventReply = await this.getDetail({
+      id: requestData.eventId,
+      isExtraMember: true,
+    })
+
+    if (eventReply.isErr()) {
+      return err(eventReply.error)
+    }
+
+    for (const memberId of requestData.memberIdList) {
+      if (!(await this.repo.checkMemberExits(requestData.eventId, memberId))) {
+        return err(
+          new Error(`Member with id : [${memberId}] isn't exits in event`),
+        )
+      }
+    }
+
+    const listRemoveMember = eventReply.value.member.filter(
+      each => !requestData.memberIdList.includes(each.id),
+    )
+
+    const updateReply = await this.repo.updateMemberInEvent(
+      requestData.eventId,
+      listRemoveMember,
+    )
+
+    if (updateReply.isOk()) {
+      await this.logService.create({
+        action: Action.UPDATE,
+        subject: EventEntity.tableName,
+        oldData: eventReply.value,
+        newData: updateReply,
+        sessionId: sessionId,
+        user: userInfo,
+      })
+    }
+
+    return updateReply
+  }
+
+  async addGuest(
+    requestData: AddGuestToEventRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
+    const eventReply = await this.getDetail({
+      id: requestData.eventId,
+      isExtraGuest: true,
+    })
+
+    if (eventReply.isErr()) {
+      return err(eventReply.error)
+    }
+
+    const listAddGuest = eventReply.value.guest
+
+    for (const guestId of requestData.guestIdList) {
+      if (await this.repo.checkGuestExits(requestData.eventId, guestId)) {
+        return err(
+          new Error(`Guest with id : [${guestId}] already exits in event`),
+        )
+      } else {
+        listAddGuest.push({
+          id: guestId,
+        } as GuestEntity)
+      }
+    }
+
+    const updateReply = await this.repo.updateGuestInEvent(
+      requestData.eventId,
+      listAddGuest,
+    )
+
+    if (updateReply.isOk()) {
+      await this.logService.create({
+        action: Action.UPDATE,
+        subject: EventEntity.tableName,
+        oldData: eventReply.value,
+        newData: updateReply,
+        sessionId: sessionId,
+        user: userInfo,
+      })
+    }
+
+    return updateReply
+  }
+
+  async removeGuest(
+    requestData: RemoveGuestFromEventRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ) {
+    const eventReply = await this.getDetail({
+      id: requestData.eventId,
+      isExtraGuest: true,
+    })
+
+    if (eventReply.isErr()) {
+      return err(eventReply.error)
+    }
+
+    for (const guestId of requestData.guestIdList) {
+      if (!(await this.repo.checkGuestExits(requestData.eventId, guestId))) {
+        return err(
+          new Error(`Guest with id : [${guestId}] isn't exits in event`),
+        )
+      }
+    }
+
+    const listRemoveGuest = eventReply.value.guest.filter(
+      each => !requestData.guestIdList.includes(each.id),
+    )
+
+    const updateReply = await this.repo.updateGuestInEvent(
+      requestData.eventId,
+      listRemoveGuest,
+    )
+
+    if (updateReply.isOk()) {
+      await this.logService.create({
+        action: Action.UPDATE,
+        subject: EventEntity.tableName,
+        oldData: eventReply.value,
+        newData: updateReply,
+        sessionId: sessionId,
+        user: userInfo,
+      })
+    }
+
+    return updateReply
+  }
+
+  //TODO: check status event
+
+  //TODO: End Event -> Auto confirm ...
 }
