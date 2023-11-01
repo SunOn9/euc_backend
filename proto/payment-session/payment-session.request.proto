@@ -28,7 +28,8 @@ message GetPaymentSessionConditionRequest {
 message CreatePaymentSessionRequest {
   string title = 1;
   optional string description = 2;
-  EnumProto.SessionStatus status = 3;
+  // EnumProto.SessionStatus status = 3;
+  optional int32 event_id = 4;
 }
 
 message UpdatePaymentSessionDataRequest {

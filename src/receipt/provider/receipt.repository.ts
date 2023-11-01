@@ -29,8 +29,11 @@ export class ReceiptRepository extends Repository<ReceiptEntity> {
     createData: CreateReceiptRequestDto,
   ): Promise<Result<Receipt, Error>> {
     try {
+      const { receiptSessionId, ...other } = createData
+
       const saveData = {
-        ...createData,
+        ...other,
+        receiptSession: { id: receiptSessionId }
       } as ReceiptEntity
 
       const dataReply = await this.save(saveData)

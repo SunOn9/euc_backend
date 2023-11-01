@@ -24,14 +24,14 @@ export class ReceiptSessionService {
     private readonly logService: LogService,
     private readonly receiptService: ReceiptService,
     private readonly clubService: ClubService,
-  ) {}
+  ) { }
 
   async create(
     requestData: CreateReceiptSessionRequestDto,
     sessionId: string,
     userInfo: User,
   ) {
-    const createReply = await this.repo.createReceiptSession(requestData)
+    const createReply = await this.repo.createReceiptSession(requestData, userInfo.club.id)
 
     if (createReply.isOk()) {
       await this.logService.create({

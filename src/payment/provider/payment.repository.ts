@@ -30,10 +30,11 @@ export class PaymentRepository extends Repository<PaymentEntity> {
     createData: CreatePaymentRequestDto,
   ): Promise<Result<Payment, Error>> {
     try {
-      const { ...other } = createData
+      const { paymentSessionId, ...other } = createData
 
       const saveData = {
         ...other,
+        paymentSession: { id: paymentSessionId }
       } as PaymentEntity
 
       const dataReply = await this.save(saveData)

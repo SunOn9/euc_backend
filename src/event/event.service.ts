@@ -17,6 +17,12 @@ import { MemberService } from '/member/member.service'
 import { GuestService } from '/guest/guest.service'
 import { MemberEntity } from '/member/entities/member.entity'
 import { GuestEntity } from '/guest/entities/guest.entity'
+import { EnumProto_EventType, EnumProto_MoneyMethod } from '/generated/enumps'
+import { PaymentSessionService } from '/payment-session/payment-session.service'
+import { ReceiptSessionService } from '/receipt-session/receipt-session.service'
+import { UtilsService } from 'lib/utils'
+import { PaymentService } from '/payment/payment.service'
+import { ReceiptService } from '/receipt/receipt.service'
 
 @Injectable()
 export class EventService {
@@ -25,17 +31,20 @@ export class EventService {
     private readonly logService: LogService,
     private readonly memberService: MemberService,
     private readonly guestService: GuestService,
-  ) {}
+    private readonly paymentSessionService: PaymentSessionService,
+    private readonly receiptSessionService: ReceiptSessionService,
+    private readonly paymentService: PaymentService,
+    private readonly receiptService: ReceiptService,
+    private readonly utilsService: UtilsService,
+
+
+  ) { }
 
   async create(
     requestData: CreateEventRequestDto,
     sessionId: string,
     userInfo: User,
   ) {
-    //TODO: Check event type -> Create Payment Session and Reiceipt Session
-
-    //TODO: Check place fee -> Create Payment Session
-
     const updateReply = await this.repo.createEvent(requestData)
 
     if (updateReply.isOk()) {
@@ -46,8 +55,41 @@ export class EventService {
         sessionId: sessionId,
         user: userInfo,
       })
-    }
 
+      if (updateReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
+        const paymentSessionReply = await this.paymentSessionService.create({
+          title: `Phiếu chi cho buổi tập - ${this.utilsService.convertToVietNamDate(updateReply.value.startEventDate)}`,
+          description: 'Phiếu chi tạo tự động cho buổi tập hằng tuần',
+          eventId: updateReply.value.id
+        }, sessionId, userInfo)
+
+        if (paymentSessionReply.isErr()) {
+          return err(paymentSessionReply.error)
+        }
+
+        const receiptSessionReply = await this.receiptSessionService.create({
+          title: `Phiếu thu cho buổi tập - ${this.utilsService.convertToVietNamDate(updateReply.value.startEventDate)}`,
+          description: 'Phiếu thu tạo tự động cho buổi tập hằng tuần',
+          eventId: updateReply.value.id
+        }, sessionId, userInfo)
+
+        if (receiptSessionReply.isErr()) {
+          return err(receiptSessionReply.error)
+        }
+
+        if (updateReply.value.place) {
+          if (updateReply.value.place.fee !== 0) {
+            await this.paymentService.create({
+              title: `Chi phí địa điểm buổi tập - ${updateReply.value.place.name}`,
+              description: 'Chi phí tạo tự động cho địa điểm',
+              method: EnumProto_MoneyMethod.UNRECOGNIZED,
+              amount: updateReply.value.place.fee,
+              paymentSessionId: paymentSessionReply.value.id
+            }, sessionId, userInfo)
+          }
+        }
+      }
+    }
     return updateReply
   }
 
@@ -298,7 +340,7 @@ export class EventService {
     return updateReply
   }
 
-  //TODO: check status event
-
-  //TODO: End Event -> Auto confirm ...
+  //TODO: add guest or member, create receipt for that...
+  //TODO: remove guest or member, remove receipt for that...
+  //TODO: End Event -> Auto confirm ... (check paymentSession, receiptSession -> each status method must not UNRECOGNIZED)
 }

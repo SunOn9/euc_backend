@@ -32,8 +32,12 @@ export class EventRepository extends Repository<EventEntity> {
     createData: CreateEventRequestDto,
   ): Promise<Result<Event, Error>> {
     try {
+      const { clubId, placeId, ...other } = createData
+
       const saveData = {
-        ...createData,
+        ...other,
+        place: placeId !== undefined ? { id: placeId } : {},
+        club: { id: clubId }
       } as EventEntity
 
       const dataReply = await this.save(saveData)

@@ -35,4 +35,12 @@ export class CreatePaymentRequestDto implements CreatePaymentRequest {
   @IsNotEmpty()
   @IsEnum(EnumProto_MoneyMethod)
   method: EnumProto_MoneyMethod
+
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  paymentSessionId: number
+
 }

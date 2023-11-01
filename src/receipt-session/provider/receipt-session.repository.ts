@@ -27,12 +27,15 @@ export class ReceiptSessionRepository extends Repository<ReceiptSessionEntity> {
 
   async createReceiptSession(
     createData: CreateReceiptSessionRequestDto,
+    clubId: number
   ): Promise<Result<ReceiptSession, Error>> {
     try {
-      const { ...other } = createData
+      const { eventId, ...other } = createData
 
       const saveData = {
         ...other,
+        event: eventId !== undefined ? { id: eventId } : {},
+        club: { id: clubId }
       } as ReceiptSessionEntity
 
       const dataReply = await this.save(saveData)

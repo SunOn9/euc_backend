@@ -24,14 +24,14 @@ export class PaymentSessionService {
     private readonly logService: LogService,
     private readonly clubService: ClubService,
     private readonly paymentService: PaymentService,
-  ) {}
+  ) { }
 
   async create(
     requestData: CreatePaymentSessionRequestDto,
     sessionId: string,
     userInfo: User,
   ) {
-    const createReply = await this.repo.createPaymentSession(requestData)
+    const createReply = await this.repo.createPaymentSession(requestData, userInfo.club.id)
 
     if (createReply.isOk()) {
       await this.logService.create({

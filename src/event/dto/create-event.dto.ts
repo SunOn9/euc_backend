@@ -3,6 +3,7 @@ import {
   IsDateString,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator'
@@ -12,6 +13,7 @@ import {
 } from '@nestjs/swagger/dist/decorators/api-property.decorator'
 import { CreateEventRequest } from '/generated/event/event.request'
 import { EnumProto_EventType } from '/generated/enumps'
+import { Type } from 'class-transformer'
 
 export class CreateEventRequestDto implements CreateEventRequest {
   @ApiProperty()
@@ -33,4 +35,16 @@ export class CreateEventRequestDto implements CreateEventRequest {
   @IsNotEmpty()
   @IsEnum(EnumProto_EventType)
   type: EnumProto_EventType
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  placeId?: number
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  clubId?: number
 }

@@ -27,9 +27,10 @@ message GetReceiptSessionConditionRequest {
 }
 
 message CreateReceiptSessionRequest {
-  string title = 2;
-  optional string description = 3;
-  EnumProto.SessionStatus status = 6;
+  string title = 1;
+  optional string description = 2;
+  // EnumProto.SessionStatus status = 3;
+  optional int32 event_id = 4;
 }
 
 message UpdateReceiptSessionDataRequest {

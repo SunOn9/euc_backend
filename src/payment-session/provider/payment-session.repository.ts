@@ -28,12 +28,15 @@ export class PaymentSessionRepository extends Repository<PaymentSessionEntity> {
 
   async createPaymentSession(
     createData: CreatePaymentSessionRequestDto,
+    clubId: number
   ): Promise<Result<PaymentSession, Error>> {
     try {
-      const { ...other } = createData
+      const { eventId, ...other } = createData
 
       const saveData = {
         ...other,
+        event: eventId !== undefined ? { id: eventId } : {},
+        club: { id: clubId }
       } as PaymentSessionEntity
 
       const dataReply = await this.save(saveData)

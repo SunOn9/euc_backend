@@ -24,6 +24,7 @@ message CreatePaymentRequest {
   optional string description = 3;
   int32 amount = 4;
   EnumProto.MoneyMethod method = 5;
+  int32 payment_session_id = 6;
 }
 
 message UpdatePaymentDataRequest {

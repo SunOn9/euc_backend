@@ -35,4 +35,11 @@ export class CreateReceiptRequestDto implements CreateReceiptRequest {
   @IsNotEmpty()
   @IsEnum(EnumProto_MoneyMethod)
   method: EnumProto_MoneyMethod
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  receiptSessionId: number
+
 }
