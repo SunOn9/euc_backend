@@ -31,14 +31,16 @@ export class ReceiptSessionEntity {
   amount: number
 
   @Column({ nullable: true })
-  description?: string | null
+  description?: string
 
   @ManyToOne(() => EventEntity, event => event.receiptSession, {
     nullable: true,
   })
-  event?: EventEntity | null
+  event?: EventEntity
 
-  @OneToMany(() => ReceiptEntity, receipt => receipt.receiptSession)
+  @OneToMany(() => ReceiptEntity, receipt => receipt.receiptSession, {
+    cascade: true,
+  })
   receipt: ReceiptEntity[]
 
   @Column({
@@ -50,20 +52,20 @@ export class ReceiptSessionEntity {
   status: EnumProto_SessionStatus
 
   @Column({ nullable: true })
-  dateConfirm?: Date | null
+  dateConfirm?: Date
 
   @ManyToOne(() => UserEntity, user => user.receiptSessionConfirm, {
     nullable: true,
   })
-  userConfirm?: UserEntity | null
+  userConfirm?: UserEntity
 
   @Column({ nullable: true })
-  dateDone?: Date | null
+  dateDone?: Date
 
   @ManyToOne(() => UserEntity, user => user.receiptSessionDone, {
     nullable: true,
   })
-  userDone?: UserEntity | null
+  userDone?: UserEntity
 
   @ManyToOne(() => ClubEntity, club => club.receiptSession)
   club: ClubEntity
@@ -75,7 +77,7 @@ export class ReceiptSessionEntity {
   updatedAt: Date
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | null
+  deletedAt?: Date
 
   constructor(partial: Partial<ReceiptSessionEntity>) {
     Object.assign(this, partial)

@@ -96,4 +96,10 @@ export class GetReceiptSessionConditionRequestDto
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
   isExtraReceipt?: boolean
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  isExtraClub?: boolean
 }

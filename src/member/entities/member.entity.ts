@@ -13,7 +13,11 @@ import {
 } from 'typeorm'
 import { EventEntity } from 'src/event/entities/event.entity'
 import { AreaEntity } from '/area/entities/area.entity'
-import { EnumProto_Gender, EnumProto_MemberStatus, EnumProto_MemberType } from '/generated/enumps'
+import {
+  EnumProto_Gender,
+  EnumProto_MemberStatus,
+  EnumProto_MemberType,
+} from '/generated/enumps'
 import { MemberInClubEntity } from './member-in-club.entity'
 
 @Entity({ name: 'member' })
@@ -42,7 +46,7 @@ export class MemberEntity {
   type: EnumProto_MemberType
 
   @Column({ nullable: true })
-  monthlyFee?: string | null
+  monthlyFee?: string
 
   @ManyToOne(() => AreaEntity, area => area.member)
   hometown: AreaEntity

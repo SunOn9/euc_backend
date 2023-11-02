@@ -27,7 +27,7 @@ export class ReceiptSessionRepository extends Repository<ReceiptSessionEntity> {
 
   async createReceiptSession(
     createData: CreateReceiptSessionRequestDto,
-    clubId: number
+    clubId: number,
   ): Promise<Result<ReceiptSession, Error>> {
     try {
       const { eventId, ...other } = createData
@@ -35,7 +35,7 @@ export class ReceiptSessionRepository extends Repository<ReceiptSessionEntity> {
       const saveData = {
         ...other,
         event: eventId !== undefined ? { id: eventId } : {},
-        club: { id: clubId }
+        club: { id: clubId },
       } as ReceiptSessionEntity
 
       const dataReply = await this.save(saveData)
@@ -210,6 +210,7 @@ export class ReceiptSessionRepository extends Repository<ReceiptSessionEntity> {
         userConfirm: conditions.isExtraUserConfirm ?? false,
         event: conditions.isExtraEvent ?? false,
         receipt: conditions.isExtraReceipt ?? false,
+        club: conditions.isExtraClub ?? false,
       },
     })
 

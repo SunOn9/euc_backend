@@ -25,7 +25,7 @@ export class MemberInClubEntity {
   createdAt: Date
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | null
+  deletedAt?: Date
 
   constructor(partial: Partial<MemberInClubEntity>) {
     Object.assign(this, partial)

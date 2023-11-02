@@ -6,11 +6,16 @@ import { ReceiptEntity } from './entities/receipt.entity'
 import { PermissionModule } from '/permission/permission.module'
 import { ReceiptReflect } from './provider/receipt.proto'
 import { ReceiptRepository } from './provider/receipt.repository'
+import { ReceiptSessionModule } from '/receipt-session/receipt-session.module'
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ReceiptEntity]), PermissionModule],
+  imports: [
+    TypeOrmModule.forFeature([ReceiptEntity]),
+    PermissionModule,
+    ReceiptSessionModule,
+  ],
   controllers: [ReceiptController],
   providers: [ReceiptService, ReceiptReflect, ReceiptRepository],
-  exports: [ReceiptService, ReceiptReflect, ReceiptRepository]
+  exports: [ReceiptService, ReceiptReflect, ReceiptRepository],
 })
-export class ReceiptModule { }
+export class ReceiptModule {}

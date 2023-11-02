@@ -35,7 +35,7 @@ export class UserEntity {
   password: string
 
   @Column({ unique: true, nullable: true, length: 10 })
-  phone?: string | null
+  phone?: string
 
   @Column()
   role: EnumProto_UserRole
@@ -88,7 +88,7 @@ export class UserEntity {
   updatedAt: Date
 
   @DeleteDateColumn()
-  deletedAt?: Date | null
+  deletedAt?: Date
 
   constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial)

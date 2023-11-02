@@ -21,7 +21,7 @@ export class PaymentEntity {
   title: string
 
   @Column({ nullable: true })
-  description?: string | null
+  description?: string
 
   @Column()
   amount: number

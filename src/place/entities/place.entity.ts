@@ -25,7 +25,7 @@ export class PlaceEntity {
   address: string
 
   @Column({ nullable: true })
-  fee?: number | null
+  fee?: number
 
   @OneToMany(() => EventEntity, event => event.place)
   event: EventEntity[]

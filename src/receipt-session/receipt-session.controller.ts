@@ -12,7 +12,10 @@ import {
   Query,
   Req,
 } from '@nestjs/common/decorators/http/route-params.decorator'
-import { ReceiptSessionListReply, ReceiptSessionReply } from '/generated/receipt-session/receipt-session.reply'
+import {
+  ReceiptSessionListReply,
+  ReceiptSessionReply,
+} from '/generated/receipt-session/receipt-session.reply'
 import CustomException from 'lib/utils/custom.exception'
 import { CreateReceiptSessionRequestDto } from './dto/create-receipt-session.dto'
 import * as CONST from '../prelude/constant'
@@ -29,7 +32,7 @@ import { ReceiptSessionEntity } from './entities/receipt-session.entity'
 @UseGuards(PermissionsGuard)
 @Controller('receipt-session')
 export class ReceiptSessionController {
-  constructor(private readonly service: ReceiptSessionService) { }
+  constructor(private readonly service: ReceiptSessionService) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')

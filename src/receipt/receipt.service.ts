@@ -10,19 +10,28 @@ import { RemoveReceiptRequestDto } from './dto/remove-receipt.dto'
 import { UpdateReceiptRequestDto } from './dto/update-receipt.dto'
 import { ReceiptEntity } from './entities/receipt.entity'
 import { ReceiptRepository } from './provider/receipt.repository'
+import { ReceiptSessionService } from '/receipt-session/receipt-session.service'
 
 @Injectable()
 export class ReceiptService {
   constructor(
     private readonly repo: ReceiptRepository,
     private readonly logService: LogService,
-  ) { }
+    private readonly receiptSessionService: ReceiptSessionService,
+  ) {}
 
   async create(
     requestData: CreateReceiptRequestDto,
     sessionId: string,
     userInfo: User,
   ) {
+    const receiptSessionReply = await this.receiptSessionService.getDetail({
+      id: requestData.receiptSessionId,
+    })
+
+    if (receiptSessionReply.isErr()) {
+      return err(receiptSessionReply.error)
+    }
 
     const createReply = await this.repo.createReceipt(requestData)
 
@@ -34,6 +43,19 @@ export class ReceiptService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      await this.receiptSessionService.update(
+        {
+          conditions: {
+            id: receiptSessionReply.value.id,
+          },
+          data: {
+            amount: receiptSessionReply.value.amount + createReply.value.amount,
+          },
+        },
+        sessionId,
+        userInfo,
+      )
     }
 
     return createReply
@@ -54,7 +76,10 @@ export class ReceiptService {
     sessionId: string,
     userInfo: User,
   ) {
-    const receiptReply = await this.repo.getDetail(requestData.conditions)
+    const receiptReply = await this.repo.getDetail({
+      ...requestData.conditions,
+      isExtraReceiptSession: true,
+    })
 
     if (receiptReply.isErr()) {
       return err(receiptReply.error)
@@ -63,6 +88,7 @@ export class ReceiptService {
     const updateReply = await this.repo.updateReceipt(requestData)
 
     if (updateReply.isOk()) {
+      //log
       await this.logService.create({
         action: Action.UPDATE,
         subject: ReceiptEntity.tableName,
@@ -71,6 +97,23 @@ export class ReceiptService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      //update receiptSession -> minus old amount and add new amount
+      if (requestData.data.amount !== undefined) {
+        await this.receiptSessionService.update(
+          {
+            conditions: { id: receiptReply.value.receiptSession.id },
+            data: {
+              amount:
+                receiptReply.value.receiptSession.amount -
+                receiptReply.value.amount +
+                updateReply.value.amount,
+            },
+          },
+          sessionId,
+          userInfo,
+        )
+      }
     }
 
     return updateReply
@@ -84,6 +127,7 @@ export class ReceiptService {
     //Check receipt
     const receiptReply = await this.repo.getDetail({
       id: requestData.id,
+      isExtraReceiptSession: true,
     })
 
     if (receiptReply.isErr()) {
@@ -100,6 +144,22 @@ export class ReceiptService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      //update receiptSession amount
+      await this.receiptSessionService.update(
+        {
+          conditions: {
+            id: receiptReply.value.receiptSession.id,
+          },
+          data: {
+            amount:
+              receiptReply.value.receiptSession.amount -
+              receiptReply.value.amount,
+          },
+        },
+        sessionId,
+        userInfo,
+      )
     }
     return removeReply
   }

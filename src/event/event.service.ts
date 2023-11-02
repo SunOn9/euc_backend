@@ -31,14 +31,13 @@ export class EventService {
     private readonly logService: LogService,
     private readonly memberService: MemberService,
     private readonly guestService: GuestService,
+    private readonly utilsService: UtilsService,
+
     private readonly paymentSessionService: PaymentSessionService,
     private readonly receiptSessionService: ReceiptSessionService,
     private readonly paymentService: PaymentService,
     private readonly receiptService: ReceiptService,
-    private readonly utilsService: UtilsService,
-
-
-  ) { }
+  ) {}
 
   async create(
     requestData: CreateEventRequestDto,
@@ -57,21 +56,33 @@ export class EventService {
       })
 
       if (updateReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
-        const paymentSessionReply = await this.paymentSessionService.create({
-          title: `Phiếu chi cho buổi tập - ${this.utilsService.convertToVietNamDate(updateReply.value.startEventDate)}`,
-          description: 'Phiếu chi tạo tự động cho buổi tập hằng tuần',
-          eventId: updateReply.value.id
-        }, sessionId, userInfo)
+        const paymentSessionReply = await this.paymentSessionService.create(
+          {
+            title: `Phiếu chi cho buổi tập - ${this.utilsService.convertToVietNamDate(
+              updateReply.value.startEventDate,
+            )}`,
+            description: 'Phiếu chi tạo tự động cho buổi tập hằng tuần',
+            eventId: updateReply.value.id,
+          },
+          sessionId,
+          userInfo,
+        )
 
         if (paymentSessionReply.isErr()) {
           return err(paymentSessionReply.error)
         }
 
-        const receiptSessionReply = await this.receiptSessionService.create({
-          title: `Phiếu thu cho buổi tập - ${this.utilsService.convertToVietNamDate(updateReply.value.startEventDate)}`,
-          description: 'Phiếu thu tạo tự động cho buổi tập hằng tuần',
-          eventId: updateReply.value.id
-        }, sessionId, userInfo)
+        const receiptSessionReply = await this.receiptSessionService.create(
+          {
+            title: `Phiếu thu cho buổi tập - ${this.utilsService.convertToVietNamDate(
+              updateReply.value.startEventDate,
+            )}`,
+            description: 'Phiếu thu tạo tự động cho buổi tập hằng tuần',
+            eventId: updateReply.value.id,
+          },
+          sessionId,
+          userInfo,
+        )
 
         if (receiptSessionReply.isErr()) {
           return err(receiptSessionReply.error)
@@ -79,13 +90,17 @@ export class EventService {
 
         if (updateReply.value.place) {
           if (updateReply.value.place.fee !== 0) {
-            await this.paymentService.create({
-              title: `Chi phí địa điểm buổi tập - ${updateReply.value.place.name}`,
-              description: 'Chi phí tạo tự động cho địa điểm',
-              method: EnumProto_MoneyMethod.UNRECOGNIZED,
-              amount: updateReply.value.place.fee,
-              paymentSessionId: paymentSessionReply.value.id
-            }, sessionId, userInfo)
+            await this.paymentService.create(
+              {
+                title: `Chi phí địa điểm buổi tập - ${updateReply.value.place.name}`,
+                description: 'Chi phí tạo tự động cho địa điểm',
+                method: EnumProto_MoneyMethod.UNRECOGNIZED,
+                amount: updateReply.value.place.fee,
+                paymentSessionId: paymentSessionReply.value.id,
+              },
+              sessionId,
+              userInfo,
+            )
           }
         }
       }

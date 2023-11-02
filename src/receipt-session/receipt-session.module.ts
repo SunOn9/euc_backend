@@ -8,12 +8,13 @@ import { ReceiptSessionEntity } from './entities/receipt-session.entity'
 import { ReceiptSessionReflect } from './provider/receipt-session.proto'
 import { ReceiptSessionRepository } from './provider/receipt-session.repository'
 import { ClubModule } from '/club/club.module'
+import { forwardRef } from '@nestjs/common/utils/forward-ref.util'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ReceiptSessionEntity]),
     PermissionModule,
-    ReceiptModule,
+    forwardRef(() => ReceiptModule),
     ClubModule,
   ],
   controllers: [ReceiptSessionController],

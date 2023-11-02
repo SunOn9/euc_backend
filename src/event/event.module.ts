@@ -19,9 +19,13 @@ import { ReceiptModule } from '/receipt/receipt.module'
     PermissionModule,
     MemberModule,
     GuestModule,
-    PaymentSessionModule, ReceiptSessionModule, PaymentModule, ReceiptModule
+
+    PaymentSessionModule,
+    PaymentModule,
+    ReceiptSessionModule,
+    ReceiptModule,
   ],
   controllers: [EventController],
   providers: [EventService, EventReflect, EventRepository],
 })
-export class EventModule { }
+export class EventModule {}

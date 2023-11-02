@@ -16,6 +16,8 @@ import { EnumProto_SessionStatus, EnumProto_UserRole } from '/generated/enumps'
 import { Club } from '/generated/club/club'
 import { PaymentService } from '/payment/payment.service'
 import { Payment } from '/generated/payment/payment'
+import { Inject, forwardRef } from '@nestjs/common'
+import { ForbiddenError } from '@casl/ability'
 
 @Injectable()
 export class PaymentSessionService {
@@ -23,15 +25,19 @@ export class PaymentSessionService {
     private readonly repo: PaymentSessionRepository,
     private readonly logService: LogService,
     private readonly clubService: ClubService,
+    @Inject(forwardRef(() => PaymentService))
     private readonly paymentService: PaymentService,
-  ) { }
+  ) {}
 
   async create(
     requestData: CreatePaymentSessionRequestDto,
     sessionId: string,
     userInfo: User,
   ) {
-    const createReply = await this.repo.createPaymentSession(requestData, userInfo.club.id)
+    const createReply = await this.repo.createPaymentSession(
+      requestData,
+      userInfo.club.id,
+    )
 
     if (createReply.isOk()) {
       await this.logService.create({
@@ -93,6 +99,7 @@ export class PaymentSessionService {
     //Check paymentSession
     const paymentSessionReply = await this.repo.getDetail({
       id: requestData.id,
+      isExtraClub: true,
     })
 
     if (paymentSessionReply.isErr()) {
@@ -109,6 +116,24 @@ export class PaymentSessionService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      //update fund when status is done
+      if (paymentSessionReply.value.status === EnumProto_SessionStatus.DONE) {
+        await this.clubService.update(
+          {
+            conditions: {
+              id: userInfo.club.id,
+            },
+            data: {
+              fund:
+                paymentSessionReply.value.club.fund +
+                paymentSessionReply.value.amount,
+            },
+          },
+          sessionId,
+          userInfo,
+        )
+      }
     }
     return removeReply
   }
@@ -162,7 +187,7 @@ export class PaymentSessionService {
       userInfo.role !== EnumProto_UserRole.TREASURER &&
       userInfo.role !== EnumProto_UserRole.ADMIN
     ) {
-      return err(new Error(`Forbidden Resource`))
+      return err(ForbiddenError)
     }
 
     const paymentSessionReply = await this.repo.getDetail(requestData)

@@ -24,7 +24,7 @@ export class ReceiptEntity {
   fundAmount: number
 
   @Column({ nullable: true })
-  description?: string | null
+  description?: string
 
   @Column()
   amount: number

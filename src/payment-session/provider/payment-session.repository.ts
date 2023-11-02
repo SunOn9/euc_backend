@@ -28,7 +28,7 @@ export class PaymentSessionRepository extends Repository<PaymentSessionEntity> {
 
   async createPaymentSession(
     createData: CreatePaymentSessionRequestDto,
-    clubId: number
+    clubId: number,
   ): Promise<Result<PaymentSession, Error>> {
     try {
       const { eventId, ...other } = createData
@@ -36,7 +36,7 @@ export class PaymentSessionRepository extends Repository<PaymentSessionEntity> {
       const saveData = {
         ...other,
         event: eventId !== undefined ? { id: eventId } : {},
-        club: { id: clubId }
+        club: { id: clubId },
       } as PaymentSessionEntity
 
       const dataReply = await this.save(saveData)
@@ -211,6 +211,7 @@ export class PaymentSessionRepository extends Repository<PaymentSessionEntity> {
         userConfirm: conditions.isExtraUserConfirm ?? false,
         event: conditions.isExtraEvent ?? false,
         payment: conditions.isExtraPayment ?? false,
+        club: conditions.isExtraClub ?? false,
       },
     })
 

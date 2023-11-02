@@ -21,7 +21,9 @@ export class PaymentSessionEntity {
   @PrimaryGeneratedColumn()
   id: number
 
-  @OneToMany(() => PaymentEntity, payment => payment.paymentSession)
+  @OneToMany(() => PaymentEntity, payment => payment.paymentSession, {
+    cascade: true,
+  })
   payment: PaymentEntity[]
 
   @Column()
@@ -31,8 +33,7 @@ export class PaymentSessionEntity {
   amount: number
 
   @ManyToOne(() => EventEntity, event => event.paymentSession)
-  event?: EventEntity | null
-
+  event?: EventEntity
   @Column({
     type: 'enum',
     enum: EnumProto_SessionStatus,
@@ -45,23 +46,19 @@ export class PaymentSessionEntity {
   title: string
 
   @Column({ nullable: true })
-  description?: string | null
-
+  description?: string
   @Column({ nullable: true })
-  dateConfirm?: Date | null
-
+  dateConfirm?: Date
   @ManyToOne(() => UserEntity, user => user.paymentSessionConfirm, {
     nullable: true,
   })
-  userConfirm?: UserEntity | null
-
+  userConfirm?: UserEntity
   @Column({ nullable: true })
-  dateDone?: Date | null
-
+  dateDone?: Date
   @ManyToOne(() => UserEntity, user => user.paymentSessionDone, {
     nullable: true,
   })
-  userDone?: UserEntity | null
+  userDone?: UserEntity
 
   @ManyToOne(() => ClubEntity, club => club.paymentSession)
   club: ClubEntity
@@ -73,8 +70,7 @@ export class PaymentSessionEntity {
   updatedAt: Date
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date | null
-
+  deletedAt?: Date
   constructor(partial: Partial<PaymentSessionEntity>) {
     Object.assign(this, partial)
   }

@@ -13,10 +13,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse()
     const status = exception.getStatus()
 
-    response.status(status).json({
-      statusCode: status,
-      errorCode: '',
-      message: exception.getResponse()['message'].toString(),
-    })
+    if (exception.name === 'CustomException') {
+      response.status(status).json({
+        statusCode: status,
+        errorCode: exception.getResponse()['errorCode'].toString(),
+        message: exception.getResponse()['message'].toString(),
+      })
+    } else {
+      response.status(status).json({
+        statusCode: status,
+        errorCode: exception.name,
+        message: exception.getResponse()['message'].toString(),
+      })
+    }
   }
 }

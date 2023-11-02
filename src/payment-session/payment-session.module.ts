@@ -8,12 +8,13 @@ import { PaymentSessionEntity } from './entities/payment-session.entity'
 import { PaymentSessionReflect } from './provider/payment-session.proto'
 import { PaymentSessionRepository } from './provider/payment-session.repository'
 import { ClubModule } from '/club/club.module'
+import { forwardRef } from '@nestjs/common/utils/forward-ref.util'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([PaymentSessionEntity]),
     PermissionModule,
-    PaymentModule,
+    forwardRef(() => PaymentModule),
     ClubModule,
   ],
   controllers: [PaymentSessionController],

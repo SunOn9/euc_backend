@@ -96,4 +96,10 @@ export class GetPaymentSessionConditionRequestDto
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
   isExtraPayment?: boolean
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  isExtraClub?: boolean
 }

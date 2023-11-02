@@ -17,14 +17,22 @@ export class LogService {
 
   async getDetail(requestData: GetLogConditionRequestDto, userInfo: User) {
     if (userInfo.role !== EnumProto_UserRole.ADMIN) {
-      throw new CustomException('', `Forbidden resource`, HttpStatus.FORBIDDEN)
+      throw new CustomException(
+        'ERROR',
+        `Forbidden resource`,
+        HttpStatus.FORBIDDEN,
+      )
     }
     return await this.repo.getDetail(requestData)
   }
 
   async getList(requestData: GetLogConditionRequestDto, userInfo: User) {
     if (userInfo.role !== EnumProto_UserRole.ADMIN) {
-      throw new CustomException('', `Forbidden resource`, HttpStatus.FORBIDDEN)
+      throw new CustomException(
+        'ERROR',
+        `Forbidden resource`,
+        HttpStatus.FORBIDDEN,
+      )
     }
     return await this.repo.getList(requestData)
   }

@@ -16,22 +16,28 @@ import { EnumProto_SessionStatus, EnumProto_UserRole } from '/generated/enumps'
 import { Receipt } from '/generated/receipt/receipt'
 import { ClubService } from '/club/club.service'
 import { ReceiptService } from '/receipt/receipt.service'
+import { Inject, forwardRef } from '@nestjs/common'
+import { ForbiddenError } from '@casl/ability'
 
 @Injectable()
 export class ReceiptSessionService {
   constructor(
     private readonly repo: ReceiptSessionRepository,
     private readonly logService: LogService,
-    private readonly receiptService: ReceiptService,
     private readonly clubService: ClubService,
-  ) { }
+    @Inject(forwardRef(() => ReceiptService))
+    private readonly receiptService: ReceiptService,
+  ) {}
 
   async create(
     requestData: CreateReceiptSessionRequestDto,
     sessionId: string,
     userInfo: User,
   ) {
-    const createReply = await this.repo.createReceiptSession(requestData, userInfo.club.id)
+    const createReply = await this.repo.createReceiptSession(
+      requestData,
+      userInfo.club.id,
+    )
 
     if (createReply.isOk()) {
       await this.logService.create({
@@ -93,6 +99,7 @@ export class ReceiptSessionService {
     //Check receiptSession
     const receiptSessionReply = await this.repo.getDetail({
       id: requestData.id,
+      isExtraClub: true,
     })
 
     if (receiptSessionReply.isErr()) {
@@ -109,6 +116,24 @@ export class ReceiptSessionService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      //update fund when status is done
+      if (receiptSessionReply.value.status === EnumProto_SessionStatus.DONE) {
+        await this.clubService.update(
+          {
+            conditions: {
+              id: userInfo.club.id,
+            },
+            data: {
+              fund:
+                receiptSessionReply.value.club.fund -
+                receiptSessionReply.value.amount,
+            },
+          },
+          sessionId,
+          userInfo,
+        )
+      }
     }
     return removeReply
   }
@@ -162,7 +187,7 @@ export class ReceiptSessionService {
       userInfo.role !== EnumProto_UserRole.TREASURER &&
       userInfo.role !== EnumProto_UserRole.ADMIN
     ) {
-      return err(new Error(`Forbidden Resource`))
+      return err(ForbiddenError)
     }
 
     const receiptSessionReply = await this.repo.getDetail(requestData)
