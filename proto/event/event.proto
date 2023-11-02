@@ -98,6 +98,10 @@ message Event {
       google.protobuf.Timestamp created_at = 7;
       google.protobuf.Timestamp updated_at = 8;
       optional google.protobuf.Timestamp deleted_at = 9;
+      int32 fund_amount = 10;
+      optional int32 hidden_id = 11;
+      optional int32 hidden_type = 20;
+
     }
   }
 
@@ -126,6 +130,10 @@ message Event {
       google.protobuf.Timestamp created_at = 7;
       google.protobuf.Timestamp updated_at = 8;
       optional google.protobuf.Timestamp deleted_at = 9;
+      int32 fund_amount = 10;
+      optional int32 hidden_id = 19;
+      optional int32 hidden_type = 20;
+
     }
   
     message User {

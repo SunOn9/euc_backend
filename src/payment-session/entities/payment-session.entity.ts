@@ -26,14 +26,15 @@ export class PaymentSessionEntity {
   })
   payment: PaymentEntity[]
 
-  @Column()
+  @Column({ default: 0 })
   fundAmount: number
 
-  @Column()
+  @Column({ default: 0 })
   amount: number
 
   @ManyToOne(() => EventEntity, event => event.paymentSession)
   event?: EventEntity
+
   @Column({
     type: 'enum',
     enum: EnumProto_SessionStatus,
@@ -47,14 +48,18 @@ export class PaymentSessionEntity {
 
   @Column({ nullable: true })
   description?: string
+
   @Column({ nullable: true })
   dateConfirm?: Date
+
   @ManyToOne(() => UserEntity, user => user.paymentSessionConfirm, {
     nullable: true,
   })
   userConfirm?: UserEntity
+
   @Column({ nullable: true })
   dateDone?: Date
+
   @ManyToOne(() => UserEntity, user => user.paymentSessionDone, {
     nullable: true,
   })
@@ -71,6 +76,7 @@ export class PaymentSessionEntity {
 
   @DeleteDateColumn({ nullable: true })
   deletedAt?: Date
+
   constructor(partial: Partial<PaymentSessionEntity>) {
     Object.assign(this, partial)
   }

@@ -24,10 +24,10 @@ export class ReceiptSessionEntity {
   @Column()
   title: string
 
-  @Column()
+  @Column({ default: 0 })
   fundAmount: number
 
-  @Column()
+  @Column({ default: 0 })
   amount: number
 
   @Column({ nullable: true })

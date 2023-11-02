@@ -24,6 +24,8 @@ message GetEventConditionRequest {
   optional bool is_extra_payment_session =17;
   optional bool is_extra_receipt_session =18;
   optional bool is_extra_place = 19;
+  optional bool is_extra_receipt =20;
+  optional bool is_extra_payment =21;
 }
 
 message CreateEventRequest {
@@ -60,6 +62,7 @@ message UpdateEventDataRequest {
   optional google.protobuf.Timestamp start_event_date = 8;
   optional google.protobuf.Timestamp end_event_date = 9;
   optional EnumProto.EventType type =10;
+  optional google.protobuf.Timestamp actual_end_event_date = 11;
 }
 
 message UpdateEventRequest {
@@ -70,3 +73,8 @@ message UpdateEventRequest {
 message RemoveEventRequest {
   int32 id = 1;
 }
+
+message EndEventRequest {
+  int32 id = 1;
+}
+

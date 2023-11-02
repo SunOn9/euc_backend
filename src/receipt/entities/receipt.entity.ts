@@ -20,13 +20,16 @@ export class ReceiptEntity {
   @Column()
   title: string
 
-  @Column()
+  @Column({ default: 0 })
   fundAmount: number
+
+  @Column({ nullable: true })
+  hiddenId?: number
 
   @Column({ nullable: true })
   description?: string
 
-  @Column()
+  @Column({ default: 0 })
   amount: number
 
   @Column()

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
-import { err, ok } from 'neverthrow'
+import { Result, err, ok } from 'neverthrow'
 import { EventRepository } from './provider/event.repository'
 import { CreateEventRequestDto } from './dto/create-event.dto'
 import { GetEventConditionRequestDto } from './dto/get-event-condition-request.dto'
@@ -17,12 +17,18 @@ import { MemberService } from '/member/member.service'
 import { GuestService } from '/guest/guest.service'
 import { MemberEntity } from '/member/entities/member.entity'
 import { GuestEntity } from '/guest/entities/guest.entity'
-import { EnumProto_EventType, EnumProto_MoneyMethod } from '/generated/enumps'
+import {
+  EnumProto_EventType,
+  EnumProto_MemberType,
+  EnumProto_MoneyMethod,
+} from '/generated/enumps'
 import { PaymentSessionService } from '/payment-session/payment-session.service'
 import { ReceiptSessionService } from '/receipt-session/receipt-session.service'
 import { UtilsService } from 'lib/utils'
 import { PaymentService } from '/payment/payment.service'
 import { ReceiptService } from '/receipt/receipt.service'
+import { ClubService } from '/club/club.service'
+import { EndEventRequestDto } from './dto/end-event.dto'
 
 @Injectable()
 export class EventService {
@@ -31,8 +37,8 @@ export class EventService {
     private readonly logService: LogService,
     private readonly memberService: MemberService,
     private readonly guestService: GuestService,
+    private readonly clubService: ClubService,
     private readonly utilsService: UtilsService,
-
     private readonly paymentSessionService: PaymentSessionService,
     private readonly receiptSessionService: ReceiptSessionService,
     private readonly paymentService: PaymentService,
@@ -179,10 +185,20 @@ export class EventService {
     const eventReply = await this.getDetail({
       id: requestData.eventId,
       isExtraMember: true,
+      isExtraReceiptSession: true,
     })
 
     if (eventReply.isErr()) {
       return err(eventReply.error)
+    }
+
+    const clubReply = await this.clubService.getDetail({
+      id: userInfo.club.id,
+      isExtraClubFee: true,
+    })
+
+    if (clubReply.isErr()) {
+      return err(clubReply.error)
     }
 
     const listAddMember = eventReply.value.member
@@ -213,6 +229,53 @@ export class EventService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      if (updateReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
+        if (updateReply.value.receiptSession.length !== 0) {
+          for (const memberId of requestData.memberIdList) {
+            const memberReply = await this.memberService.getDetail({
+              id: memberId,
+            })
+
+            if (memberReply.isErr()) {
+              return err(memberReply.error)
+            }
+
+            let fee: number
+
+            switch (memberReply.value.type) {
+              case EnumProto_MemberType.STUDENT: {
+                fee = clubReply.value.fee[0].studentFee
+                break
+              }
+              case EnumProto_MemberType.WORKER: {
+                fee = clubReply.value.fee[0].workerFee
+                break
+              }
+              default: {
+                fee = 0
+                break
+              }
+            }
+
+            await this.receiptService.create(
+              {
+                title: `Phí buổi tập ${this.utilsService.convertToVietNamDate(
+                  eventReply.value.startEventDate,
+                )} - ${memberReply.value.name}`,
+                description: `Tạo tự động khi thêm thành viên vào buổi tập`,
+                hiddenId: memberId,
+                hiddenType: 0,
+                amount: fee,
+                method: EnumProto_MoneyMethod.UNRECOGNIZED,
+                receiptSessionId: updateReply.value.receiptSession[0].id,
+              },
+              sessionId,
+              userInfo,
+            )
+          }
+        }
+      }
     }
 
     return updateReply
@@ -226,6 +289,8 @@ export class EventService {
     const eventReply = await this.getDetail({
       id: requestData.eventId,
       isExtraMember: true,
+      isExtraReceipt: true,
+      isExtraReceiptSession: true,
     })
 
     if (eventReply.isErr()) {
@@ -258,6 +323,25 @@ export class EventService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      if (updateReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
+        if (updateReply.value.receiptSession.length !== 0) {
+          const { receipt } = eventReply.value.receiptSession[0]
+          for (const memberId of requestData.memberIdList) {
+            const reply = receipt.find(
+              each => each.hiddenId === memberId && each.hiddenType === 0,
+            )
+
+            await this.receiptService.remove(
+              {
+                id: reply.id,
+              },
+              sessionId,
+              userInfo,
+            )
+          }
+        }
+      }
     }
 
     return updateReply
@@ -271,10 +355,21 @@ export class EventService {
     const eventReply = await this.getDetail({
       id: requestData.eventId,
       isExtraGuest: true,
+      isExtraReceiptSession: true,
+      isExtraReceipt: true,
     })
 
     if (eventReply.isErr()) {
       return err(eventReply.error)
+    }
+
+    const clubReply = await this.clubService.getDetail({
+      id: userInfo.club.id,
+      isExtraClubFee: true,
+    })
+
+    if (clubReply.isErr()) {
+      return err(clubReply.error)
     }
 
     const listAddGuest = eventReply.value.guest
@@ -305,6 +400,53 @@ export class EventService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      if (updateReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
+        if (updateReply.value.receiptSession.length !== 0) {
+          for (const guestId of requestData.guestIdList) {
+            const guestReply = await this.guestService.getDetail({
+              id: guestId,
+            })
+
+            if (guestReply.isErr()) {
+              return err(guestReply.error)
+            }
+
+            let fee: number
+
+            switch (guestReply.value.type) {
+              case EnumProto_MemberType.STUDENT: {
+                fee = clubReply.value.fee[0].studentFee
+                break
+              }
+              case EnumProto_MemberType.WORKER: {
+                fee = clubReply.value.fee[0].workerFee
+                break
+              }
+              default: {
+                fee = 0
+                break
+              }
+            }
+
+            await this.receiptService.create(
+              {
+                title: `Phí buổi tập ${this.utilsService.convertToVietNamDate(
+                  eventReply.value.startEventDate,
+                )} - ${guestReply.value.name}`,
+                description: `Tạo tự động khi thêm thành viên vào buổi tập`,
+                hiddenId: guestId,
+                hiddenType: 1,
+                amount: fee,
+                method: EnumProto_MoneyMethod.UNRECOGNIZED,
+                receiptSessionId: updateReply.value.receiptSession[0].id,
+              },
+              sessionId,
+              userInfo,
+            )
+          }
+        }
+      }
     }
 
     return updateReply
@@ -318,6 +460,8 @@ export class EventService {
     const eventReply = await this.getDetail({
       id: requestData.eventId,
       isExtraGuest: true,
+      isExtraReceipt: true,
+      isExtraReceiptSession: true,
     })
 
     if (eventReply.isErr()) {
@@ -350,12 +494,99 @@ export class EventService {
         sessionId: sessionId,
         user: userInfo,
       })
+
+      if (updateReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
+        if (updateReply.value.receiptSession.length !== 0) {
+          const { receipt } = eventReply.value.receiptSession[0]
+          for (const guestId of requestData.guestIdList) {
+            const reply = receipt.find(
+              each => each.hiddenId === guestId && each.hiddenType === 1,
+            )
+
+            await this.receiptService.remove(
+              {
+                id: reply.id,
+              },
+              sessionId,
+              userInfo,
+            )
+          }
+        }
+      }
     }
 
     return updateReply
   }
 
-  //TODO: add guest or member, create receipt for that...
-  //TODO: remove guest or member, remove receipt for that...
-  //TODO: End Event -> Auto confirm ... (check paymentSession, receiptSession -> each status method must not UNRECOGNIZED)
+  async endEvent(
+    requestData: EndEventRequestDto,
+    sessionId: string,
+    userInfo: User,
+  ): Promise<Result<boolean, Error>> {
+    const eventReply = await this.getDetail({
+      id: requestData.id,
+      isExtraPaymentSession: true,
+      isExtraReceiptSession: true,
+      isExtraReceipt: true,
+      isExtraPayment: true,
+    })
+
+    if (eventReply.isErr()) {
+      return err(eventReply.error)
+    }
+
+    const { paymentSession, receiptSession } = eventReply.value
+
+    const funcPaymentSession = (): Result<boolean, Error> => {
+      for (const each of paymentSession) {
+        const { payment } = each
+        for (const each of payment) {
+          if (each.method === EnumProto_MoneyMethod.UNRECOGNIZED) {
+            return err(new Error(`Payment session not done`))
+          }
+        }
+      }
+      return ok(true)
+    }
+
+    const funcReceiptSession = (): Result<boolean, Error> => {
+      for (const each of receiptSession) {
+        const { receipt } = each
+        for (const each of receipt) {
+          if (each.method === EnumProto_MoneyMethod.UNRECOGNIZED) {
+            return err(new Error(`Receipt session not done`))
+          }
+        }
+      }
+      return ok(true)
+    }
+
+    const reply = await Promise.all([
+      funcPaymentSession(),
+      funcReceiptSession(),
+    ])
+
+    if (reply[0].isErr()) {
+      return err(reply[0].error)
+    }
+
+    if (reply[1].isErr()) {
+      return err(reply[1].error)
+    }
+
+    await this.update(
+      {
+        conditions: {
+          id: requestData.id,
+        },
+        data: {
+          actualEndEventDate: new Date(),
+        },
+      },
+      sessionId,
+      userInfo,
+    )
+
+    return ok(true)
+  }
 }

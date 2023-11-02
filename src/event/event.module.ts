@@ -12,6 +12,7 @@ import { PaymentSessionModule } from '/payment-session/payment-session.module'
 import { ReceiptSessionModule } from '/receipt-session/receipt-session.module'
 import { PaymentModule } from '/payment/payment.module'
 import { ReceiptModule } from '/receipt/receipt.module'
+import { ClubModule } from '/club/club.module'
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { ReceiptModule } from '/receipt/receipt.module'
     PermissionModule,
     MemberModule,
     GuestModule,
-
+    ClubModule,
     PaymentSessionModule,
     PaymentModule,
     ReceiptSessionModule,

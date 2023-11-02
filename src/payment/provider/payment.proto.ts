@@ -10,6 +10,7 @@ export class PaymentReflect {
     reflect.id = entity.id ?? 0
     reflect.title = entity.title ?? ''
     reflect.description = entity.description ?? ''
+    reflect.hiddenId = entity.hiddenId ?? 0
     reflect.amount = entity.amount ?? 0
     reflect.fundAmount = entity.fundAmount ?? 0
     reflect.method = entity.method ?? EnumProto_MoneyMethod.UNRECOGNIZED

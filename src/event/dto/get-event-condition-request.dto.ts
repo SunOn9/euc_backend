@@ -101,4 +101,16 @@ export class GetEventConditionRequestDto implements GetEventConditionRequest {
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
   isExtraPlace?: boolean
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  isExtraPayment?: boolean
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => value === 'true')
+  isExtraReceipt?: boolean
 }

@@ -30,6 +30,7 @@ import { AddMemberToEventRequestDto } from './dto/add-member.dto'
 import { AddGuestToEventRequestDto } from './dto/add-guest.dto'
 import { RemoveGuestFromEventRequestDto } from './dto/remove-guest.dto'
 import { RemoveMemberFromEventRequestDto } from './dto/remove-member.dto'
+import { EndEventRequestDto } from './dto/end-event.dto'
 
 @UseGuards(PermissionsGuard)
 @Controller('event')
@@ -306,6 +307,38 @@ export class EventController {
     response.statusCode = CONST.DEFAULT_SUCCESS_CODE
     response.message = CONST.DEFAULT_SUCCESS_MESSAGE
     response.payload = CONST.DEFAULT_REMOVE_SUCCESS_MESSAGE
+    return response
+  }
+
+  @Post('end')
+  @CheckPermissions({
+    action: [Action.UPDATE],
+    subject: [EventEntity],
+    fields: [],
+  })
+  @HttpCode(HttpStatus.CREATED)
+  async endEvent(
+    @Req() req: Request,
+    @Body() bodyData: EndEventRequestDto,
+  ): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    const data = await this.service.endEvent(
+      bodyData,
+      req['sessionId'],
+      req['userInfo'],
+    )
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = CONST.DEFAULT_UPDATE_SUCCESS_MESSAGE
     return response
   }
 }

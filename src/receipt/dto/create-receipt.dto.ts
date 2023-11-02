@@ -42,4 +42,15 @@ export class CreateReceiptRequestDto implements CreateReceiptRequest {
   @Type(() => Number)
   receiptSessionId: number
 
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  hiddenId?: number
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  hiddenType?: number
 }

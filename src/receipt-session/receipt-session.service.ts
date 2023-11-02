@@ -25,6 +25,7 @@ export class ReceiptSessionService {
     private readonly repo: ReceiptSessionRepository,
     private readonly logService: LogService,
     private readonly clubService: ClubService,
+
     @Inject(forwardRef(() => ReceiptService))
     private readonly receiptService: ReceiptService,
   ) {}

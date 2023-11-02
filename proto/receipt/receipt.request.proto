@@ -25,6 +25,8 @@ message CreateReceiptRequest {
   int32 amount = 4;
   EnumProto.MoneyMethod method = 5;
   int32 receipt_session_id = 6;
+  optional int32 hidden_id = 7;
+  optional int32 hidden_type = 8;
 }
 
 message UpdateReceiptDataRequest {

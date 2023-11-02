@@ -12,7 +12,6 @@ import { UpdateEventRequestDto } from '../dto/update-event.dto'
 import { GetEventConditionRequestDto } from '../dto/get-event-condition-request.dto'
 import { EventListDataReply } from '/generated/event/event.reply'
 import { RemoveEventRequestDto } from '../dto/remove-event.dto'
-import { AddMemberToEventRequestDto } from '../dto/add-member.dto'
 import { Member } from '/generated/member/member'
 import { Guest } from '/generated/guest/guest'
 
@@ -37,7 +36,7 @@ export class EventRepository extends Repository<EventEntity> {
       const saveData = {
         ...other,
         place: placeId !== undefined ? { id: placeId } : {},
-        club: { id: clubId }
+        club: { id: clubId },
       } as EventEntity
 
       const dataReply = await this.save(saveData)
@@ -267,8 +266,16 @@ export class EventRepository extends Repository<EventEntity> {
         member: conditions.isExtraMember ?? false,
         guest: conditions.isExtraGuest ?? false,
         place: conditions.isExtraPlace ?? false,
-        paymentSession: conditions.isExtraPaymentSession ?? false,
-        receiptSession: conditions.isExtraReceiptSession ?? false,
+        paymentSession: conditions.isExtraPaymentSession
+          ? {
+              payment: conditions.isExtraPayment ?? false,
+            }
+          : false,
+        receiptSession: conditions.isExtraReceiptSession
+          ? {
+              receipt: conditions.isExtraReceipt ?? false,
+            }
+          : false,
       },
     })
 
