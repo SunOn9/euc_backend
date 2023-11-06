@@ -5,7 +5,13 @@ import { LogListReply, LogReply } from '/generated/log/log.reply'
 import { GetLogConditionRequestDto } from './dto/get-log-condition-request.dto'
 import CustomException from 'lib/utils/custom.exception'
 import * as CONST from '../prelude/constant'
+import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
+@ApiHeader({
+  name: 'sessionId',
+  description: 'Session',
+  required: true,
+})
 @Controller('log')
 export class LogController {
   constructor(private readonly service: LogService) {}

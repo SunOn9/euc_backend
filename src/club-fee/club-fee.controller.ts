@@ -28,7 +28,13 @@ import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
 import { ClubFeeEntity } from './entities/club-fee.entity'
 import { EnumProto_UserRole } from '/generated/enumps'
+import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
+@ApiHeader({
+  name: 'sessionId',
+  description: 'Session',
+  required: true,
+})
 @UseGuards(PermissionsGuard)
 @Controller('clubFee')
 export class ClubFeeController {

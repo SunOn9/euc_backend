@@ -10,7 +10,13 @@ import { Response } from 'express'
 import { HttpStatus } from '@nestjs/common'
 import CustomException from 'lib/utils/custom.exception'
 import { ExportMemberRequestDto } from './dto/export-member.dto'
+import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
+@ApiHeader({
+  name: 'sessionId',
+  description: 'Session',
+  required: true,
+})
 @UseGuards(PermissionsGuard)
 @Controller('excel')
 export class ExcelController {

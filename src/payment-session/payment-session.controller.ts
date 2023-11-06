@@ -12,7 +12,10 @@ import {
   Query,
   Req,
 } from '@nestjs/common/decorators/http/route-params.decorator'
-import { PaymentSessionListReply, PaymentSessionReply } from '/generated/payment-session/payment-session.reply'
+import {
+  PaymentSessionListReply,
+  PaymentSessionReply,
+} from '/generated/payment-session/payment-session.reply'
 import CustomException from 'lib/utils/custom.exception'
 import { CreatePaymentSessionRequestDto } from './dto/create-payment-session.dto'
 import * as CONST from '../prelude/constant'
@@ -25,11 +28,17 @@ import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
 import { PaymentSessionEntity } from './entities/payment-session.entity'
+import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
+@ApiHeader({
+  name: 'sessionId',
+  description: 'Session',
+  required: true,
+})
 @UseGuards(PermissionsGuard)
 @Controller('payment-session')
 export class PaymentSessionController {
-  constructor(private readonly service: PaymentSessionService) { }
+  constructor(private readonly service: PaymentSessionService) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')

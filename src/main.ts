@@ -5,7 +5,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
 import { HttpExceptionFilter } from './exception.filter'
 
-import * as passport from 'passport'
 import * as session from 'express-session'
 import { ConfigService } from '@nestjs/config'
 
@@ -17,21 +16,18 @@ async function bootstrap() {
 
   const configService = httpApp.get(ConfigService)
 
-  const oneMonth = 30 * 24 * 60 * 60 * 1000
   httpApp.use(
     session({
       secret: configService.get('SECRET'),
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: oneMonth, sameSite: 'strict' },
     }),
   )
-  httpApp.use(passport.initialize())
-  httpApp.use(passport.session())
 
   httpApp.enableShutdownHooks()
 
   httpApp.enableCors({
+    origin: 'http://localhost:3000',
     credentials: true,
   })
   httpApp.useGlobalPipes(

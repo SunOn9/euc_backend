@@ -2,20 +2,22 @@ import {
   Controller,
   Request,
   Post,
-  UseGuards,
   Body,
   HttpStatus,
   SetMetadata,
   Get,
+  UnauthorizedException,
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import CustomException from 'lib/utils/custom.exception'
-import { LoginGuard } from './guard/local-auth.guard'
 import * as CONST from '../prelude/constant'
 import { LoginRequestDto } from './dto/login.dto'
 import { SessionService } from '/session/session.service'
 import { SimpleReply } from '/generated/common'
 import { UserReply } from '/generated/user/user.reply'
+import { UtilsService } from 'lib/utils'
+import { User } from '/generated/user/user'
+import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const AllowUnauthorizedRequest = () =>
@@ -26,9 +28,9 @@ export class AuthController {
   constructor(
     private readonly service: AuthService,
     private readonly sessionService: SessionService,
-  ) { }
+    private readonly ultilService: UtilsService,
+  ) {}
 
-  @UseGuards(LoginGuard)
   @Post('/login')
   @AllowUnauthorizedRequest()
   async login(
@@ -37,9 +39,18 @@ export class AuthController {
   ): Promise<UserReply> {
     const response = {} as UserReply
 
+    const valiedateReply = await this.service.validateUser(
+      bodyData.username,
+      bodyData.password,
+    )
+
+    if (valiedateReply === null) {
+      throw new UnauthorizedException()
+    }
+
     bodyData.data.sessionId = req.sessionID
 
-    const data = await this.service.create(bodyData.data, req.user.id)
+    const data = await this.service.create(bodyData.data, valiedateReply.id)
 
     if (data.isErr()) {
       throw new CustomException(
@@ -49,18 +60,22 @@ export class AuthController {
       )
     }
 
-    await this.sessionService.set(
-      req.sessionID,
-      req.session.cookie._expires,
-      req.session.passport.user,
-    )
+    const expire = this.ultilService.addDays(new Date(), 30)
+
+    await this.sessionService.set(req.sessionID, expire, valiedateReply)
 
     response.statusCode = CONST.DEFAULT_SUCCESS_CODE
     response.message = CONST.DEFAULT_SUCCESS_MESSAGE
-    response.payload = req.user
+    response.payload = valiedateReply as User
+    response.extraData = { sessionId: req.sessionID }
     return response
   }
 
+  @ApiHeader({
+    name: 'sessionId',
+    description: 'Session',
+    required: true,
+  })
   @Get('/logout')
   async logout(@Request() req: any): Promise<SimpleReply> {
     const response = {} as SimpleReply
@@ -73,6 +88,11 @@ export class AuthController {
     return response
   }
 
+  @ApiHeader({
+    name: 'sessionId',
+    description: 'Session',
+    required: true,
+  })
   @Get('check')
   async check(): Promise<SimpleReply> {
     const response = {} as SimpleReply

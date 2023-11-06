@@ -25,7 +25,7 @@ export class PermissionsGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest()
 
-    const sessionID = this.extractSessionIDFromRequest(request)
+    const sessionID = this.extractSessionIDFromHeader(request)
 
     const ability = await this.abilityFactory.defineAbility(sessionID)
 
@@ -51,15 +51,7 @@ export class PermissionsGuard implements CanActivate {
     }
   }
 
-  extractSessionIDFromRequest(request: any): string {
-    const connectSidHeader = request.rawHeaders.find(
-      (header: string | string[]) => header.includes('connect.sid'),
-    )
-    let connectSid = null
-    if (connectSidHeader) {
-      const connectSidIndex = connectSidHeader.indexOf('=') + 1
-      connectSid = connectSidHeader.slice(connectSidIndex)
-    }
-    return connectSid.split('.')[0].slice(4)
+  extractSessionIDFromHeader(request: any): string {
+    return request.headers['sessionid']
   }
 }

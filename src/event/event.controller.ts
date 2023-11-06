@@ -31,7 +31,13 @@ import { AddGuestToEventRequestDto } from './dto/add-guest.dto'
 import { RemoveGuestFromEventRequestDto } from './dto/remove-guest.dto'
 import { RemoveMemberFromEventRequestDto } from './dto/remove-member.dto'
 import { EndEventRequestDto } from './dto/end-event.dto'
+import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
+@ApiHeader({
+  name: 'sessionId',
+  description: 'Session',
+  required: true,
+})
 @UseGuards(PermissionsGuard)
 @Controller('event')
 export class EventController {

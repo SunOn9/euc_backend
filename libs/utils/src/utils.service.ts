@@ -32,4 +32,9 @@ export class UtilsService {
   ): boolean {
     return targetDate >= startDate && targetDate <= endDate
   }
+
+  public addDays(date: Date, days: number): Date {
+    date.setDate(date.getDate() + days)
+    return date
+  }
 }

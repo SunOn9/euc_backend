@@ -23,7 +23,7 @@ export class AthenticatedGuard implements CanActivate {
       return true
     }
 
-    const sessionID = this.extractSessionIDFromRequest(request)
+    const sessionID = this.extractSessionIDFromHeader(request)
 
     const session = await this.sessionService.get(sessionID)
 
@@ -37,18 +37,7 @@ export class AthenticatedGuard implements CanActivate {
     return true
   }
 
-  extractSessionIDFromRequest(request: any): string {
-    const connectSidHeader = request.rawHeaders.find(
-      (header: string | string[]) => header.includes('connect.sid'),
-    )
-    let reply = null
-
-    if (connectSidHeader) {
-      const connectSidIndex = connectSidHeader.indexOf('=') + 1
-      const connectSid = connectSidHeader.slice(connectSidIndex)
-      reply = connectSid.split('.')[0].slice(4)
-    }
-
-    return reply
+  extractSessionIDFromHeader(request: any): string {
+    return request.headers['sessionid']
   }
 }

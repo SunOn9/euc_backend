@@ -26,7 +26,13 @@ import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
 import { MemberEntity } from './entities/member.entity'
 import { UpdateClubOfMemberRequestDto } from './dto/update-club-of-member.dto'
+import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
+@ApiHeader({
+  name: 'sessionId',
+  description: 'Session',
+  required: true,
+})
 @UseGuards(PermissionsGuard)
 @Controller('member')
 export class MemberController {

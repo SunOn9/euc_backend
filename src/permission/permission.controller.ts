@@ -25,7 +25,13 @@ import { PermissionsGuard } from './guard/permission.guard'
 import { CheckPermissions } from './guard/permission.decorator'
 import { Action } from './casl/casl.type'
 import { PermissionEntity } from './entities/permission.entity'
+import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
+@ApiHeader({
+  name: 'sessionId',
+  description: 'Session',
+  required: true,
+})
 @UseGuards(PermissionsGuard)
 @Controller('permission')
 export class PermissionController {

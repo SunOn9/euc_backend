@@ -25,11 +25,17 @@ import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
 import { PlaceEntity } from './entities/place.entity'
+import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
+@ApiHeader({
+  name: 'sessionId',
+  description: 'Session',
+  required: true,
+})
 @UseGuards(PermissionsGuard)
 @Controller('place')
 export class PlaceController {
-  constructor(private readonly service: PlaceService) { }
+  constructor(private readonly service: PlaceService) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')

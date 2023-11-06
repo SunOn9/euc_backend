@@ -12,7 +12,10 @@ import {
   Query,
   Req,
 } from '@nestjs/common/decorators/http/route-params.decorator'
-import { ReceiptListReply, ReceiptReply } from '/generated/receipt/receipt.reply'
+import {
+  ReceiptListReply,
+  ReceiptReply,
+} from '/generated/receipt/receipt.reply'
 import CustomException from 'lib/utils/custom.exception'
 import { CreateReceiptRequestDto } from './dto/create-receipt.dto'
 import * as CONST from '../prelude/constant'
@@ -25,11 +28,17 @@ import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
 import { ReceiptEntity } from './entities/receipt.entity'
+import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
+@ApiHeader({
+  name: 'sessionId',
+  description: 'Session',
+  required: true,
+})
 @UseGuards(PermissionsGuard)
 @Controller('receipt')
 export class ReceiptController {
-  constructor(private readonly service: ReceiptService) { }
+  constructor(private readonly service: ReceiptService) {}
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
