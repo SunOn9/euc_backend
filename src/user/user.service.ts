@@ -19,6 +19,10 @@ export class UserService {
     private readonly logService: LogService,
   ) {}
 
+  //TODO: Create -> Auto generated password and send to email
+  //TODO: Change password
+  //TODO: Email module
+
   async create(
     requestData: CreateUserRequestDto,
     sessionId: string,
