@@ -9,7 +9,7 @@ import { User } from '/generated/user/user'
 import { LogService } from '/log/log.service'
 import { Action } from '/permission/casl/casl.type'
 import { PaymentEntity } from './entities/payment.entity'
-import { PaymentSessionService } from '/payment-session/payment-session.service'
+import { PaymentSessionService } from '../paymentSession/paymentSession.service'
 
 @Injectable()
 export class PaymentService {

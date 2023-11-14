@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity'
+import { ReceiptSessionEntity } from '../../receiptSession/entities/receiptSession.entity'
 import { EnumProto_MoneyMethod } from '/generated/enumps'
 
 @Entity('receipt')

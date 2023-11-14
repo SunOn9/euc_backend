@@ -12,8 +12,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { MemberEntity } from '/member/entities/member.entity'
-import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity'
-import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity'
+import { PaymentSessionEntity } from '../../paymentSession/entities/paymentSession.entity'
+import { ReceiptSessionEntity } from '../../receiptSession/entities/receiptSession.entity'
 import { GuestEntity } from '/guest/entities/guest.entity'
 import { PlaceEntity } from '/place/entities/place.entity'
 import { EnumProto_EventType } from '/generated/enumps'

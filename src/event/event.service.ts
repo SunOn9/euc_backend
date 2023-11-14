@@ -22,8 +22,8 @@ import {
   EnumProto_MemberType,
   EnumProto_MoneyMethod,
 } from '/generated/enumps'
-import { PaymentSessionService } from '/payment-session/payment-session.service'
-import { ReceiptSessionService } from '/receipt-session/receipt-session.service'
+import { PaymentSessionService } from '../paymentSession/paymentSession.service'
+import { ReceiptSessionService } from '../receiptSession/receiptSession.service'
 import { UtilsService } from 'lib/utils'
 import { PaymentService } from '/payment/payment.service'
 import { ReceiptService } from '/receipt/receipt.service'

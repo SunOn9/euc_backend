@@ -12,10 +12,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { PermissionEntity } from '/permission/entities/permission.entity'
-import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity'
+import { ReceiptSessionEntity } from '../../receiptSession/entities/receiptSession.entity'
 import { ClubEntity } from '/club/entities/club.entity'
 import { LogEntity } from '/log/entities/log.entity'
-import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity'
+import { PaymentSessionEntity } from '../../paymentSession/entities/paymentSession.entity'
 import { EnumProto_UserRole } from '/generated/enumps'
 
 @Entity({ name: 'user' })

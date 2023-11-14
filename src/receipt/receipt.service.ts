@@ -10,7 +10,7 @@ import { RemoveReceiptRequestDto } from './dto/remove-receipt.dto'
 import { UpdateReceiptRequestDto } from './dto/update-receipt.dto'
 import { ReceiptEntity } from './entities/receipt.entity'
 import { ReceiptRepository } from './provider/receipt.repository'
-import { ReceiptSessionService } from '/receipt-session/receipt-session.service'
+import { ReceiptSessionService } from '../receiptSession/receiptSession.service'
 
 @Injectable()
 export class ReceiptService {

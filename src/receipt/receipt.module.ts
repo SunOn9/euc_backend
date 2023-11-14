@@ -6,7 +6,7 @@ import { ReceiptEntity } from './entities/receipt.entity'
 import { PermissionModule } from '/permission/permission.module'
 import { ReceiptReflect } from './provider/receipt.proto'
 import { ReceiptRepository } from './provider/receipt.repository'
-import { ReceiptSessionModule } from '/receipt-session/receipt-session.module'
+import { ReceiptSessionModule } from '../receiptSession/receiptSession.module'
 
 @Module({
   imports: [

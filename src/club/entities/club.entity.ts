@@ -10,12 +10,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { GuestEntity } from '/guest/entities/guest.entity'
-import { ClubFeeEntity } from '/club-fee/entities/club-fee.entity'
+import { ClubFeeEntity } from '../../clubFee/entities/clubFee.entity'
 import { UserEntity } from '/user/entities/user.entity'
 import { EventEntity } from '/event/entities/event.entity'
 import { MemberInClubEntity } from '/member/entities/member-in-club.entity'
-import { PaymentSessionEntity } from '/payment-session/entities/payment-session.entity'
-import { ReceiptSessionEntity } from '/receipt-session/entities/receipt-session.entity'
+import { PaymentSessionEntity } from '../../paymentSession/entities/paymentSession.entity'
+import { ReceiptSessionEntity } from '../../receiptSession/entities/receiptSession.entity'
 import { PlaceEntity } from '/place/entities/place.entity'
 
 @Entity({ name: 'club' })

@@ -6,7 +6,7 @@ import { PaymentEntity } from './entities/payment.entity'
 import { PermissionModule } from '/permission/permission.module'
 import { PaymentReflect } from './provider/payment.proto'
 import { PaymentRepository } from './provider/payment.repository'
-import { PaymentSessionModule } from '/payment-session/payment-session.module'
+import { PaymentSessionModule } from '../paymentSession/paymentSession.module'
 
 @Module({
   imports: [
