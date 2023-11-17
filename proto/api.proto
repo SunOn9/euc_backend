@@ -67,12 +67,32 @@ service AuthService {
   rpc Check (Null) returns (SimpleReply) {}
 }
 
-service UserService {
-  rpc CreateUser (CreateUserRequest) returns (UserReply) {}
-  rpc GetDetail (GetUserConditionRequest) returns (UserReply) {}
-  rpc GetList (GetUserConditionRequest) returns (UserListReply) {}
-  rpc UpdateUser (UpdateUserRequest) returns (UserReply) {}
-  rpc RemoveUser (RemoveUserRequest) returns (SimpleReply) {}
+service ClubService {
+  rpc CreateClub (CreateClubRequest) returns (ClubReply) {}
+  rpc GetDetail (GetClubConditionRequest) returns (ClubReply) {}
+  rpc GetList (GetClubConditionRequest) returns (ClubListReply) {}
+  rpc UpdateClub (UpdateClubRequest) returns (ClubReply) {}
+  rpc RemoveClub (RemoveClubRequest) returns (SimpleReply) {}
+}
+
+service ClubFeeService {
+  rpc CreateClubFee (CreateClubFeeRequest) returns (ClubFeeReply) {}
+  rpc GetDetail (GetClubFeeConditionRequest) returns (ClubFeeReply) {}
+  rpc GetList (GetClubFeeConditionRequest) returns (ClubFeeListReply) {}
+  rpc RemoveClubFee (RemoveClubFeeRequest) returns (SimpleReply) {}
+}
+
+service EventService {
+  rpc CreateEvent (CreateEventRequest) returns (EventReply) {}
+  rpc GetDetail (GetEventConditionRequest) returns (EventReply) {}
+  rpc GetList (GetEventConditionRequest) returns (EventListReply) {}
+  rpc UpdateEvent (UpdateEventRequest) returns (EventReply) {}
+  rpc RemoveEvent (RemoveEventRequest) returns (SimpleReply) {}
+  rpc AddMember (AddMemberToEventRequest) returns (SimpleReply) {}
+  rpc RemoveMember (RemoveMemberFromEventRequest) returns (SimpleReply) {}
+  rpc AddGuest (AddGuestToEventRequest) returns (SimpleReply) {}
+  rpc RemoveGuest (RemoveGuestFromEventRequest) returns (SimpleReply) {}
+  rpc EndEvent (EndEventRequest) returns (SimpleReply) {}
 }
 
 service ExcelService {
@@ -87,12 +107,18 @@ service GuestService {
   rpc RemoveGuest (RemoveGuestRequest) returns (SimpleReply) {}
 }
 
-service PlaceService {
-  rpc CreatePlace (CreatePlaceRequest) returns (PlaceReply) {}
-  rpc GetDetail (GetPlaceConditionRequest) returns (PlaceReply) {}
-  rpc GetList (GetPlaceConditionRequest) returns (PlaceListReply) {}
-  rpc UpdatePlace (UpdatePlaceRequest) returns (PlaceReply) {}
-  rpc RemovePlace (RemovePlaceRequest) returns (SimpleReply) {}
+service LogService {
+  rpc GetDetail (GetLogConditionRequest) returns (LogReply) {}
+  rpc GetList (GetLogConditionRequest) returns (LogListReply) {}
+}
+
+service MemberService {
+  rpc CreateMember (CreateMemberRequest) returns (MemberReply) {}
+  rpc GetDetail (GetMemberConditionRequest) returns (MemberReply) {}
+  rpc GetList (GetMemberConditionRequest) returns (MemberListReply) {}
+  rpc UpdateMember (UpdateMemberRequest) returns (MemberReply) {}
+  rpc RemoveMember (RemoveMemberRequest) returns (SimpleReply) {}
+  rpc ChangeClub (UpdateClubOfMemberRequest) returns (SimpleReply) {}
 }
 
 service PaymentService {
@@ -111,12 +137,12 @@ service ReceiptService {
   rpc RemoveReceipt (RemoveReceiptRequest) returns (SimpleReply) {}
 }
 
-service PermissionService {
-  rpc CreatePermission (CreatePermissionRequest) returns (PermissionReply) {}
-  rpc GetDetail (GetPermissionConditionRequest) returns (PermissionReply) {}
-  rpc GetList (GetPermissionConditionRequest) returns (PermissionListReply) {}
-  rpc UpdatePermission (UpdatePermissionRequest) returns (PermissionReply) {}
-  rpc RemovePermission (RemovePermissionRequest) returns (SimpleReply) {}
+service PlaceService {
+  rpc CreatePlace (CreatePlaceRequest) returns (PlaceReply) {}
+  rpc GetDetail (GetPlaceConditionRequest) returns (PlaceReply) {}
+  rpc GetList (GetPlaceConditionRequest) returns (PlaceListReply) {}
+  rpc UpdatePlace (UpdatePlaceRequest) returns (PlaceReply) {}
+  rpc RemovePlace (RemovePlaceRequest) returns (SimpleReply) {}
 }
 
 service PaymentSessionService {
@@ -135,17 +161,16 @@ service ReceiptSessionService {
   rpc RemoveReceiptSession (RemoveReceiptSessionRequest) returns (SimpleReply) {}
 }
 
-service ClubService {
-  rpc CreateClub (CreateClubRequest) returns (ClubReply) {}
-  rpc GetDetail (GetClubConditionRequest) returns (ClubReply) {}
-  rpc GetList (GetClubConditionRequest) returns (ClubListReply) {}
-  rpc UpdateClub (UpdateClubRequest) returns (ClubReply) {}
-  rpc RemoveClub (RemoveClubRequest) returns (SimpleReply) {}
+service PermissionService {
+  rpc CreatePermission (CreatePermissionRequest) returns (PermissionReply) {}
+  rpc GetList (GetPermissionConditionRequest) returns (PermissionListReply) {}
 }
 
-service ClubFeeService {
-  rpc CreateClubFee (CreateClubFeeRequest) returns (ClubFeeReply) {}
-  rpc GetDetail (GetClubFeeConditionRequest) returns (ClubFeeReply) {}
-  rpc GetList (GetClubFeeConditionRequest) returns (ClubFeeListReply) {}
-  rpc RemoveClubFee (RemoveClubFeeRequest) returns (SimpleReply) {}
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (UserReply) {}
+  rpc GetDetail (GetUserConditionRequest) returns (UserReply) {}
+  rpc GetList (GetUserConditionRequest) returns (UserListReply) {}
+  rpc UpdateUser (UpdateUserRequest) returns (UserReply) {}
+  rpc RemoveUser (RemoveUserRequest) returns (SimpleReply) {}
+  rpc UpdateUserPermission (UpdateUserPermissionRequest) returns (SimpleReply) {}
 }

@@ -26,6 +26,7 @@ import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
 import { UserEntity } from './entities/user.entity'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
+import { UpdateUserPermissionRequestDto } from './dto/update-user-permission.dto'
 
 @ApiHeader({
   name: 'sessionId',
@@ -196,10 +197,10 @@ export class UserController {
   @HttpCode(HttpStatus.CREATED)
   async updateUserPermission(
     @Req() req: Request,
-    @Body() bodyData: UpdateUserRequestDto,
+    @Body() bodyData: UpdateUserPermissionRequestDto,
   ): Promise<SimpleReply> {
     const response = {} as SimpleReply
-    const data = await this.service.update(
+    const data = await this.service.updateUserPermission(
       bodyData,
       req['sessionId'],
       req['userInfo'],
