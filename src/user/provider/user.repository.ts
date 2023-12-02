@@ -14,6 +14,9 @@ import { UpdateUserRequestDto } from '../dto/update-user.dto'
 import { RemoveUserRequestDto } from '../dto/remove-user.dto'
 import { UpdateUserPermissionRequestDto } from '../dto/update-user-permission.dto'
 import { PermissionEntity } from '/permission/entities/permission.entity'
+import * as bcrypt from 'bcrypt'
+import { ConfigService } from '@nestjs/config'
+import { UpdatePasswordRequest } from '/generated/user/user.request'
 
 @Injectable()
 export class UserRepository extends Repository<UserEntity> {
@@ -23,6 +26,7 @@ export class UserRepository extends Repository<UserEntity> {
     private dataSource: DataSource,
     private proto: UserReflect,
     private utilService: UtilsService,
+    private configService: ConfigService
   ) {
     super(UserEntity, dataSource.createEntityManager())
   }
@@ -31,8 +35,12 @@ export class UserRepository extends Repository<UserEntity> {
     createData: CreateUserRequestDto,
   ): Promise<Result<User, Error>> {
     try {
+
+      const { clubId, ...other } = createData
+
       const saveData = {
-        ...createData,
+        ...other,
+        password: await bcrypt.hash(this.configService.get('DEFAULT_PASSWORD'), 10)
       } as UserEntity
 
       const dataReply = await this.save(saveData)
@@ -42,6 +50,44 @@ export class UserRepository extends Repository<UserEntity> {
       }
 
       return ok(this.proto.reflect(dataReply))
+    } catch (e) {
+      throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  async resetPassord(userId: number) {
+    try {
+      if (!(userId)) {
+        return err(new Error(`Empty userId`))
+      }
+
+      await this.update({ id: userId }, { password: await bcrypt.hash(this.configService.get('DEFAULT_PASSWORD'), 10) })
+
+      return await this.getDetail({ id: userId })
+    } catch (e) {
+      throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  async updatePassword(userId: number, request: UpdatePasswordRequest) {
+    try {
+      if (!(userId)) {
+        return err(new Error(`Empty userId`))
+      }
+
+      const userReply = await this.getDetail({ id: userId })
+
+      if (userReply.isErr()) {
+        return err(userReply.error)
+      }
+
+      if (await bcrypt.compare(request.oldPassword, userReply.value.password)) {
+        await this.update({ id: userId }, { password: await bcrypt.hash(request.newPassword, 10) })
+      } else {
+        return err(new Error(`Wrong password`))
+      }
+
+      return await this.getDetail({ id: userId })
     } catch (e) {
       throw new CustomException('ERROR', e.message, HttpStatus.BAD_REQUEST)
     }

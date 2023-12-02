@@ -73,6 +73,8 @@ service UserService {
   rpc GetList (GetUserConditionRequest) returns (UserListReply) {}
   rpc UpdateUser (UpdateUserRequest) returns (UserReply) {}
   rpc RemoveUser (RemoveUserRequest) returns (SimpleReply) {}
+  rpc UpdateUserPassword (UpdatePasswordRequest) returns (UserReply) {}
+  rpc ResetPassword (ResetPasswordRequest) returns (UserReply) {}
 }
 
 service ExcelService {

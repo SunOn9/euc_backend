@@ -28,15 +28,16 @@ message GetUserConditionRequest {
 message CreateUserRequest {
   string name = 1;
   string email = 2;
-  string password = 3;
+  // string password = 3;
   optional string phone = 4;
   EnumProto.UserRole role =5;
+  int32 club_id = 6;
 }
 
 message UpdateUserDataRequest {
   string name = 1;
   string email = 2;
-  string password = 3;
+  // string password = 3;
   optional string phone = 4;
   EnumProto.UserRole role =5;
 }
@@ -53,4 +54,13 @@ message RemoveUserRequest {
 message UpdateUserPermissionRequest {
   int32 id = 1;
   repeated int32 permission_id_list =2;
+}
+
+message ResetPasswordRequest {
+  int32 id = 1;
+}
+
+message UpdatePasswordRequest {
+  string oldPassword = 2;
+  string newPassword = 3;
 }

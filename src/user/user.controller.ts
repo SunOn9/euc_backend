@@ -26,6 +26,8 @@ import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
 import { UserEntity } from './entities/user.entity'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
+import { ResetPasswordRequestDto } from './dto/reset-password.dto'
+import { UpdatePasswordRequestDto } from './dto/update-password.dto'
 
 @ApiHeader({
   name: 'sessionId',
@@ -35,7 +37,7 @@ import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 @UseGuards(PermissionsGuard)
 @Controller('user')
 export class UserController {
-  constructor(private readonly service: UserService) {}
+  constructor(private readonly service: UserService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
@@ -75,7 +77,6 @@ export class UserController {
     subject: [UserEntity],
     fields: [],
     conditions: {
-      club: 'user.club',
     },
   })
   @HttpCode(HttpStatus.CREATED)
@@ -88,6 +89,72 @@ export class UserController {
       bodyData,
       req['sessionId'],
       req['userInfo'],
+    )
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = CONST.DEFAULT_UPDATE_SUCCESS_MESSAGE
+    return response
+  }
+
+  @Post('updateUserPassword')
+  @CheckPermissions({
+    action: [Action.UPDATE],
+    subject: [UserEntity],
+    fields: [],
+    conditions: {
+    },
+  })
+  @HttpCode(HttpStatus.CREATED)
+  async updateUserPassword(
+    @Req() req: Request,
+    @Body() bodyData: UpdatePasswordRequestDto,
+  ): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    const data = await this.service.updatePassword(
+      req['sessionId'],
+      req['userInfo']['id'],
+      bodyData
+    )
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = CONST.DEFAULT_UPDATE_SUCCESS_MESSAGE
+    return response
+  }
+
+  @Post('resetPassword')
+  @CheckPermissions({
+    action: [Action.UPDATE],
+    subject: [UserEntity],
+    fields: [],
+    conditions: {
+    },
+  })
+  @HttpCode(HttpStatus.CREATED)
+  async resrtUserPassword(
+    @Req() req: Request,
+    @Body() bodyData: ResetPasswordRequestDto,
+  ): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    const data = await this.service.resetPassword(
+      bodyData.id
     )
 
     if (data.isErr()) {
