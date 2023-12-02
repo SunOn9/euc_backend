@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common/decorators/core/injectable.decorator'
-import unidecode from 'unidecode'
+// import unidecode from 'unidecode'
 
 @Injectable()
 export class UtilsService {
@@ -13,9 +13,9 @@ export class UtilsService {
     return Object.keys(obj).length === 0
   }
 
-  public convertToSlug(str: string): string {
-    return unidecode(str.toLowerCase()).replace(/\s+/g, '-').replace(/-+/g, '-')
-  }
+  // public convertToSlug(str: string): string {
+  //   return unidecode(str.toLowerCase()).replace(/\s+/g, '-').replace(/-+/g, '-')
+  // }
 
   public convertToVietNamDate(date: Date): string {
     return date.toLocaleDateString('vi-VN', {
