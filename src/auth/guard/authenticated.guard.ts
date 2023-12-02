@@ -9,7 +9,7 @@ export class AthenticatedGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly sessionService: SessionService,
-  ) {}
+  ) { }
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest()

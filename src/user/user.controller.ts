@@ -20,7 +20,7 @@ import { GetUserConditionRequestDto } from './dto/get-user-condition-request.dto
 import { UpdateUserRequestDto } from './dto/update-user.dto'
 import { SimpleReply } from '/generated/common'
 import { RemoveUserRequestDto } from './dto/remove-user.dto'
-import { UseGuards } from '@nestjs/common'
+import { SetMetadata, UseGuards } from '@nestjs/common'
 import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
@@ -28,6 +28,11 @@ import { UserEntity } from './entities/user.entity'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 import { ResetPasswordRequestDto } from './dto/reset-password.dto'
 import { UpdatePasswordRequestDto } from './dto/update-password.dto'
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+// const AllowUnauthorizedRequest = () =>
+//   SetMetadata('allowUnauthorizedRequest', true)
+
 
 @ApiHeader({
   name: 'sessionId',

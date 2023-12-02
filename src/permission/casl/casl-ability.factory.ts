@@ -18,7 +18,7 @@ type AppAbility = MongoAbility<[Action, Subject]>
 
 @Injectable()
 export class CaslAbilityFactory {
-  constructor(private readonly sessionService: SessionService) {}
+  constructor(private readonly sessionService: SessionService) { }
 
   async defineAbility(
     sessionId: string,
