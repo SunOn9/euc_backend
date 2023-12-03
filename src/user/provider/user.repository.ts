@@ -40,6 +40,7 @@ export class UserRepository extends Repository<UserEntity> {
 
       const saveData = {
         ...other,
+        club: { id: clubId },
         password: await bcrypt.hash(this.configService.get('DEFAULT_PASSWORD'), 10)
       } as UserEntity
 
@@ -258,6 +259,8 @@ export class UserRepository extends Repository<UserEntity> {
     if (conditions.isDeleted) {
       queryBuilder.withDeleted()
     }
+
+    // console.log(conditions)
 
     queryBuilder.setFindOptions({
       relationLoadStrategy: 'query',

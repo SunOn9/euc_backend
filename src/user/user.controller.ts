@@ -176,7 +176,7 @@ export class UserController {
     return response
   }
 
-  @Get('detail/:id')
+  @Get('detail')
   @CheckPermissions({
     action: [Action.READ],
     subject: [UserEntity],
@@ -184,7 +184,7 @@ export class UserController {
   })
   async getDetail(
     // @Req() req: Request,
-    @Param() request: GetUserConditionRequestDto,
+    @Query() request: GetUserConditionRequestDto,
   ): Promise<UserReply> {
     const response = {} as UserReply
     const data = await this.service.getDetail(request)
