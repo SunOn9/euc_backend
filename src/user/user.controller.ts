@@ -20,13 +20,18 @@ import { GetUserConditionRequestDto } from './dto/get-user-condition-request.dto
 import { UpdateUserRequestDto } from './dto/update-user.dto'
 import { SimpleReply } from '/generated/common'
 import { RemoveUserRequestDto } from './dto/remove-user.dto'
-import { UseGuards } from '@nestjs/common'
+import { SetMetadata, UseGuards } from '@nestjs/common'
 import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
 import { UserEntity } from './entities/user.entity'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
-import { UpdateUserPermissionRequestDto } from './dto/update-user-permission.dto'
+import { ResetPasswordRequestDto } from './dto/reset-password.dto'
+import { UpdatePasswordRequestDto } from './dto/update-password.dto'
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+// const AllowUnauthorizedRequest = () =>
+//   SetMetadata('allowUnauthorizedRequest', true)
 
 @ApiHeader({
   name: 'sessionId',
@@ -75,9 +80,7 @@ export class UserController {
     action: [Action.UPDATE],
     subject: [UserEntity],
     fields: [],
-    conditions: {
-      club: 'user.club',
-    },
+    conditions: {},
   })
   @HttpCode(HttpStatus.CREATED)
   async updateUser(
@@ -105,7 +108,69 @@ export class UserController {
     return response
   }
 
-  @Get('detail/:id')
+  @Post('updateUserPassword')
+  @CheckPermissions({
+    action: [Action.UPDATE],
+    subject: [UserEntity],
+    fields: [],
+    conditions: {},
+  })
+  @HttpCode(HttpStatus.CREATED)
+  async updateUserPassword(
+    @Req() req: Request,
+    @Body() bodyData: UpdatePasswordRequestDto,
+  ): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    const data = await this.service.updatePassword(
+      req['sessionId'],
+      req['userInfo']['id'],
+      bodyData,
+    )
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = CONST.DEFAULT_UPDATE_SUCCESS_MESSAGE
+    return response
+  }
+
+  @Post('resetPassword')
+  @CheckPermissions({
+    action: [Action.UPDATE],
+    subject: [UserEntity],
+    fields: [],
+    conditions: {},
+  })
+  @HttpCode(HttpStatus.CREATED)
+  async resrtUserPassword(
+    @Req() req: Request,
+    @Body() bodyData: ResetPasswordRequestDto,
+  ): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    const data = await this.service.resetPassword(bodyData.id)
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = CONST.DEFAULT_UPDATE_SUCCESS_MESSAGE
+    return response
+  }
+
+  @Get('detail')
   @CheckPermissions({
     action: [Action.READ],
     subject: [UserEntity],
@@ -113,7 +178,7 @@ export class UserController {
   })
   async getDetail(
     // @Req() req: Request,
-    @Param() request: GetUserConditionRequestDto,
+    @Query() request: GetUserConditionRequestDto,
   ): Promise<UserReply> {
     const response = {} as UserReply
     const data = await this.service.getDetail(request)

@@ -24,7 +24,7 @@ export class MemberService {
     private readonly clubService: ClubService,
     @InjectRepository(MemberInClubEntity)
     private memberInClubRepo: Repository<MemberInClubEntity>,
-  ) {}
+  ) { }
 
   async create(
     requestData: CreateMemberRequestDto,
@@ -240,7 +240,7 @@ export class MemberService {
         user: userInfo,
       })
 
-      console.log(memberReply.value.memberInClub[0].club)
+      // console.log(memberReply.value.memberInClub[0].club)
 
       //Check club
       const clubReply = await this.clubService.getDetail({
@@ -251,7 +251,7 @@ export class MemberService {
         return err(clubReply.error)
       }
 
-      console.log(clubReply.value.totalMember)
+      // console.log(clubReply.value.totalMember)
 
       await this.clubService.update(
         {

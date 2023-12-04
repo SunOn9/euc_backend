@@ -31,7 +31,7 @@ export class AreaRepository extends Repository<AreaEntity> {
     try {
       const saveData = {
         ...createData,
-        slug: this.utilService.convertToSlug(createData.name),
+        slug: '',
       } as AreaEntity
 
       const dataReply = await this.save(saveData)

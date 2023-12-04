@@ -23,4 +23,9 @@ export class CreateClubRequestDto implements CreateClubRequest {
   @IsNumber()
   @Type(() => Number)
   areaId: number
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  abbreviation?: string
 }

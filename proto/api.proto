@@ -93,6 +93,8 @@ service EventService {
   rpc AddGuest (AddGuestToEventRequest) returns (SimpleReply) {}
   rpc RemoveGuest (RemoveGuestFromEventRequest) returns (SimpleReply) {}
   rpc EndEvent (EndEventRequest) returns (SimpleReply) {}
+  rpc UpdateUserPassword (UpdatePasswordRequest) returns (UserReply) {}
+  rpc ResetPassword (ResetPasswordRequest) returns (UserReply) {}
 }
 
 service ExcelService {

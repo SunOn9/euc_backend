@@ -2,10 +2,9 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
-  MaxLength,
-  MinLength,
 } from 'class-validator'
 import { CreateUserRequest } from '/generated/user/user.request'
 import {
@@ -13,6 +12,7 @@ import {
   ApiPropertyOptional,
 } from '@nestjs/swagger/dist/decorators/api-property.decorator'
 import { EnumProto_UserRole } from '/generated/enumps'
+import { Type } from 'class-transformer'
 
 export class CreateUserRequestDto implements CreateUserRequest {
   @ApiProperty()
@@ -25,13 +25,6 @@ export class CreateUserRequestDto implements CreateUserRequest {
   @IsEmail()
   email: string
 
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(8)
-  @MaxLength(32)
-  password: string
-
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
@@ -41,4 +34,10 @@ export class CreateUserRequestDto implements CreateUserRequest {
   @IsNotEmpty()
   @IsEnum(EnumProto_UserRole)
   role: EnumProto_UserRole
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  clubId: number;
 }
