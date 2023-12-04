@@ -184,4 +184,56 @@ export class ReceiptSessionController {
     response.payload = CONST.DEFAULT_REMOVE_SUCCESS_MESSAGE
     return response
   }
+
+  @Get('confirm/:id')
+  async confirmReceiptSession(
+    @Req() req: Request,
+    @Param() request: RemoveReceiptSessionRequestDto,
+  ): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    const data = await this.service.confirm(
+      request,
+      req['sessionId'],
+      req['userInfo'],
+    )
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = CONST.DEFAULT_UPDATE_SUCCESS_MESSAGE
+    return response
+  }
+
+  @Get('done/:id')
+  async doneReceiptSession(
+    @Req() req: Request,
+    @Param() request: RemoveReceiptSessionRequestDto,
+  ): Promise<SimpleReply> {
+    const response = {} as SimpleReply
+    const data = await this.service.done(
+      request,
+      req['sessionId'],
+      req['userInfo'],
+    )
+
+    if (data.isErr()) {
+      throw new CustomException(
+        'ERROR',
+        data.error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+
+    response.statusCode = CONST.DEFAULT_SUCCESS_CODE
+    response.message = CONST.DEFAULT_SUCCESS_MESSAGE
+    response.payload = CONST.DEFAULT_UPDATE_SUCCESS_MESSAGE
+    return response
+  }
 }

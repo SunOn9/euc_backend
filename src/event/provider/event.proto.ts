@@ -19,6 +19,8 @@ export class EventReflect {
     reflect.paymentSession = entity.paymentSession ?? []
     reflect.receiptSession = entity.receiptSession ?? []
     reflect.place = entity.place ?? null
+    reflect.club = entity.club ?? null
+
     return reflect
   }
 }

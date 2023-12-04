@@ -8,32 +8,32 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { ClubEntity } from '/club/entities/club.entity';
-import { EventEntity } from '/event/entities/event.entity';
-import { EnumProto_Gender, EnumProto_MemberType } from '/generated/enumps';
+} from 'typeorm'
+import { ClubEntity } from '/club/entities/club.entity'
+import { EventEntity } from '/event/entities/event.entity'
+import { EnumProto_Gender, EnumProto_MemberType } from '/generated/enumps'
 
 @Entity({ name: 'guest' })
 export class GuestEntity {
-  static tableName = 'guest';
+  static tableName = 'guest'
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Column()
-  name: string;
+  name: string
 
-  @Column()
-  nickName: string;
+  @Column({ nullable: true })
+  nickName?: string
 
   @Column()
   gender: EnumProto_Gender
 
   @Column()
-  type: EnumProto_MemberType;
+  type: EnumProto_MemberType
 
-  @ManyToOne(() => ClubEntity, (club) => club.guest)
-  club: ClubEntity;
+  @ManyToOne(() => ClubEntity, club => club.guest)
+  club: ClubEntity
 
   @ManyToMany(() => EventEntity)
   @JoinTable({
@@ -41,18 +41,18 @@ export class GuestEntity {
     joinColumn: { name: 'guest_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'event_id', referencedColumnName: 'id' },
   })
-  event: EventEntity[];
+  event: EventEntity[]
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 
   @DeleteDateColumn({ nullable: true })
-  deletedAt?: Date;
+  deletedAt?: Date
 
   constructor(partial: Partial<GuestEntity>) {
-    Object.assign(this, partial);
+    Object.assign(this, partial)
   }
 }

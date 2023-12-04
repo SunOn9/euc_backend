@@ -26,10 +26,10 @@ export class CreateEventRequestDto implements CreateEventRequest {
   @IsDateString()
   startEventDate: Date
 
-  @ApiPropertyOptional()
-  @IsOptional()
+  @ApiProperty()
+  @IsNotEmpty()
   @IsDateString()
-  endEventDate?: Date
+  endEventDate: Date
 
   @ApiProperty()
   @IsNotEmpty()

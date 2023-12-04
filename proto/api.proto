@@ -153,6 +153,8 @@ service PaymentSessionService {
   rpc GetList (GetPaymentSessionConditionRequest) returns (PaymentSessionListReply) {}
   rpc UpdatePaymentSession (UpdatePaymentSessionRequest) returns (PaymentSessionReply) {}
   rpc RemovePaymentSession (RemovePaymentSessionRequest) returns (SimpleReply) {}
+  rpc ConfirmPaymentSession (ConfirmPaymentSessionRequest) returns (SimpleReply) {}
+  rpc DonePaymentSession (DonePaymentSessionRequest) returns (SimpleReply) {}
 }
 
 service ReceiptSessionService {
@@ -161,6 +163,8 @@ service ReceiptSessionService {
   rpc GetList (GetReceiptSessionConditionRequest) returns (ReceiptSessionListReply) {}
   rpc UpdateReceiptSession (UpdateReceiptSessionRequest) returns (ReceiptSessionReply) {}
   rpc RemoveReceiptSession (RemoveReceiptSessionRequest) returns (SimpleReply) {}
+  rpc ConfirmReceiptSession (ConfirmReceiptSessionRequest) returns (SimpleReply) {}
+  rpc DoneReceiptSession (DoneReceiptSessionRequest) returns (SimpleReply) {}
 }
 
 service PermissionService {

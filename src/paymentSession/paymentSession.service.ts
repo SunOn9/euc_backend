@@ -106,6 +106,19 @@ export class PaymentSessionService {
       return err(paymentSessionReply.error)
     }
 
+    const updateReply = await this.repo.updatePaymentSession({
+      conditions: {
+        id: requestData.id,
+      },
+      data: {
+        status: EnumProto_SessionStatus.CANCEL,
+      },
+    })
+
+    if (updateReply.isErr()) {
+      return err(updateReply.error)
+    }
+
     const removeReply = await this.repo.removePaymentSession(requestData)
 
     if (removeReply.isOk()) {
@@ -187,7 +200,7 @@ export class PaymentSessionService {
       userInfo.role !== EnumProto_UserRole.TREASURER &&
       userInfo.role !== EnumProto_UserRole.ADMIN
     ) {
-      return err(ForbiddenError)
+      return err(new Error(`Forbiden`))
     }
 
     const paymentSessionReply = await this.repo.getDetail(requestData)
@@ -215,6 +228,21 @@ export class PaymentSessionService {
         fundAmount: clubReply.value.fund - paymentSessionReply.value.amount,
       },
     )
+
+    const updateClub = await this.clubService.update(
+      {
+        conditions: { id: clubReply.value.id },
+        data: {
+          fund: clubReply.value.fund - paymentSessionReply.value.amount,
+        },
+      },
+      sessionId,
+      userInfo,
+    )
+
+    if (updateClub.isErr()) {
+      return err(updateClub.error)
+    }
 
     const updateReply = await this.repo.getDetail({
       id: requestData.id,

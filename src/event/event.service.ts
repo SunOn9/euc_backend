@@ -50,7 +50,21 @@ export class EventService {
     sessionId: string,
     userInfo: User,
   ) {
-    const updateReply = await this.repo.createEvent(requestData)
+    const reply = await this.repo.createEvent(requestData)
+
+    if (reply.isErr()) {
+      return err(reply.error)
+    }
+
+    const updateReply = await this.repo.getDetail({
+      id: reply.value.id,
+      isExtraPlace: true,
+      isExtraClub: true,
+      isExtraPaymentSession: true,
+      isExtraReceiptSession: true,
+      isExtraPayment: true,
+      isExtraReceipt: true,
+    })
 
     if (updateReply.isOk()) {
       await this.logService.create({
@@ -157,15 +171,41 @@ export class EventService {
     //Check event
     const eventReply = await this.getDetail({
       id: requestData.id,
+      isExtraPaymentSession: true,
+      isExtraReceiptSession: true,
     })
 
     if (eventReply.isErr()) {
       return err(eventReply.error)
     }
 
+    if (eventReply.value.actualEndEventDate) {
+      return err(new Error(`Event already done`))
+    }
+
     const removeReply = await this.repo.removeEvent(requestData)
 
     if (removeReply.isOk()) {
+      for (const each of eventReply.value.paymentSession) {
+        await this.paymentSessionService.remove(
+          {
+            id: each.id,
+          },
+          sessionId,
+          userInfo,
+        )
+      }
+
+      for (const each of eventReply.value.receiptSession) {
+        await this.receiptSessionService.remove(
+          {
+            id: each.id,
+          },
+          sessionId,
+          userInfo,
+        )
+      }
+
       await this.logService.create({
         action: Action.DELETE,
         subject: EventEntity.tableName,

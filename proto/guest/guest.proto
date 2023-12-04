@@ -9,7 +9,7 @@ import "google/protobuf/timestamp.proto";
 message Guest {
   int32 id = 1;
   string name = 2;
-  string nick_name = 3;
+  optional string nick_name = 3;
   EnumProto.MemberType type = 4;
   google.protobuf.Timestamp created_at = 7;
   google.protobuf.Timestamp updated_at = 8;

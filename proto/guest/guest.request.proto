@@ -25,12 +25,14 @@ message CreateGuestRequest {
   optional string nick_name = 3;
   EnumProto.MemberType type = 4;
   optional int32 club_id = 5;
+  EnumProto.Gender gender = 6;
 }
 
 message UpdateGuestDataRequest {
   optional string name = 2;
   optional string nick_name = 3;
   optional EnumProto.MemberType type = 4;
+  optional EnumProto.Gender gender = 5;
 }
 
 message UpdateGuestRequest {

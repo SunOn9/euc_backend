@@ -107,6 +107,19 @@ export class ReceiptSessionService {
       return err(receiptSessionReply.error)
     }
 
+    const updateReply = await this.repo.updateReceiptSession({
+      conditions: {
+        id: requestData.id,
+      },
+      data: {
+        status: EnumProto_SessionStatus.CANCEL,
+      },
+    })
+
+    if (updateReply.isErr()) {
+      return err(updateReply.error)
+    }
+
     const removeReply = await this.repo.removeReceiptSession(requestData)
 
     if (removeReply.isOk()) {
@@ -188,7 +201,7 @@ export class ReceiptSessionService {
       userInfo.role !== EnumProto_UserRole.TREASURER &&
       userInfo.role !== EnumProto_UserRole.ADMIN
     ) {
-      return err(ForbiddenError)
+      return err(new Error(`Forbiden`))
     }
 
     const receiptSessionReply = await this.repo.getDetail(requestData)
@@ -216,6 +229,21 @@ export class ReceiptSessionService {
         fundAmount: clubReply.value.fund + receiptSessionReply.value.amount,
       },
     )
+
+    const updateClub = await this.clubService.update(
+      {
+        conditions: { id: clubReply.value.id },
+        data: {
+          fund: clubReply.value.fund + receiptSessionReply.value.amount,
+        },
+      },
+      sessionId,
+      userInfo,
+    )
+
+    if (updateClub.isErr()) {
+      return err(updateClub.error)
+    }
 
     const updateReply = await this.repo.getDetail({
       id: requestData.id,

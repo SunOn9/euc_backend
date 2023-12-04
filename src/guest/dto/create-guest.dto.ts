@@ -10,7 +10,7 @@ import {
   ApiPropertyOptional,
 } from '@nestjs/swagger/dist/decorators/api-property.decorator'
 import { CreateGuestRequest } from '/generated/guest/guest.request'
-import { EnumProto_MemberType } from '/generated/enumps'
+import { EnumProto_Gender, EnumProto_MemberType } from '/generated/enumps'
 import { Type } from 'class-transformer'
 
 export class CreateGuestRequestDto implements CreateGuestRequest {
@@ -34,4 +34,9 @@ export class CreateGuestRequestDto implements CreateGuestRequest {
   @IsNumber()
   @Type(() => Number)
   clubId?: number
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEnum(EnumProto_Gender)
+  gender: EnumProto_Gender
 }
