@@ -39,13 +39,16 @@ message Event {
     int32 id = 1;
     string name = 2;
     optional string nick_name = 3;
-    google.protobuf.Timestamp birthday = 4;
+    optional google.protobuf.Timestamp birthday = 4;
     EnumProto.MemberStatus status = 5;
     EnumProto.MemberType type = 6;
     optional string monthly_fee = 7;
     google.protobuf.Timestamp created_at = 11;
     google.protobuf.Timestamp updated_at = 12;
     optional google.protobuf.Timestamp deleted_at = 13;
+    // Area hometown =14;
+    // repeated MemberInClub member_in_club =15;
+    // repeated Event event =16;
     EnumProto.Gender gender = 17;
   }
   

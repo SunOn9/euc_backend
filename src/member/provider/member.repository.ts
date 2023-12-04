@@ -13,6 +13,7 @@ import { MemberReflect } from './member.proto'
 import { Member } from '/generated/member/member'
 import { MemberListDataReply } from '/generated/member/member.reply'
 import { ClubEntity } from '/club/entities/club.entity'
+import { AreaEntity } from '/area/entities/area.entity'
 
 @Injectable()
 export class MemberRepository extends Repository<MemberEntity> {
@@ -31,10 +32,11 @@ export class MemberRepository extends Repository<MemberEntity> {
     createData: CreateMemberRequestDto,
   ): Promise<Result<Member, Error>> {
     try {
-      const { clubId, ...other } = createData
+      const { clubId, areaId, ...other } = createData
 
       const saveData = {
         ...other,
+        hometown: { id: areaId } as AreaEntity,
         memberInClub: [{ club: { id: clubId } as ClubEntity }],
       } as MemberEntity
 

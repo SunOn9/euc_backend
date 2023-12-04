@@ -10,7 +10,11 @@ import {
   ApiProperty,
   ApiPropertyOptional,
 } from '@nestjs/swagger/dist/decorators/api-property.decorator'
-import { EnumProto_MemberStatus, EnumProto_MemberType } from '/generated/enumps'
+import {
+  EnumProto_Gender,
+  EnumProto_MemberStatus,
+  EnumProto_MemberType,
+} from '/generated/enumps'
 import { CreateMemberRequest } from '/generated/member/member.request'
 import { Type } from 'class-transformer'
 
@@ -19,6 +23,11 @@ export class CreateMemberRequestDto implements CreateMemberRequest {
   @IsNotEmpty()
   @IsString()
   name: string
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEnum(EnumProto_Gender)
+  gender: EnumProto_Gender
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -50,4 +59,10 @@ export class CreateMemberRequestDto implements CreateMemberRequest {
   @IsNumber()
   @Type(() => Number)
   clubId?: number
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  areaId: number
 }

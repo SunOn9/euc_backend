@@ -18,7 +18,7 @@ message GetMemberConditionRequest {
   optional int32 page =10;
   optional int32 limit =11;
   optional bool is_deleted =13;
-  optional bool is_extra_hometown =15;
+  // optional bool is_extra_hometown =15;
   optional bool is_extra_event =16;
   optional bool is_extra_club =17;
   optional bool is_extra_area =18;
@@ -34,6 +34,8 @@ message CreateMemberRequest {
   EnumProto.MemberType type = 6;
   optional string monthly_fee = 7;
   optional int32 club_id = 8;
+  EnumProto.Gender gender = 9;
+  int32 area_id = 10;
 }
 
 message UpdateMemberDataRequest {
@@ -43,6 +45,7 @@ message UpdateMemberDataRequest {
   optional EnumProto.MemberStatus status = 5;
   optional EnumProto.MemberType type = 6;
   optional string monthly_fee = 7;
+  EnumProto.Gender gender = 9;
   // optional int32 club_id = 8;
 }
 

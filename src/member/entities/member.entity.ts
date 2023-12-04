@@ -30,14 +30,14 @@ export class MemberEntity {
   @Column()
   name: string
 
-  @Column()
-  nickName: string
+  @Column({ nullable: true })
+  nickName?: string
 
   @Column()
   gender: EnumProto_Gender
 
-  @Column()
-  birthday: Date
+  @Column({ nullable: true })
+  birthday?: Date
 
   @Column()
   status: EnumProto_MemberStatus
