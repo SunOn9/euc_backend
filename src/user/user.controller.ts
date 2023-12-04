@@ -28,6 +28,7 @@ import { UserEntity } from './entities/user.entity'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 import { ResetPasswordRequestDto } from './dto/reset-password.dto'
 import { UpdatePasswordRequestDto } from './dto/update-password.dto'
+import { UpdateUserPermissionRequestDto } from './dto/update-user-permission.dto'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 // const AllowUnauthorizedRequest = () =>
