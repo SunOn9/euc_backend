@@ -9,7 +9,7 @@ export class AthenticatedGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly sessionService: SessionService,
-  ) { }
+  ) {}
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest()
@@ -19,11 +19,13 @@ export class AthenticatedGuard implements CanActivate {
       context.getHandler(),
     )
 
+    const sessionID = this.extractSessionIDFromHeader(request)
+
+    request['sessionId'] = sessionID
+
     if (allowUnauthorizedRequest) {
       return true
     }
-
-    const sessionID = this.extractSessionIDFromHeader(request)
 
     const session = await this.sessionService.get(sessionID)
 
@@ -32,7 +34,6 @@ export class AthenticatedGuard implements CanActivate {
     }
 
     request['userInfo'] = session.value
-    request['sessionId'] = sessionID
 
     return true
   }

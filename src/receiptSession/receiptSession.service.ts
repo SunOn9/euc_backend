@@ -12,7 +12,11 @@ import { ReceiptSessionEntity } from './entities/receiptSession.entity'
 import { ReceiptSessionRepository } from './provider/receiptSession.repository'
 import { ConfirmReceiptSessionRequestDto } from './dto/confirm-receiptSession.dto'
 import { Club } from '/generated/club/club'
-import { EnumProto_SessionStatus, EnumProto_UserRole } from '/generated/enumps'
+import {
+  EnumProto_MoneyMethod,
+  EnumProto_SessionStatus,
+  EnumProto_UserRole,
+} from '/generated/enumps'
 import { Receipt } from '/generated/receipt/receipt'
 import { ClubService } from '/club/club.service'
 import { ReceiptService } from '/receipt/receipt.service'
@@ -101,10 +105,18 @@ export class ReceiptSessionService {
     const receiptSessionReply = await this.repo.getDetail({
       id: requestData.id,
       isExtraClub: true,
+      isExtraEvent: true,
     })
 
     if (receiptSessionReply.isErr()) {
       return err(receiptSessionReply.error)
+    }
+
+    if (
+      receiptSessionReply.value.event &&
+      !receiptSessionReply.value.event.actualEndEventDate
+    ) {
+      return err(new Error(`Event still happen`))
     }
 
     const updateReply = await this.repo.updateReceiptSession({
@@ -157,10 +169,23 @@ export class ReceiptSessionService {
     sessionId: string,
     userInfo: User,
   ) {
-    const receiptSessionReply = await this.repo.getDetail(requestData)
+    const receiptSessionReply = await this.repo.getDetail({
+      ...requestData,
+      isExtraReceipt: true,
+    })
 
     if (receiptSessionReply.isErr()) {
       return err(receiptSessionReply.error)
+    }
+
+    for (const each of receiptSessionReply.value.receipt) {
+      if (each.method === EnumProto_MoneyMethod.UNRECOGNIZED) {
+        return err(
+          new Error(
+            `Receipt ${each.id} - ${each.title} still haven't choose method`,
+          ),
+        )
+      }
     }
 
     await this.repo.update(
@@ -206,16 +231,26 @@ export class ReceiptSessionService {
 
     const receiptSessionReply = await this.repo.getDetail(requestData)
 
+    if (receiptSessionReply.isErr()) {
+      return err(receiptSessionReply.error)
+    }
+
+    for (const each of receiptSessionReply.value.receipt) {
+      if (each.method === EnumProto_MoneyMethod.UNRECOGNIZED) {
+        return err(
+          new Error(
+            `Receipt ${each.id} - ${each.title} still haven't choose method`,
+          ),
+        )
+      }
+    }
+
     const clubReply = await this.clubService.getDetail({
       id: userInfo.club.id,
     })
 
     if (clubReply.isErr()) {
       return err(clubReply.error)
-    }
-
-    if (receiptSessionReply.isErr()) {
-      return err(receiptSessionReply.error)
     }
 
     await this.repo.update(

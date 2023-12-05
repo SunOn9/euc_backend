@@ -23,7 +23,7 @@ message CreateClubRequest {
   string name = 2;
   optional string abbreviation = 3;
   optional int32 fund =4;
-  optional int32 area_id = 5;
+  int32 area_id = 5;
 }
 
 message UpdateClubDataRequest {

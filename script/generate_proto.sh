@@ -17,5 +17,5 @@ outputServices=grpc-js"
 PROTO_OUT="--ts_proto_out=$pwd/src/generated/"
 protoc --plugin=$PLUGIN_PATH "$OPTION" "$PROTO_OUT" ./api.proto
 
-# cd ../src/generated/google
+# cd ../src/generated/google/protobuf
 # sed -i '' 's/import _m0 from "protobufjs\/minimal";/import * as _m0 from "protobufjs\/minimal";/' timestamp.ts

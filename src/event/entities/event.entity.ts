@@ -29,7 +29,7 @@ export class EventEntity {
   @Column()
   name: string
 
-  @ManyToMany(() => MemberEntity, member => member.event)
+  @ManyToMany(() => MemberEntity, member => member.event, {})
   @JoinTable({
     name: 'member_in_event',
     joinColumn: { name: 'event_id', referencedColumnName: 'id' },
@@ -37,7 +37,7 @@ export class EventEntity {
   })
   member: MemberEntity[]
 
-  @ManyToMany(() => GuestEntity, guest => guest.event)
+  @ManyToMany(() => GuestEntity, guest => guest.event, {})
   @JoinTable({
     name: 'guest_in_event',
     joinColumn: { name: 'event_id', referencedColumnName: 'id' },

@@ -206,6 +206,28 @@ export class EventService {
         )
       }
 
+      const listMemberRemove = eventReply.value.member.map(each => each.id)
+
+      await this.removeMember(
+        {
+          eventId: requestData.id,
+          memberIdList: listMemberRemove,
+        },
+        sessionId,
+        userInfo,
+      )
+
+      const listGuestRemove = eventReply.value.guest.map(each => each.id)
+
+      await this.removeGuest(
+        {
+          eventId: requestData.id,
+          guestIdList: listGuestRemove,
+        },
+        sessionId,
+        userInfo,
+      )
+
       await this.logService.create({
         action: Action.DELETE,
         subject: EventEntity.tableName,
@@ -270,8 +292,8 @@ export class EventService {
         user: userInfo,
       })
 
-      if (updateReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
-        if (updateReply.value.receiptSession.length !== 0) {
+      if (eventReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
+        if (eventReply.value.receiptSession.length !== 0) {
           for (const memberId of requestData.memberIdList) {
             const memberReply = await this.memberService.getDetail({
               id: memberId,
@@ -308,7 +330,7 @@ export class EventService {
                 hiddenType: 0,
                 amount: fee,
                 method: EnumProto_MoneyMethod.UNRECOGNIZED,
-                receiptSessionId: updateReply.value.receiptSession[0].id,
+                receiptSessionId: eventReply.value.receiptSession[0].id,
               },
               sessionId,
               userInfo,
@@ -364,8 +386,8 @@ export class EventService {
         user: userInfo,
       })
 
-      if (updateReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
-        if (updateReply.value.receiptSession.length !== 0) {
+      if (eventReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
+        if (eventReply.value.receiptSession.length !== 0) {
           const { receipt } = eventReply.value.receiptSession[0]
           for (const memberId of requestData.memberIdList) {
             const reply = receipt.find(
@@ -441,8 +463,8 @@ export class EventService {
         user: userInfo,
       })
 
-      if (updateReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
-        if (updateReply.value.receiptSession.length !== 0) {
+      if (eventReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
+        if (eventReply.value.receiptSession.length !== 0) {
           for (const guestId of requestData.guestIdList) {
             const guestReply = await this.guestService.getDetail({
               id: guestId,
@@ -479,7 +501,7 @@ export class EventService {
                 hiddenType: 1,
                 amount: fee,
                 method: EnumProto_MoneyMethod.UNRECOGNIZED,
-                receiptSessionId: updateReply.value.receiptSession[0].id,
+                receiptSessionId: eventReply.value.receiptSession[0].id,
               },
               sessionId,
               userInfo,
@@ -535,8 +557,8 @@ export class EventService {
         user: userInfo,
       })
 
-      if (updateReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
-        if (updateReply.value.receiptSession.length !== 0) {
+      if (eventReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
+        if (eventReply.value.receiptSession.length !== 0) {
           const { receipt } = eventReply.value.receiptSession[0]
           for (const guestId of requestData.guestIdList) {
             const reply = receipt.find(

@@ -32,6 +32,9 @@ export class PaymentEntity {
   @Column({ nullable: true })
   hiddenId?: number
 
+  @Column({ nullable: true })
+  hiddenType?: number
+
   @Column()
   method: EnumProto_MoneyMethod
 

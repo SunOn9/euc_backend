@@ -22,6 +22,7 @@ message CreateClubFeeRequest {
   int32 student_fee = 3;
   int32 worker_fee = 4;
   optional int32 monthly_fee = 5;
+  optional int32 club_id = 6;
 }
 
 message RemoveClubFeeRequest {

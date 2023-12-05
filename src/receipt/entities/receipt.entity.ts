@@ -27,6 +27,9 @@ export class ReceiptEntity {
   hiddenId?: number
 
   @Column({ nullable: true })
+  hiddenType?: number
+
+  @Column({ nullable: true })
   description?: string
 
   @Column({ default: 0 })

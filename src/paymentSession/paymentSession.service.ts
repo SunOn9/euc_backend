@@ -12,7 +12,11 @@ import { PaymentSessionEntity } from './entities/paymentSession.entity'
 import { PaymentSessionRepository } from './provider/paymentSession.repository'
 import { ClubService } from '/club/club.service'
 import { ConfirmPaymentSessionRequestDto } from './dto/confirm-paymentSession.dto'
-import { EnumProto_SessionStatus, EnumProto_UserRole } from '/generated/enumps'
+import {
+  EnumProto_MoneyMethod,
+  EnumProto_SessionStatus,
+  EnumProto_UserRole,
+} from '/generated/enumps'
 import { Club } from '/generated/club/club'
 import { PaymentService } from '/payment/payment.service'
 import { Payment } from '/generated/payment/payment'
@@ -100,10 +104,18 @@ export class PaymentSessionService {
     const paymentSessionReply = await this.repo.getDetail({
       id: requestData.id,
       isExtraClub: true,
+      isExtraEvent: true,
     })
 
     if (paymentSessionReply.isErr()) {
       return err(paymentSessionReply.error)
+    }
+
+    if (
+      paymentSessionReply.value.event &&
+      !paymentSessionReply.value.event.actualEndEventDate
+    ) {
+      return err(new Error(`Event still happen`))
     }
 
     const updateReply = await this.repo.updatePaymentSession({
@@ -156,10 +168,23 @@ export class PaymentSessionService {
     sessionId: string,
     userInfo: User,
   ) {
-    const paymentSessionReply = await this.repo.getDetail(requestData)
+    const paymentSessionReply = await this.repo.getDetail({
+      ...requestData,
+      isExtraPayment: true,
+    })
 
     if (paymentSessionReply.isErr()) {
       return err(paymentSessionReply.error)
+    }
+
+    for (const each of paymentSessionReply.value.payment) {
+      if (each.method === EnumProto_MoneyMethod.UNRECOGNIZED) {
+        return err(
+          new Error(
+            `Payment ${each.id} - ${each.title} still haven't choose method`,
+          ),
+        )
+      }
     }
 
     await this.repo.update(
@@ -203,7 +228,24 @@ export class PaymentSessionService {
       return err(new Error(`Forbiden`))
     }
 
-    const paymentSessionReply = await this.repo.getDetail(requestData)
+    const paymentSessionReply = await this.repo.getDetail({
+      ...requestData,
+      isExtraPayment: true,
+    })
+
+    if (paymentSessionReply.isErr()) {
+      return err(paymentSessionReply.error)
+    }
+
+    for (const each of paymentSessionReply.value.payment) {
+      if (each.method === EnumProto_MoneyMethod.UNRECOGNIZED) {
+        return err(
+          new Error(
+            `Payment ${each.id} - ${each.title} still haven't choose method`,
+          ),
+        )
+      }
+    }
 
     const clubReply = await this.clubService.getDetail({
       id: userInfo.club.id,
@@ -211,10 +253,6 @@ export class PaymentSessionService {
 
     if (clubReply.isErr()) {
       return err(clubReply.error)
-    }
-
-    if (paymentSessionReply.isErr()) {
-      return err(paymentSessionReply.error)
     }
 
     await this.repo.update(
