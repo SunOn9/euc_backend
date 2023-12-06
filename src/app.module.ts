@@ -54,7 +54,7 @@ import { ExcelModule } from './excel/excel.module'
         database: configService.get('MYSQL_DATABASE'),
         entities: [__dirname + '/**/entities/*.entity{.ts,.js}'],
         autoLoadEntities: true,
-        synchronize: true,
+        synchronize: false,
         namingStrategy: new SnakeNamingStrategy(),
         timezone: 'local',
       }),

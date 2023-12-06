@@ -24,8 +24,8 @@ export class ClubFeeEntity {
   @Column()
   workerFee: number
 
-  @Column()
-  monthlyFee: number
+  @Column({ nullable: true })
+  monthlyFee?: number
 
   @CreateDateColumn()
   createdAt: Date

@@ -48,7 +48,7 @@ message Club {
     int32 id = 1;
     int32 student_fee = 3;
     int32 worker_fee = 4;
-    int32 monthly_fee = 5;
+    optional int32 monthly_fee = 5;
     google.protobuf.Timestamp created_at = 6;
     optional google.protobuf.Timestamp deleted_at = 7;
   }

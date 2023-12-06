@@ -34,7 +34,7 @@ export class AuthController {
   @Post('/login')
   @AllowUnauthorizedRequest()
   async login(
-    @Request() req: Request,
+    @Request() req: any,
     @Body() bodyData: LoginRequestDto,
   ): Promise<UserReply> {
     const response = {} as UserReply
@@ -48,7 +48,7 @@ export class AuthController {
       throw new UnauthorizedException()
     }
 
-    bodyData.data.sessionId = req['sessionId']
+    bodyData.data.sessionId = req.sessionID
 
     const data = await this.service.create(bodyData.data, valiedateReply.id)
 
@@ -62,12 +62,12 @@ export class AuthController {
 
     const expire = this.ultilService.addDays(new Date(), 30)
 
-    await this.sessionService.set(req['sessionId'], expire, valiedateReply)
+    await this.sessionService.set(req.sessionID, expire, valiedateReply)
 
     response.statusCode = CONST.DEFAULT_SUCCESS_CODE
     response.message = CONST.DEFAULT_SUCCESS_MESSAGE
     response.payload = valiedateReply as User
-    response.extraData = { sessionId: req['sessionId'] }
+    response.extraData = { sessionId: req.sessionID }
     return response
   }
 
@@ -77,9 +77,9 @@ export class AuthController {
     required: true,
   })
   @Get('/logout')
-  async logout(@Request() req: Request): Promise<SimpleReply> {
+  async logout(@Request() req: any): Promise<SimpleReply> {
     const response = {} as SimpleReply
-    await this.sessionService.del(req['sessionId'])
+    await this.sessionService.del(req.sessionID)
 
     response.statusCode = CONST.DEFAULT_SUCCESS_CODE
     response.message = CONST.DEFAULT_SUCCESS_MESSAGE

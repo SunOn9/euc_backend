@@ -30,10 +30,10 @@ export class ClubFeeRepository extends Repository<ClubFeeEntity> {
     clubId: number,
   ): Promise<Result<ClubFee, Error>> {
     try {
-      const saveData: Partial<ClubFeeEntity> = {
+      const saveData = {
         ...createData,
         club: { id: clubId } as ClubEntity,
-      }
+      } as ClubFeeEntity
 
       const dataReply = await this.save(saveData)
 
