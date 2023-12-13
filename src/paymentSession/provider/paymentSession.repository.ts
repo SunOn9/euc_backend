@@ -182,7 +182,7 @@ export class PaymentSessionRepository extends Repository<PaymentSessionEntity> {
       conditions.toDateConfirm !== undefined
     ) {
       queryBuilder.andWhere(
-        `date_confirm BETWEEN (:fromDateConfirm, :toDateConfirm)`,
+        `date_confirm BETWEEN :fromDateConfirm AND :toDateConfirm`,
         {
           fromDateConfirm: `${conditions.fromDateConfirm}`,
           toDateConfirm: `${conditions.toDateConfirm}`,
@@ -194,7 +194,7 @@ export class PaymentSessionRepository extends Repository<PaymentSessionEntity> {
       conditions.fromDateDone !== undefined &&
       conditions.toDateDone !== undefined
     ) {
-      queryBuilder.andWhere(`date_done BETWEEN (:fromDateDone, :toDateDone)`, {
+      queryBuilder.andWhere(`date_done BETWEEN :fromDateDone AND :toDateDone`, {
         fromDateDone: `${conditions.fromDateDone}`,
         toDateDone: `${conditions.toDateDone}`,
       })

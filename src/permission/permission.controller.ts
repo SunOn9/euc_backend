@@ -24,7 +24,6 @@ import { GetPermissionConditionRequestDto } from './dto/get-permission-condition
 import { PermissionsGuard } from './guard/permission.guard'
 import { CheckPermissions } from './guard/permission.decorator'
 import { Action } from './casl/casl.type'
-import { PermissionEntity } from './entities/permission.entity'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
 @ApiHeader({
@@ -35,13 +34,13 @@ import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 @UseGuards(PermissionsGuard)
 @Controller('permission')
 export class PermissionController {
-  constructor(private readonly service: PermissionService) {}
+  constructor(private readonly service: PermissionService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
   @CheckPermissions({
     action: [Action.CREATE],
-    subject: [PermissionEntity],
+    subject: ['permission'],
     fields: [],
   })
   async create(
@@ -91,7 +90,7 @@ export class PermissionController {
   @Get('list')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [PermissionEntity],
+    subject: ['permission'],
     fields: [],
   })
   async getList(

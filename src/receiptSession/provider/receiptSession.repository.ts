@@ -181,7 +181,7 @@ export class ReceiptSessionRepository extends Repository<ReceiptSessionEntity> {
       conditions.toDateConfirm !== undefined
     ) {
       queryBuilder.andWhere(
-        `date_confirm BETWEEN (:fromDateConfirm, :toDateConfirm)`,
+        `date_confirm BETWEEN :fromDateConfirm AND :toDateConfirm`,
         {
           fromDateConfirm: `${conditions.fromDateConfirm}`,
           toDateConfirm: `${conditions.toDateConfirm}`,
@@ -193,7 +193,7 @@ export class ReceiptSessionRepository extends Repository<ReceiptSessionEntity> {
       conditions.fromDateDone !== undefined &&
       conditions.toDateDone !== undefined
     ) {
-      queryBuilder.andWhere(`date_done BETWEEN (:fromDateDone, :toDateDone)`, {
+      queryBuilder.andWhere(`date_done BETWEEN :fromDateDone AND :toDateDone`, {
         fromDateDone: `${conditions.fromDateDone}`,
         toDateDone: `${conditions.toDateDone}`,
       })

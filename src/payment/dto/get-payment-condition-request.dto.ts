@@ -62,4 +62,14 @@ export class GetPaymentConditionRequestDto implements GetPaymentConditionRequest
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
   isExtraPaymentSession?: boolean
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  fromDate?: Date
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  toDate?: Date
 }

@@ -27,7 +27,6 @@ import { UseGuards } from '@nestjs/common'
 import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
-import { ReceiptEntity } from './entities/receipt.entity'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
 @ApiHeader({
@@ -38,13 +37,13 @@ import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 @UseGuards(PermissionsGuard)
 @Controller('receipt')
 export class ReceiptController {
-  constructor(private readonly service: ReceiptService) {}
+  constructor(private readonly service: ReceiptService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
   @CheckPermissions({
     action: [Action.CREATE],
-    subject: [ReceiptEntity],
+    subject: ['receipt'],
     fields: [],
   })
   async createReceipt(
@@ -75,7 +74,7 @@ export class ReceiptController {
   @Post('update')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [ReceiptEntity],
+    subject: ['receipt'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)
@@ -107,7 +106,7 @@ export class ReceiptController {
   @Get('detail')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [ReceiptEntity],
+    subject: ['receipt'],
     fields: [],
   })
   async getDetail(
@@ -135,7 +134,7 @@ export class ReceiptController {
   @Get('list')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [ReceiptEntity],
+    subject: ['receipt'],
     fields: [],
   })
   async getList(

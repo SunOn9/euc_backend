@@ -8,13 +8,14 @@ import { MongoQuery } from '@casl/ability/dist/types/matchers/conditions'
 import { RawRule } from '../casl/rules'
 import { CanActivate } from '@nestjs/common/interfaces/features/can-activate.interface'
 import { ExecutionContext } from '@nestjs/common/interfaces/features/execution-context.interface'
+import { UserEntity } from '/user/entities/user.entity'
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private abilityFactory: CaslAbilityFactory,
-  ) {}
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const requiredPermissions =
@@ -29,6 +30,8 @@ export class PermissionsGuard implements CanActivate {
 
     const ability = await this.abilityFactory.defineAbility(sessionID)
 
+
+
     return requiredPermissions.every(permission =>
       this.isAllowed(ability, permission),
     )
@@ -38,18 +41,13 @@ export class PermissionsGuard implements CanActivate {
     ability: MongoAbility<AbilityTuple, MongoQuery>,
     permission: RawRule,
   ): boolean {
-    if (permission.fields.length === 0) {
-      return permission.action.every(action =>
-        permission.subject.every(subject => ability.can(action, subject)),
-      )
-    } else {
-      return permission.action.every(action =>
-        permission.subject.every(subject =>
-          permission.fields.every(field => ability.can(action, subject, field)),
-        ),
-      )
+
+    return permission.action.every(action => {
+      return permission.subject.every(subject => { console.log(subject); return ability.can(action, subject) })
     }
+    )
   }
+
 
   extractSessionIDFromHeader(request: any): string {
     return request.headers['sessionid']

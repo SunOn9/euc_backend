@@ -62,4 +62,14 @@ export class GetReceiptConditionRequestDto implements GetReceiptConditionRequest
   @IsBoolean()
   @Transform(({ value }) => value === 'true')
   isExtraReceiptSession?: boolean
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  fromDate?: Date
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsDateString()
+  toDate?: Date
 }

@@ -28,7 +28,6 @@ export class CaslAbilityFactory {
     )
 
     const user = await this.sessionService.get(sessionId)
-
     if (user.isErr()) {
       throw new CustomException(
         'ERROR',
@@ -39,10 +38,7 @@ export class CaslAbilityFactory {
 
     if (user.value.role === EnumProto_UserRole.ADMIN) {
       can(Action.MANAGE, 'all')
-      return build({
-        detectSubjectType: item =>
-          item.constructor as ExtractSubjectType<Subject>,
-      })
+      return build()
     }
 
     const rawRules: RawRule[] = user.value.permission.map(each => each.rules)
@@ -53,17 +49,14 @@ export class CaslAbilityFactory {
       )
 
       if (each.inverted === true) {
-        cannot(each.action, subjects, each.fields, each.conditions).because(
+        cannot(each.action, subjects).because(
           each.reason,
         )
       } else {
-        can(each.action, subjects, each.fields, each.conditions)
+        can(each.action, subjects)
       }
     })
 
-    return build({
-      detectSubjectType: item =>
-        item.constructor as ExtractSubjectType<Subject>,
-    })
+    return build()
   }
 }

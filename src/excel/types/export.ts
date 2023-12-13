@@ -2,6 +2,7 @@ import {
   EnumProto_Gender,
   EnumProto_MemberStatus,
   EnumProto_MemberType,
+  EnumProto_MoneyMethod,
 } from '/generated/enumps'
 
 export type ExportMember = {
@@ -14,6 +15,35 @@ export type ExportMember = {
   gender: string
   clubName: string
   totalEvent: number
+}
+
+export type ExportFund = {
+  type: string
+  title: string
+  description: string
+  amount: number
+  doneDate: string
+  method: string
+  fundAmount: number
+}
+
+export function convertEnumMoneyMethodToVietnamese(
+  status: EnumProto_MoneyMethod
+): string {
+  switch (status) {
+    case EnumProto_MoneyMethod.CASH || 0: {
+      return "Tiền mặt";
+    }
+    case EnumProto_MoneyMethod.ATM_TRANSFER || 1: {
+      return "Chuyển khoản";
+    }
+    case EnumProto_MoneyMethod.MOMO_TRANSFER || 2: {
+      return "Momo";
+    }
+    default: {
+      return "Khác";
+    }
+  }
 }
 
 export function convertEnumGenderToString(gender: EnumProto_Gender): string {

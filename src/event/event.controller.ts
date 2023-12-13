@@ -25,7 +25,6 @@ import { UseGuards } from '@nestjs/common'
 import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
-import { EventEntity } from './entities/event.entity'
 import { AddMemberToEventRequestDto } from './dto/add-member.dto'
 import { AddGuestToEventRequestDto } from './dto/add-guest.dto'
 import { RemoveGuestFromEventRequestDto } from './dto/remove-guest.dto'
@@ -41,13 +40,13 @@ import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 @UseGuards(PermissionsGuard)
 @Controller('event')
 export class EventController {
-  constructor(private readonly service: EventService) {}
+  constructor(private readonly service: EventService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
   @CheckPermissions({
     action: [Action.CREATE],
-    subject: [EventEntity],
+    subject: ['event'],
     fields: [],
   })
   async createEvent(
@@ -78,7 +77,7 @@ export class EventController {
   @Post('update')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [EventEntity],
+    subject: ['event'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)
@@ -110,7 +109,7 @@ export class EventController {
   @Get('detail')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [EventEntity],
+    subject: ['event'],
     fields: [],
   })
   async getDetail(
@@ -138,7 +137,7 @@ export class EventController {
   @Get('list')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [EventEntity],
+    subject: ['event'],
     fields: [],
   })
   async getList(
@@ -191,7 +190,7 @@ export class EventController {
   @Post('add-member')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [EventEntity],
+    subject: ['event'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)
@@ -223,7 +222,7 @@ export class EventController {
   @Post('remove-member')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [EventEntity],
+    subject: ['event'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)
@@ -255,7 +254,7 @@ export class EventController {
   @Post('add-guest')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [EventEntity],
+    subject: ['event'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)
@@ -287,7 +286,7 @@ export class EventController {
   @Post('remove-guest')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [EventEntity],
+    subject: ['event'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)
@@ -319,7 +318,7 @@ export class EventController {
   @Post('end')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [EventEntity],
+    subject: ['event'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)

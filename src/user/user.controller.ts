@@ -24,7 +24,6 @@ import { SetMetadata, UseGuards } from '@nestjs/common'
 import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
-import { UserEntity } from './entities/user.entity'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 import { ResetPasswordRequestDto } from './dto/reset-password.dto'
 import { UpdatePasswordRequestDto } from './dto/update-password.dto'
@@ -42,13 +41,13 @@ import { UpdateUserPermissionRequestDto } from './dto/update-user-permission.dto
 @UseGuards(PermissionsGuard)
 @Controller('user')
 export class UserController {
-  constructor(private readonly service: UserService) {}
+  constructor(private readonly service: UserService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
   @CheckPermissions({
     action: [Action.CREATE],
-    subject: [UserEntity],
+    subject: ['user'],
     fields: [],
   })
   async createUser(
@@ -79,7 +78,7 @@ export class UserController {
   @Post('update')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [UserEntity],
+    subject: ['user'],
     fields: [],
     conditions: {},
   })
@@ -110,12 +109,6 @@ export class UserController {
   }
 
   @Post('updateUserPassword')
-  @CheckPermissions({
-    action: [Action.UPDATE],
-    subject: [UserEntity],
-    fields: [],
-    conditions: {},
-  })
   @HttpCode(HttpStatus.CREATED)
   async updateUserPassword(
     @Req() req: Request,
@@ -145,7 +138,7 @@ export class UserController {
   @Post('resetPassword')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [UserEntity],
+    subject: ['user'],
     fields: [],
     conditions: {},
   })
@@ -174,7 +167,7 @@ export class UserController {
   @Get('detail')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [UserEntity],
+    subject: ['user'],
     fields: [],
   })
   async getDetail(
@@ -201,7 +194,7 @@ export class UserController {
   @Get('list')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [UserEntity],
+    subject: ['user'],
     fields: [],
   })
   async getList(
@@ -254,7 +247,7 @@ export class UserController {
   @Post('update-permission')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [UserEntity],
+    subject: ['user'],
     fields: [],
     conditions: {
       club: 'user.club',

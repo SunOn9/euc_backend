@@ -27,7 +27,6 @@ import { UseGuards } from '@nestjs/common'
 import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
-import { ReceiptSessionEntity } from './entities/receiptSession.entity'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
 @ApiHeader({
@@ -38,13 +37,13 @@ import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 @UseGuards(PermissionsGuard)
 @Controller('receiptSession')
 export class ReceiptSessionController {
-  constructor(private readonly service: ReceiptSessionService) {}
+  constructor(private readonly service: ReceiptSessionService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
   @CheckPermissions({
     action: [Action.CREATE],
-    subject: [ReceiptSessionEntity],
+    subject: ['receipt_session'],
     fields: [],
   })
   async createReceiptSession(
@@ -75,7 +74,7 @@ export class ReceiptSessionController {
   @Post('update')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [ReceiptSessionEntity],
+    subject: ['receipt_session'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)
@@ -107,7 +106,7 @@ export class ReceiptSessionController {
   @Get('detail')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [ReceiptSessionEntity],
+    subject: ['receipt_session'],
     fields: [],
   })
   async getDetail(
@@ -135,7 +134,7 @@ export class ReceiptSessionController {
   @Get('list')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [ReceiptSessionEntity],
+    subject: ['receipt_session'],
     fields: [],
   })
   async getList(

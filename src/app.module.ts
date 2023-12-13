@@ -126,4 +126,4 @@ import { ExcelModule } from './excel/excel.module'
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

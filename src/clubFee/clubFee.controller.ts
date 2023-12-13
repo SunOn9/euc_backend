@@ -26,7 +26,6 @@ import { UseGuards } from '@nestjs/common'
 import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
-import { ClubFeeEntity } from './entities/clubFee.entity'
 import { EnumProto_UserRole } from '/generated/enumps'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
@@ -38,13 +37,13 @@ import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 @UseGuards(PermissionsGuard)
 @Controller('clubFee')
 export class ClubFeeController {
-  constructor(private readonly service: ClubFeeService) {}
+  constructor(private readonly service: ClubFeeService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
   @CheckPermissions({
     action: [Action.CREATE],
-    subject: [ClubFeeEntity],
+    subject: ['club_fee'],
     fields: [],
   })
   async createClubFee(
@@ -76,7 +75,7 @@ export class ClubFeeController {
   @Get('detail')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [ClubFeeEntity],
+    subject: ['club_fee'],
     fields: [],
   })
   async getDetail(
@@ -108,7 +107,7 @@ export class ClubFeeController {
   @Get('list')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [ClubFeeEntity],
+    subject: ['club_fee'],
     fields: [],
   })
   async getList(
@@ -138,7 +137,7 @@ export class ClubFeeController {
 
   @CheckPermissions({
     action: [Action.DELETE],
-    subject: [ClubFeeEntity],
+    subject: ['club_fee'],
     fields: [],
   })
   @Get('remove/:id')

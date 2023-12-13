@@ -24,7 +24,6 @@ import { UseGuards } from '@nestjs/common'
 import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
-import { ClubEntity } from './entities/club.entity'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
 @ApiHeader({
@@ -35,13 +34,13 @@ import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 @UseGuards(PermissionsGuard)
 @Controller('club')
 export class ClubController {
-  constructor(private readonly service: ClubService) {}
+  constructor(private readonly service: ClubService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
   @CheckPermissions({
     action: [Action.CREATE],
-    subject: [ClubEntity],
+    subject: ['club'],
     fields: [],
   })
   async createClub(
@@ -72,7 +71,7 @@ export class ClubController {
   @Post('update')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [ClubEntity],
+    subject: ['club'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)
@@ -104,7 +103,7 @@ export class ClubController {
   @Get('detail')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [ClubEntity],
+    subject: ['club'],
     fields: [],
   })
   async getDetail(
@@ -132,7 +131,7 @@ export class ClubController {
   @Get('list')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [ClubEntity],
+    subject: ['club'],
     fields: [],
   })
   async getList(

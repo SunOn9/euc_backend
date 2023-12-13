@@ -27,7 +27,6 @@ import { UseGuards } from '@nestjs/common'
 import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
-import { PaymentEntity } from './entities/payment.entity'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
 @ApiHeader({
@@ -38,13 +37,13 @@ import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 @UseGuards(PermissionsGuard)
 @Controller('payment')
 export class PaymentController {
-  constructor(private readonly service: PaymentService) {}
+  constructor(private readonly service: PaymentService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
   @CheckPermissions({
     action: [Action.CREATE],
-    subject: [PaymentEntity],
+    subject: ['payment'],
     fields: [],
   })
   async createPayment(
@@ -75,7 +74,7 @@ export class PaymentController {
   @Post('update')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [PaymentEntity],
+    subject: ['payment'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)
@@ -107,7 +106,7 @@ export class PaymentController {
   @Get('detail')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [PaymentEntity],
+    subject: ['payment'],
     fields: [],
   })
   async getDetail(
@@ -135,7 +134,7 @@ export class PaymentController {
   @Get('list')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [PaymentEntity],
+    subject: ['payment'],
     fields: [],
   })
   async getList(
@@ -160,6 +159,11 @@ export class PaymentController {
   }
 
   @Get('remove/:id')
+  @CheckPermissions({
+    action: [Action.DELETE],
+    subject: ['payment'],
+    fields: [],
+  })
   async removePayment(
     @Req() req: Request,
     @Param() request: RemovePaymentRequestDto,

@@ -177,6 +177,13 @@ export class ReceiptRepository extends Repository<ReceiptEntity> {
       })
     }
 
+    if (conditions.fromDate !== undefined && conditions.toDate !== undefined) {
+      queryBuilder.andWhere(`created_at BETWEEN :fromDate AND :toDate`, {
+        fromDate: `${conditions.fromDate}`,
+        toDate: `${conditions.toDate}`,
+      })
+    }
+
 
     if (conditions.isDeleted) {
       queryBuilder.withDeleted()

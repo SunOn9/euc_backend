@@ -3,6 +3,7 @@ package euc_backend;
 
 import "google/protobuf/timestamp.proto";
 import "enumps.proto";
+import "common.proto";
 
 message GetReceiptConditionRequest {
   optional int32 id = 1;
@@ -10,6 +11,8 @@ message GetReceiptConditionRequest {
   optional string description = 3;
   optional int32 amount = 4;
   optional EnumProto.MoneyMethod method = 5;
+  optional google.protobuf.Timestamp from_date = 6;
+  optional google.protobuf.Timestamp to_date = 7;
   // google.protobuf.Timestamp created_at = 7;
   // google.protobuf.Timestamp updated_at = 8;
   // optional google.protobuf.Timestamp deleted_at = 9;

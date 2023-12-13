@@ -24,7 +24,6 @@ import { UseGuards } from '@nestjs/common'
 import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
-import { MemberEntity } from './entities/member.entity'
 import { UpdateClubOfMemberRequestDto } from './dto/update-club-of-member.dto'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
@@ -36,13 +35,13 @@ import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 @UseGuards(PermissionsGuard)
 @Controller('member')
 export class MemberController {
-  constructor(private readonly service: MemberService) {}
+  constructor(private readonly service: MemberService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
   @CheckPermissions({
     action: [Action.CREATE],
-    subject: [MemberEntity],
+    subject: ['member'],
     fields: [],
   })
   async createMember(
@@ -73,7 +72,7 @@ export class MemberController {
   @Post('update')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [MemberEntity],
+    subject: ['member'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)
@@ -105,7 +104,7 @@ export class MemberController {
   @Post('change-club')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [MemberEntity],
+    subject: ['member'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)
@@ -137,7 +136,7 @@ export class MemberController {
   @Get('detail')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [MemberEntity],
+    subject: ['member'],
     fields: [],
   })
   async getDetail(
@@ -165,7 +164,7 @@ export class MemberController {
   @Get('list')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [MemberEntity],
+    subject: ['member'],
     fields: [],
   })
   async getList(

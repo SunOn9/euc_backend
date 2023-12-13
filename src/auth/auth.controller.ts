@@ -29,7 +29,7 @@ export class AuthController {
     private readonly service: AuthService,
     private readonly sessionService: SessionService,
     private readonly ultilService: UtilsService,
-  ) {}
+  ) { }
 
   @Post('/login')
   @AllowUnauthorizedRequest()
@@ -79,7 +79,9 @@ export class AuthController {
   @Get('/logout')
   async logout(@Request() req: any): Promise<SimpleReply> {
     const response = {} as SimpleReply
-    await this.sessionService.del(req.sessionID)
+
+
+    await this.sessionService.del(req['sessionId'])
 
     response.statusCode = CONST.DEFAULT_SUCCESS_CODE
     response.message = CONST.DEFAULT_SUCCESS_MESSAGE

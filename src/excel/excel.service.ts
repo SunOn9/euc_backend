@@ -5,15 +5,21 @@ import { Result, err, ok } from 'neverthrow'
 import * as tmp from 'tmp'
 import { join } from 'path'
 import {
+  ExportFund,
   ExportMember,
   convertEnumGenderToString,
+  convertEnumMoneyMethodToVietnamese,
   convertEnumStatusToString,
   convertEnumTypeToString,
 } from './types/export'
 import { UtilsService } from 'lib/utils'
-import { ExportMemberRequest } from '/generated/member/member.request'
 import { Member_Event } from '/generated/member/member'
 import { ExportMemberRequestDto } from './dto/export-member.dto'
+import { ExportOptionDto } from './dto/export-fund.dto'
+import { User } from '/generated/user/user'
+import { EnumProto_UserRole } from '/generated/enumps'
+import { PaymentSessionService } from '/paymentSession/paymentSession.service'
+import { ReceiptSessionService } from '/receiptSession/receiptSession.service'
 // import { ReadStream, createReadStream } from 'fs'
 
 const cwd = process.cwd()
@@ -22,8 +28,10 @@ const cwd = process.cwd()
 export class ExcelService {
   constructor(
     private readonly memberService: MemberService,
+    private readonly paymentSessionService: PaymentSessionService,
+    private readonly receiptSessionService: ReceiptSessionService,
     private readonly utilService: UtilsService,
-  ) {}
+  ) { }
 
   async generateFile<T>(
     exportData: T,
@@ -57,9 +65,14 @@ export class ExcelService {
     }
   }
 
-  async exportMember(request: ExportMemberRequestDto, name: string) {
+  async exportMember(request: ExportMemberRequestDto, name: string, userInfo: User) {
+
+
+
     const memberReply = await this.memberService.getList({
       ...request.conditions,
+      page: 1,
+      limit: 10000,
       isExtraClub: true,
       isExtraEvent: true,
       isExtraArea: true,
@@ -69,9 +82,15 @@ export class ExcelService {
       return err(memberReply.error)
     }
 
-    const { memberList } = memberReply.value
+
+
+    let { memberList } = memberReply.value
     const { fromDate, toDate } = request.options
     const exportData: ExportMember[] = []
+
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      memberList = memberList.filter(each => each.memberInClub[0].id === userInfo.club.id)
+    }
 
     for (const member of memberList) {
       let eventList: Member_Event[]
@@ -87,6 +106,8 @@ export class ExcelService {
         eventList = member.event
       }
 
+
+
       exportData.push({
         name: member.name,
         nickName: member.nickName,
@@ -100,5 +121,105 @@ export class ExcelService {
       })
     }
     return this.generateFile(exportData, name)
+  }
+
+  async exportFund(request: ExportOptionDto, name: string, userInfo: User) {
+    const exportData: ExportFund[] = []
+    const { fromDate, toDate } = request
+
+    const funcPayment = async () => {
+      const paymentSessionReply = await this.paymentSessionService.getList({
+        fromDateDone: fromDate,
+        toDateDone: toDate,
+        isExtraClub: true,
+        isExtraPayment: true,
+        page: 1,
+        limit: 1000,
+      })
+
+      if (paymentSessionReply.isErr()) {
+        return err(paymentSessionReply.error)
+      }
+
+      let { paymentSessionList } = paymentSessionReply.value
+
+      if (userInfo.role !== EnumProto_UserRole.ADMIN) {
+        paymentSessionList = paymentSessionList.filter(each => each.club.id === userInfo.club.id)
+      }
+
+      for (const paymentSession of paymentSessionList) {
+        for (const payment of paymentSession.payment) {
+          exportData.push({
+            type: 'Chi',
+            title: payment.title,
+            description: payment.description,
+            method: convertEnumMoneyMethodToVietnamese(payment.method),
+            amount: payment.amount,
+            fundAmount: payment.fundAmount,
+            doneDate: this.utilService.convertToVietNamDate(paymentSession.dateDone),
+          })
+        }
+      }
+      return ok(true)
+
+    }
+
+    const funcReceipt = async () => {
+      const receiptSessionReply = await this.receiptSessionService.getList({
+        fromDateDone: fromDate,
+        toDateDone: toDate,
+        isExtraClub: true,
+        isExtraReceipt: true,
+        page: 1,
+        limit: 1000,
+      })
+
+      if (receiptSessionReply.isErr()) {
+        return err(receiptSessionReply.error)
+      }
+
+      let { receiptSessionList } = receiptSessionReply.value
+
+      if (userInfo.role !== EnumProto_UserRole.ADMIN) {
+        receiptSessionList = receiptSessionList.filter(each => each.club.id === userInfo.club.id)
+      }
+
+      for (const receiptSession of receiptSessionList) {
+        for (const receipt of receiptSession.receipt) {
+          exportData.push({
+            type: 'Thu',
+            title: receipt.title,
+            description: receipt.description,
+            method: convertEnumMoneyMethodToVietnamese(receipt.method),
+            amount: receipt.amount,
+            fundAmount: receipt.fundAmount,
+            doneDate: this.utilService.convertToVietNamDate(receiptSession.dateDone),
+          })
+        }
+      }
+
+      return ok(true)
+    }
+
+    const [payment, receipt] = await Promise.all([funcPayment(), funcReceipt()])
+
+    if (payment.isErr()) {
+      return err(payment.error)
+    }
+
+    if (receipt.isErr()) {
+      return err(receipt.error)
+    }
+
+    exportData.sort(this.compareCreatedAt)
+
+    return this.generateFile(exportData, name, { fromDate: this.utilService.convertToVietNamDate(fromDate), toDate: this.utilService.convertToVietNamDate(toDate) })
+  }
+
+  compareCreatedAt(a: ExportFund, b: ExportFund) {
+    const timestampA = Date.parse(a.doneDate)
+    const timestampB = Date.parse(b.doneDate)
+
+    return timestampA - timestampB
   }
 }

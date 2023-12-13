@@ -24,7 +24,6 @@ import { UseGuards } from '@nestjs/common'
 import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
-import { PlaceEntity } from './entities/place.entity'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
 @ApiHeader({
@@ -35,13 +34,13 @@ import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 @UseGuards(PermissionsGuard)
 @Controller('place')
 export class PlaceController {
-  constructor(private readonly service: PlaceService) {}
+  constructor(private readonly service: PlaceService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
   @CheckPermissions({
     action: [Action.CREATE],
-    subject: [PlaceEntity],
+    subject: ['place'],
     fields: [],
   })
   async createPlace(
@@ -72,7 +71,7 @@ export class PlaceController {
   @Post('update')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [PlaceEntity],
+    subject: ['place'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)
@@ -104,7 +103,7 @@ export class PlaceController {
   @Get('detail')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [PlaceEntity],
+    subject: ['place'],
     fields: [],
   })
   async getDetail(
@@ -132,7 +131,7 @@ export class PlaceController {
   @Get('list')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [PlaceEntity],
+    subject: ['place'],
     fields: [],
   })
   async getList(

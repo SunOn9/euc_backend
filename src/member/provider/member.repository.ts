@@ -205,8 +205,8 @@ export class MemberRepository extends Repository<MemberEntity> {
       relations: {
         memberInClub: conditions.isExtraClub
           ? {
-              club: true,
-            }
+            club: true,
+          }
           : false,
         event: conditions.isExtraEvent ?? false,
         hometown: conditions.isExtraArea ?? false,

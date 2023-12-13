@@ -17,7 +17,8 @@ import { PermissionEntity } from '/permission/entities/permission.entity'
 import * as bcrypt from 'bcrypt'
 import { ConfigService } from '@nestjs/config'
 import { UpdatePasswordRequest } from '/generated/user/user.request'
-
+import { EnumProto_UserRole } from '/generated/enumps'
+import * as CONST from './user.constant'
 @Injectable()
 export class UserRepository extends Repository<UserEntity> {
   constructor(
@@ -38,10 +39,41 @@ export class UserRepository extends Repository<UserEntity> {
 
       const { clubId, ...other } = createData
 
+      let permission: Partial<PermissionEntity>[]
+
+      switch (createData.role) {
+        case EnumProto_UserRole.ADMIN: {
+          permission = CONST.ADMIN_PERMISSION
+          break
+        }
+        case EnumProto_UserRole.STAFF: {
+          permission = CONST.STAFF_PERMISSION
+          break
+
+        }
+        case EnumProto_UserRole.LEADER: {
+          permission = CONST.LEADER_PERMISSION
+          break
+
+        }
+        case EnumProto_UserRole.CORE_MEMBER: {
+          permission = CONST.CORE_PERMISSION
+          break
+        }
+        case EnumProto_UserRole.TREASURER: {
+          permission = CONST.TREASURE_PERMISSION
+          break
+        }
+        default: {
+          break
+        }
+      }
+
       const saveData = {
         ...other,
         club: { id: clubId },
-        password: await bcrypt.hash(this.configService.get('DEFAULT_PASSWORD'), 10)
+        password: await bcrypt.hash(this.configService.get('DEFAULT_PASSWORD'), 10),
+        permission: permission
       } as UserEntity
 
       const dataReply = await this.save(saveData)

@@ -9,8 +9,8 @@ export class ClubReflect {
     reflect.id = entity.id ?? 0
     reflect.name = entity.name ?? ''
     reflect.abbreviation = entity.abbreviation ?? ''
-    reflect.fund = entity.fund = 0
-    reflect.totalMember = entity.totalMember = 0
+    reflect.fund = entity.fund ?? 0
+    reflect.totalMember = entity.totalMember ?? 0
     reflect.createdAt = entity.createdAt ?? null
     reflect.updatedAt = entity.updatedAt ?? null
     reflect.deletedAt = entity.deletedAt ?? null

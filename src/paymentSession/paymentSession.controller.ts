@@ -27,7 +27,6 @@ import { UseGuards } from '@nestjs/common'
 import { PermissionsGuard } from '/permission/guard/permission.guard'
 import { CheckPermissions } from '/permission/guard/permission.decorator'
 import { Action } from '../permission/casl/casl.type'
-import { PaymentSessionEntity } from './entities/paymentSession.entity'
 import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 
 @ApiHeader({
@@ -38,13 +37,13 @@ import { ApiHeader } from '@nestjs/swagger/dist/decorators/api-header.decorator'
 @UseGuards(PermissionsGuard)
 @Controller('paymentSession')
 export class PaymentSessionController {
-  constructor(private readonly service: PaymentSessionService) {}
+  constructor(private readonly service: PaymentSessionService) { }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('create')
   @CheckPermissions({
     action: [Action.CREATE],
-    subject: [PaymentSessionEntity],
+    subject: ['payment_session'],
     fields: [],
   })
   async createPaymentSession(
@@ -75,7 +74,7 @@ export class PaymentSessionController {
   @Post('update')
   @CheckPermissions({
     action: [Action.UPDATE],
-    subject: [PaymentSessionEntity],
+    subject: ['payment_session'],
     fields: [],
   })
   @HttpCode(HttpStatus.CREATED)
@@ -107,7 +106,7 @@ export class PaymentSessionController {
   @Get('detail')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [PaymentSessionEntity],
+    subject: ['payment_session'],
     fields: [],
   })
   async getDetail(
@@ -135,7 +134,7 @@ export class PaymentSessionController {
   @Get('list')
   @CheckPermissions({
     action: [Action.READ],
-    subject: [PaymentSessionEntity],
+    subject: ['payment_session'],
     fields: [],
   })
   async getList(
@@ -159,7 +158,13 @@ export class PaymentSessionController {
     return response
   }
 
+
   @Get('remove/:id')
+  @CheckPermissions({
+    action: [Action.MANAGE],
+    subject: ['payment_session'],
+    fields: [],
+  })
   async removePaymentSession(
     @Req() req: Request,
     @Param() request: RemovePaymentSessionRequestDto,
@@ -212,6 +217,11 @@ export class PaymentSessionController {
   }
 
   @Get('done/:id')
+  @CheckPermissions({
+    action: [Action.MANAGE],
+    subject: ['payment_session'],
+    fields: [],
+  })
   async donePaymentSession(
     @Req() req: Request,
     @Param() request: RemovePaymentSessionRequestDto,

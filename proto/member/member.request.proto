@@ -3,6 +3,7 @@ package euc_backend;
 
 import "google/protobuf/timestamp.proto";
 import "enumps.proto";
+import "common.proto";
 
 message GetMemberConditionRequest {
   optional int32 id = 1;
@@ -66,9 +67,4 @@ message UpdateClubOfMemberRequest {
 message ExportMemberRequest {
   GetMemberConditionRequest conditions = 1;
   ExportOption options = 2;
-}
-
-message ExportOption {
-  optional google.protobuf.Timestamp from_date = 1;
-  optional google.protobuf.Timestamp to_date = 2;
 }

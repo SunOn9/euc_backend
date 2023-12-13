@@ -99,6 +99,7 @@ service EventService {
 
 service ExcelService {
   rpc ExportMember (GetMemberConditionRequest) returns (Null) {}
+  rpc ExportFund (ExportOption) returns (Null) {}
 }
 
 service GuestService {
