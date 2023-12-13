@@ -32,7 +32,7 @@ export class ReceiptSessionService {
 
     @Inject(forwardRef(() => ReceiptService))
     private readonly receiptService: ReceiptService,
-  ) {}
+  ) { }
 
   async create(
     requestData: CreateReceiptSessionRequestDto,
@@ -229,7 +229,10 @@ export class ReceiptSessionService {
       return err(new Error(`Forbiden`))
     }
 
-    const receiptSessionReply = await this.repo.getDetail(requestData)
+    const receiptSessionReply = await this.repo.getDetail({
+      isExtraReceipt: true,
+      ...requestData
+    })
 
     if (receiptSessionReply.isErr()) {
       return err(receiptSessionReply.error)

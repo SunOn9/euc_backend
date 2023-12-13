@@ -159,6 +159,11 @@ export class ReceiptSessionController {
   }
 
   @Get('remove/:id')
+  @CheckPermissions({
+    action: [Action.MANAGE],
+    subject: ['receipt_session'],
+    fields: [],
+  })
   async removeReceiptSession(
     @Req() req: Request,
     @Param() request: RemoveReceiptSessionRequestDto,

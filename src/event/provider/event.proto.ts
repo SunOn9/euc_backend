@@ -20,6 +20,7 @@ export class EventReflect {
     reflect.receiptSession = entity.receiptSession ?? []
     reflect.place = entity.place ?? null
     reflect.club = entity.club ?? null
+    reflect.actualEndEventDate = entity.actualEndEventDate ?? null
 
     return reflect
   }

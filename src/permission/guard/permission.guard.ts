@@ -43,7 +43,7 @@ export class PermissionsGuard implements CanActivate {
   ): boolean {
 
     return permission.action.every(action => {
-      return permission.subject.every(subject => { console.log(subject); return ability.can(action, subject) })
+      return permission.subject.every(subject => { return ability.can(action, subject) })
     }
     )
   }

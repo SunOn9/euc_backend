@@ -21,6 +21,7 @@ import {
   EnumProto_EventType,
   EnumProto_MemberType,
   EnumProto_MoneyMethod,
+  EnumProto_SessionStatus,
 } from '/generated/enumps'
 import { PaymentSessionService } from '../paymentSession/paymentSession.service'
 import { ReceiptSessionService } from '../receiptSession/receiptSession.service'
@@ -43,7 +44,7 @@ export class EventService {
     private readonly receiptSessionService: ReceiptSessionService,
     private readonly paymentService: PaymentService,
     private readonly receiptService: ReceiptService,
-  ) {}
+  ) { }
 
   async create(
     requestData: CreateEventRequestDto,
@@ -254,6 +255,18 @@ export class EventService {
       return err(eventReply.error)
     }
 
+
+    if (eventReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
+      if (eventReply.value.receiptSession.length !== 0) {
+        if (eventReply.value.receiptSession[0].status !== EnumProto_SessionStatus.JUST_CREATE) {
+          return err(
+            new Error(`Cannot addMember`),
+          )
+        }
+      }
+    }
+
+
     const clubReply = await this.clubService.getDetail({
       id: userInfo.club.id,
       isExtraClubFee: true,
@@ -359,6 +372,17 @@ export class EventService {
       return err(eventReply.error)
     }
 
+
+    if (eventReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
+      if (eventReply.value.receiptSession.length !== 0) {
+        if (eventReply.value.receiptSession[0].status !== EnumProto_SessionStatus.JUST_CREATE) {
+          return err(
+            new Error(`Cannot removeMember`),
+          )
+        }
+      }
+    }
+
     for (const memberId of requestData.memberIdList) {
       if (!(await this.repo.checkMemberExits(requestData.eventId, memberId))) {
         return err(
@@ -423,6 +447,17 @@ export class EventService {
 
     if (eventReply.isErr()) {
       return err(eventReply.error)
+    }
+
+
+    if (eventReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
+      if (eventReply.value.receiptSession.length !== 0) {
+        if (eventReply.value.receiptSession[0].status !== EnumProto_SessionStatus.JUST_CREATE) {
+          return err(
+            new Error(`Cannot addGuest`),
+          )
+        }
+      }
     }
 
     const clubReply = await this.clubService.getDetail({
@@ -530,6 +565,17 @@ export class EventService {
       return err(eventReply.error)
     }
 
+
+    if (eventReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
+      if (eventReply.value.receiptSession.length !== 0) {
+        if (eventReply.value.receiptSession[0].status !== EnumProto_SessionStatus.JUST_CREATE) {
+          return err(
+            new Error(`Cannot removeGuest`),
+          )
+        }
+      }
+    }
+
     for (const guestId of requestData.guestIdList) {
       if (!(await this.repo.checkGuestExits(requestData.eventId, guestId))) {
         return err(
@@ -599,28 +645,35 @@ export class EventService {
 
     const { paymentSession, receiptSession } = eventReply.value
 
-    const funcPaymentSession = (): Result<boolean, Error> => {
+    const funcPaymentSession = async (): Promise<Result<boolean, Error>> => {
       for (const each of paymentSession) {
-        const { payment } = each
-        for (const each of payment) {
-          if (each.method === EnumProto_MoneyMethod.UNRECOGNIZED) {
-            return err(new Error(`Payment session not done`))
+        if (each.status !== EnumProto_SessionStatus.CONFIRMED) {
+          const { payment } = each
+          for (const each of payment) {
+            if (each.method === EnumProto_MoneyMethod.UNRECOGNIZED) {
+              return err(new Error(`Payment session ${each.title} can't confirm - check again`))
+            }
           }
+          await this.paymentSessionService.confirm({ id: each.id }, sessionId, userInfo)
         }
       }
       return ok(true)
     }
 
-    const funcReceiptSession = (): Result<boolean, Error> => {
+    const funcReceiptSession = async (): Promise<Result<boolean, Error>> => {
       for (const each of receiptSession) {
-        const { receipt } = each
-        for (const each of receipt) {
-          if (each.method === EnumProto_MoneyMethod.UNRECOGNIZED) {
-            return err(new Error(`Receipt session not done`))
+        if (each.status !== EnumProto_SessionStatus.CONFIRMED) {
+          const { receipt } = each
+          for (const each of receipt) {
+            if (each.method === EnumProto_MoneyMethod.UNRECOGNIZED) {
+              return err(new Error(`Receipt session  ${each.title} can't confirm  - check again`))
+            }
           }
+
+          await this.receiptSessionService.confirm({ id: each.id }, sessionId, userInfo)
         }
+        return ok(true)
       }
-      return ok(true)
     }
 
     const reply = await Promise.all([
