@@ -189,6 +189,11 @@ export class MemberController {
   }
 
   @Get('remove/:id')
+  @CheckPermissions({
+    action: [Action.DELETE],
+    subject: ['member'],
+    fields: [],
+  })
   async removeMember(
     @Req() req: Request,
     @Param() request: RemoveMemberRequestDto,

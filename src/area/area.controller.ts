@@ -156,6 +156,11 @@ export class AreaController {
   }
 
   @Get('remove/:id')
+  @CheckPermissions({
+    action: [Action.DELETE],
+    subject: ['area'],
+    fields: [],
+  })
   async removeArea(
     @Req() req: Request,
     @Param() request: RemoveAreaRequestDto,

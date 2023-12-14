@@ -156,6 +156,11 @@ export class ClubController {
   }
 
   @Get('remove/:id')
+  @CheckPermissions({
+    action: [Action.DELETE],
+    subject: ['club'],
+    fields: [],
+  })
   async removeClub(
     @Req() req: Request,
     @Param() request: RemoveClubRequestDto,

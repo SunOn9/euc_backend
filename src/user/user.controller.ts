@@ -219,6 +219,11 @@ export class UserController {
   }
 
   @Get('remove/:id')
+  @CheckPermissions({
+    action: [Action.DELETE],
+    subject: ['user'],
+    fields: [],
+  })
   async removeUser(
     @Req() req: Request,
     @Param() request: RemoveUserRequestDto,
@@ -248,10 +253,7 @@ export class UserController {
   @CheckPermissions({
     action: [Action.UPDATE],
     subject: ['user'],
-    fields: [],
-    conditions: {
-      club: 'user.club',
-    },
+    fields: []
   })
   @HttpCode(HttpStatus.CREATED)
   async updateUserPermission(

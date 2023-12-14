@@ -162,6 +162,11 @@ export class EventController {
   }
 
   @Get('remove/:id')
+  @CheckPermissions({
+    action: [Action.DELETE],
+    subject: ['event'],
+    fields: [],
+  })
   async removeEvent(
     @Req() req: Request,
     @Param() request: RemoveEventRequestDto,

@@ -156,6 +156,11 @@ export class PlaceController {
   }
 
   @Get('remove/:id')
+  @CheckPermissions({
+    action: [Action.DELETE],
+    subject: ['place'],
+    fields: [],
+  })
   async removePlace(
     @Req() req: Request,
     @Param() request: RemovePlaceRequestDto,

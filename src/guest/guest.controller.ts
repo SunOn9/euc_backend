@@ -156,6 +156,11 @@ export class GuestController {
   }
 
   @Get('remove/:id')
+  @CheckPermissions({
+    action: [Action.DELETE],
+    subject: ['guest'],
+    fields: [],
+  })
   async removeGuest(
     @Req() req: Request,
     @Param() request: RemoveGuestRequestDto,
