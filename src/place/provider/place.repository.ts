@@ -30,6 +30,7 @@ export class PlaceRepository extends Repository<PlaceEntity> {
   ): Promise<Result<Place, Error>> {
     try {
       const saveData = {
+        club: { id: createData.clubId },
         ...createData,
       } as PlaceEntity
 

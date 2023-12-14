@@ -19,4 +19,10 @@ export class CreatePlaceRequestDto implements CreatePlaceRequest {
   @IsNotEmpty()
   @IsString()
   address: string
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  clubId?: number
 }

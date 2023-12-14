@@ -34,6 +34,10 @@ export class PlaceService {
       )
     }
 
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId = userInfo.club.id
+    }
+
     const createReply = await this.repo.createPlace(requestData)
 
     if (createReply.isOk()) {
