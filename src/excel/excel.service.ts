@@ -67,30 +67,17 @@ export class ExcelService {
 
   async exportMember(request: ExportMemberRequestDto, name: string, userInfo: User) {
 
-
-
     const memberReply = await this.memberService.getList({
-      ...request.conditions,
-      page: 1,
-      limit: 10000,
-      isExtraClub: true,
-      isExtraEvent: true,
-      isExtraArea: true,
+      ...request.conditions
     }, userInfo)
 
     if (memberReply.isErr()) {
       return err(memberReply.error)
     }
 
-
-
     let { memberList } = memberReply.value
     const { fromDate, toDate } = request.options
     const exportData: ExportMember[] = []
-
-    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
-      memberList = memberList.filter(each => each.memberInClub[0].id === userInfo.club.id)
-    }
 
     for (const member of memberList) {
       let eventList: Member_Event[]
@@ -105,8 +92,6 @@ export class ExcelService {
       } else {
         eventList = member.event
       }
-
-
 
       exportData.push({
         name: member.name,
@@ -134,7 +119,7 @@ export class ExcelService {
         isExtraClub: true,
         isExtraPayment: true,
         page: 1,
-        limit: 1000,
+        limit: 10000,
       }, userInfo)
 
       if (paymentSessionReply.isErr()) {
