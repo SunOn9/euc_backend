@@ -107,11 +107,11 @@ export class PlaceController {
     fields: [],
   })
   async getDetail(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Query() request: GetPlaceConditionRequestDto,
   ): Promise<PlaceReply> {
     const response = {} as PlaceReply
-    const data = await this.service.getDetail(request)
+    const data = await this.service.getDetail(request, req['userInfo'])
 
     if (data.isErr()) {
       throw new CustomException(
@@ -135,11 +135,11 @@ export class PlaceController {
     fields: [],
   })
   async getList(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Query() request: GetPlaceConditionRequestDto,
   ): Promise<PlaceListReply> {
     const response = {} as PlaceListReply
-    const listData = await this.service.getList(request)
+    const listData = await this.service.getList(request, req['userInfo'])
 
     if (listData.isErr()) {
       throw new CustomException(

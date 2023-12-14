@@ -12,6 +12,13 @@ export class GetPlaceConditionRequestDto implements GetPlaceConditionRequest {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  clubId?: number
+
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
   name?: string
 

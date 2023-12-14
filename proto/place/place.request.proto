@@ -15,6 +15,7 @@ message GetPlaceConditionRequest {
   optional int32 page =10;
   optional int32 limit =11;
   optional bool is_deleted =13;
+  optional int32 club_id = 14;
 }
 
 message CreatePlaceRequest {

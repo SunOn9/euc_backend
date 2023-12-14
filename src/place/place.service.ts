@@ -9,6 +9,7 @@ import { User } from '/generated/user/user'
 import { LogService } from '/log/log.service'
 import { Action } from '/permission/casl/casl.type'
 import { PlaceEntity } from './entities/place.entity'
+import { EnumProto_UserRole } from '/generated/enumps'
 
 @Injectable()
 export class PlaceService {
@@ -48,13 +49,19 @@ export class PlaceService {
     return createReply
   }
 
-  async getDetail(requestData: GetPlaceConditionRequestDto) {
-    const updateReply = await this.repo.getDetail(requestData)
+  async getDetail(requestData: GetPlaceConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId = userInfo.club.id
+    }
 
-    return updateReply
+    return await this.repo.getDetail(requestData)
   }
 
-  async getList(requestData: GetPlaceConditionRequestDto) {
+  async getList(requestData: GetPlaceConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId = userInfo.club.id
+    }
+
     return await this.repo.getList(requestData)
   }
 

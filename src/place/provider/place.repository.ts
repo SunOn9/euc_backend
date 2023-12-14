@@ -149,6 +149,12 @@ export class PlaceRepository extends Repository<PlaceEntity> {
       })
     }
 
+    if (conditions.clubId !== undefined) {
+      queryBuilder.andWhere(`club_id = :clubId`, {
+        clubId: `${conditions.clubId}`,
+      })
+    }
+
     if (conditions.name !== undefined) {
       queryBuilder.andWhere(`name LIKE :name`, {
         name: `%${conditions.name}%`,
