@@ -65,6 +65,12 @@ export const LEADER_PERMISSION: Partial<PermissionEntity>[] = [
   },
   {
     id: 17
+  },
+  {
+    id: 20
+  },
+  {
+    id: 21
   }
 ]
 
@@ -80,6 +86,12 @@ export const CORE_PERMISSION: Partial<PermissionEntity>[] = [
   },
   {
     id: 13
+  },
+  {
+    id: 20
+  },
+  {
+    id: 21
   }
 ]
 
@@ -104,6 +116,12 @@ export const TREASURE_PERMISSION: Partial<PermissionEntity>[] = [
   },
   {
     id: 13
+  },
+  {
+    id: 20
+  },
+  {
+    id: 21
   }
 ]
 
