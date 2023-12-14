@@ -52,6 +52,10 @@ export class EventService {
     sessionId: string,
     userInfo: User,
   ) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId = userInfo.club.id
+    }
+
     const reply = await this.repo.createEvent(requestData)
 
     if (reply.isErr()) {
