@@ -18,4 +18,4 @@ PROTO_OUT="--ts_proto_out=$pwd/src/generated/"
 protoc --plugin=$PLUGIN_PATH "$OPTION" "$PROTO_OUT" ./api.proto
 
 cd ../src/generated/google/protobuf
-sed -i 's/import Long = require("long");/import { Long } from "long";/' timestamp.ts
+sed -i 's/import Long = require("long");/import Long from "long";/' timestamp.ts
