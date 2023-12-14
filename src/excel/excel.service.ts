@@ -68,7 +68,8 @@ export class ExcelService {
   async exportMember(request: ExportMemberRequestDto, name: string, userInfo: User) {
 
     const memberReply = await this.memberService.getList({
-      ...request.conditions
+      ...request.conditions,
+      isExtraEvent: true,
     }, userInfo)
 
     if (memberReply.isErr()) {
