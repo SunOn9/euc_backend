@@ -22,6 +22,7 @@ import {
   EnumProto_MemberType,
   EnumProto_MoneyMethod,
   EnumProto_SessionStatus,
+  EnumProto_UserRole,
 } from '/generated/enumps'
 import { PaymentSessionService } from '../paymentSession/paymentSession.service'
 import { ReceiptSessionService } from '../receiptSession/receiptSession.service'
@@ -129,11 +130,20 @@ export class EventService {
     return updateReply
   }
 
-  async getDetail(requestData: GetEventConditionRequestDto) {
+  async getDetail(requestData: GetEventConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId = userInfo.club.id
+    }
+
+
     return await this.repo.getDetail(requestData)
   }
 
-  async getList(requestData: GetEventConditionRequestDto) {
+  async getList(requestData: GetEventConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId = userInfo.club.id
+    }
+
     return await this.repo.getList(requestData)
   }
 
@@ -174,7 +184,7 @@ export class EventService {
       id: requestData.id,
       isExtraPaymentSession: true,
       isExtraReceiptSession: true,
-    })
+    }, userInfo)
 
     if (eventReply.isErr()) {
       return err(eventReply.error)
@@ -249,7 +259,7 @@ export class EventService {
       id: requestData.eventId,
       isExtraMember: true,
       isExtraReceiptSession: true,
-    })
+    }, userInfo)
 
     if (eventReply.isErr()) {
       return err(eventReply.error)
@@ -366,7 +376,7 @@ export class EventService {
       isExtraMember: true,
       isExtraReceipt: true,
       isExtraReceiptSession: true,
-    })
+    }, userInfo)
 
     if (eventReply.isErr()) {
       return err(eventReply.error)
@@ -443,7 +453,7 @@ export class EventService {
       isExtraGuest: true,
       isExtraReceiptSession: true,
       isExtraReceipt: true,
-    })
+    }, userInfo)
 
     if (eventReply.isErr()) {
       return err(eventReply.error)
@@ -559,7 +569,7 @@ export class EventService {
       isExtraGuest: true,
       isExtraReceipt: true,
       isExtraReceiptSession: true,
-    })
+    }, userInfo)
 
     if (eventReply.isErr()) {
       return err(eventReply.error)
@@ -637,7 +647,7 @@ export class EventService {
       isExtraReceiptSession: true,
       isExtraReceipt: true,
       isExtraPayment: true,
-    })
+    }, userInfo)
 
     if (eventReply.isErr()) {
       return err(eventReply.error)
