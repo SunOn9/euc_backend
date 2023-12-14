@@ -111,8 +111,7 @@ export class GuestController {
     @Query() request: GetGuestConditionRequestDto,
   ): Promise<GuestReply> {
     const response = {} as GuestReply
-    const data = await this.service.getDetail(request, req['userInfo']
-    )
+    const data = await this.service.getDetail(request, req['userInfo'])
 
     if (data.isErr()) {
       throw new CustomException(

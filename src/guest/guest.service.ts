@@ -89,7 +89,7 @@ export class GuestService {
 
   async getDetail(requestData: GetGuestConditionRequestDto, userInfo: User) {
     if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
-      requestData.clubId === userInfo.club.id
+      requestData.clubId = userInfo.club.id
     }
 
     return await this.repo.getDetail(requestData)
@@ -97,7 +97,7 @@ export class GuestService {
 
   async getList(requestData: GetGuestConditionRequestDto, userInfo: User) {
     if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
-      requestData.clubId === userInfo.club.id
+      requestData.clubId = userInfo.club.id
     }
 
     return await this.repo.getList(requestData)

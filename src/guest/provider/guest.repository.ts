@@ -155,8 +155,9 @@ export class GuestRepository extends Repository<GuestEntity> {
     }
 
     if (conditions.clubId !== undefined) {
-      queryBuilder
-        .andWhere('guest.club_id = :clubId', { clubId: conditions.clubId })
+      queryBuilder.andWhere(`${GuestEntity.tableName}.club_id = :clubId`, {
+        clubId: `${conditions.clubId}`,
+      })
     }
 
 
