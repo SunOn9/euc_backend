@@ -25,6 +25,7 @@ message GetMemberConditionRequest {
   optional bool is_extra_area =18;
   optional google.protobuf.Timestamp birthday_from = 19;
   optional google.protobuf.Timestamp birthday_to = 20;
+  optional int32 club_id = 21;
 }
 
 message CreateMemberRequest {

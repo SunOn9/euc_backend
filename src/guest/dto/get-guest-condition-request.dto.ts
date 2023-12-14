@@ -19,6 +19,12 @@ export class GetGuestConditionRequestDto implements GetGuestConditionRequest {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  clubId?: number
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsString()
   name?: string
 

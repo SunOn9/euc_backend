@@ -18,7 +18,7 @@ message GetGuestConditionRequest {
   optional bool is_deleted =13;
   optional bool is_extra_club =15;
   optional bool is_extra_event =16;
-  
+  optional int32 club_id = 17;
 }
 
 message CreateGuestRequest {

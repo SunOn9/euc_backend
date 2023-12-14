@@ -105,7 +105,7 @@ export class GuestRepository extends Repository<GuestEntity> {
       const queryBuilder = this.setupQueryCondition(conditions)
 
       const [dataReply, total] = await queryBuilder
-        .orderBy(`id`, 'DESC')
+        .orderBy(`${GuestEntity.tableName}.id`, 'DESC')
         .take(limit)
         .skip(skip)
         .getManyAndCount()
@@ -149,25 +149,31 @@ export class GuestRepository extends Repository<GuestEntity> {
     const queryBuilder = this.createQueryBuilder(GuestEntity.tableName)
 
     if (conditions.id !== undefined) {
-      queryBuilder.andWhere(`id = :id`, {
+      queryBuilder.andWhere(`${GuestEntity.tableName}.id = :id`, {
         id: `${conditions.id}`,
       })
     }
 
+    if (conditions.clubId !== undefined) {
+      queryBuilder
+        .andWhere('guest.club_id = :clubId', { clubId: conditions.clubId })
+    }
+
+
     if (conditions.name !== undefined) {
-      queryBuilder.andWhere(`name LIKE :name`, {
+      queryBuilder.andWhere(`${GuestEntity.tableName}.name LIKE :name`, {
         name: `%${conditions.name}%`,
       })
     }
 
     if (conditions.nickName !== undefined) {
-      queryBuilder.andWhere(`nick_name LIKE :nickName`, {
+      queryBuilder.andWhere(`${GuestEntity.tableName}.nick_name LIKE :nickName`, {
         nickName: `%${conditions.nickName}%`,
       })
     }
 
     if (conditions.type !== undefined) {
-      queryBuilder.andWhere(`type = :type`, {
+      queryBuilder.andWhere(`${GuestEntity.tableName}.type = :type`, {
         type: `${conditions.type}`,
       })
     }

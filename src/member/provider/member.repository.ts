@@ -107,7 +107,7 @@ export class MemberRepository extends Repository<MemberEntity> {
       const queryBuilder = this.setupQueryCondition(conditions)
 
       const [dataReply, total] = await queryBuilder
-        .orderBy(`id`, 'DESC')
+        .orderBy(`member.id`, 'DESC')
         .take(limit)
         .skip(skip)
         .getManyAndCount()
@@ -151,31 +151,37 @@ export class MemberRepository extends Repository<MemberEntity> {
     const queryBuilder = this.createQueryBuilder(MemberEntity.tableName)
 
     if (conditions.id !== undefined) {
-      queryBuilder.andWhere(`id = :id`, {
+      queryBuilder.andWhere(`${MemberEntity.tableName}.id = :id`, {
         id: `${conditions.id}`,
       })
     }
 
+    if (conditions.clubId !== undefined) {
+      queryBuilder
+        .leftJoinAndSelect('member.memberInClub', 'member_in_club')
+        .andWhere('member_in_club.club_id = :clubId', { clubId: conditions.clubId })
+    }
+
     if (conditions.name !== undefined) {
-      queryBuilder.andWhere(`name LIKE :name`, {
+      queryBuilder.andWhere(`${MemberEntity.tableName}.name LIKE :name`, {
         name: `%${conditions.name}%`,
       })
     }
 
     if (conditions.nickName !== undefined) {
-      queryBuilder.andWhere(`nick_name LIKE :nickName`, {
+      queryBuilder.andWhere(`${MemberEntity.tableName}.nick_name LIKE :nickName`, {
         nickName: `%${conditions.nickName}%`,
       })
     }
 
     if (conditions.type !== undefined) {
-      queryBuilder.andWhere(`type = :type`, {
+      queryBuilder.andWhere(`${MemberEntity.tableName}.type = :type`, {
         type: `${conditions.type}`,
       })
     }
 
     if (conditions.status !== undefined) {
-      queryBuilder.andWhere(`status = :status`, {
+      queryBuilder.andWhere(`${MemberEntity.tableName}.status = :status`, {
         status: `${conditions.status}`,
       })
     }
@@ -184,14 +190,14 @@ export class MemberRepository extends Repository<MemberEntity> {
       conditions.birthdayFrom !== undefined &&
       conditions.birthdayTo !== undefined
     ) {
-      queryBuilder.andWhere(`birthday BETWEEN :birthdayFrom AND :birthdayTo`, {
+      queryBuilder.andWhere(`${MemberEntity.tableName}.birthday BETWEEN :birthdayFrom AND :birthdayTo`, {
         birthdayFrom: `${conditions.birthdayFrom}`,
         birthdayTo: `${conditions.birthdayTo}`,
       })
     }
 
     if (conditions.monthlyFee !== undefined) {
-      queryBuilder.andWhere(`monthly_fee = :monthlyFee`, {
+      queryBuilder.andWhere(`${MemberEntity.tableName}.monthly_fee = :monthlyFee`, {
         monthlyFee: `${conditions.monthlyFee}`,
       })
     }
@@ -210,7 +216,7 @@ export class MemberRepository extends Repository<MemberEntity> {
           : false,
         event: conditions.isExtraEvent ?? false,
         hometown: conditions.isExtraArea ?? false,
-      },
+      }
     })
 
     return queryBuilder
