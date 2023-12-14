@@ -76,7 +76,7 @@ export class ExcelService {
       isExtraClub: true,
       isExtraEvent: true,
       isExtraArea: true,
-    })
+    }, userInfo)
 
     if (memberReply.isErr()) {
       return err(memberReply.error)
@@ -135,7 +135,7 @@ export class ExcelService {
         isExtraPayment: true,
         page: 1,
         limit: 1000,
-      })
+      }, userInfo)
 
       if (paymentSessionReply.isErr()) {
         return err(paymentSessionReply.error)
@@ -172,7 +172,7 @@ export class ExcelService {
         isExtraReceipt: true,
         page: 1,
         limit: 1000,
-      })
+      }, userInfo)
 
       if (receiptSessionReply.isErr()) {
         return err(receiptSessionReply.error)

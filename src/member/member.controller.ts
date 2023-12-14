@@ -140,11 +140,11 @@ export class MemberController {
     fields: [],
   })
   async getDetail(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Query() request: GetMemberConditionRequestDto,
   ): Promise<MemberReply> {
     const response = {} as MemberReply
-    const data = await this.service.getDetail(request)
+    const data = await this.service.getDetail(request, req['userInfo'])
 
     if (data.isErr()) {
       throw new CustomException(
@@ -168,11 +168,11 @@ export class MemberController {
     fields: [],
   })
   async getList(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Query() request: GetMemberConditionRequestDto,
   ): Promise<MemberListReply> {
     const response = {} as MemberListReply
-    const listData = await this.service.getList(request)
+    const listData = await this.service.getList(request, req['userInfo'],)
 
     if (listData.isErr()) {
       throw new CustomException(

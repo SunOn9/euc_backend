@@ -110,11 +110,11 @@ export class ReceiptSessionController {
     fields: [],
   })
   async getDetail(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Query() request: GetReceiptSessionConditionRequestDto,
   ): Promise<ReceiptSessionReply> {
     const response = {} as ReceiptSessionReply
-    const data = await this.service.getDetail(request)
+    const data = await this.service.getDetail(request, req['userInfo'])
 
     if (data.isErr()) {
       throw new CustomException(
@@ -138,11 +138,11 @@ export class ReceiptSessionController {
     fields: [],
   })
   async getList(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Query() request: GetReceiptSessionConditionRequestDto,
   ): Promise<ReceiptSessionListReply> {
     const response = {} as ReceiptSessionListReply
-    const listData = await this.service.getList(request)
+    const listData = await this.service.getList(request, req['userInfo'])
 
     if (listData.isErr()) {
       throw new CustomException(

@@ -17,7 +17,7 @@ export class PaymentService {
     private readonly repo: PaymentRepository,
     private readonly logService: LogService,
     private readonly paymentSessionService: PaymentSessionService,
-  ) {}
+  ) { }
 
   async create(
     requestData: CreatePaymentRequestDto,
@@ -26,7 +26,7 @@ export class PaymentService {
   ) {
     const paymentSessionReply = await this.paymentSessionService.getDetail({
       id: requestData.paymentSessionId,
-    })
+    }, userInfo)
 
     if (paymentSessionReply.isErr()) {
       return err(paymentSessionReply.error)

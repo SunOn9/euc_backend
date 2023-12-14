@@ -12,13 +12,18 @@ import { EnumProto_SessionStatus } from '/generated/enumps'
 import { GetReceiptSessionConditionRequest } from '/generated/receiptSession/receiptSession.request'
 
 export class GetReceiptSessionConditionRequestDto
-  implements GetReceiptSessionConditionRequest
-{
+  implements GetReceiptSessionConditionRequest {
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
   id?: number
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  clubId?: number
 
   @ApiPropertyOptional()
   @IsOptional()

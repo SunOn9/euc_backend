@@ -18,7 +18,7 @@ export class ReceiptService {
     private readonly repo: ReceiptRepository,
     private readonly logService: LogService,
     private readonly receiptSessionService: ReceiptSessionService,
-  ) {}
+  ) { }
 
   async create(
     requestData: CreateReceiptRequestDto,
@@ -27,7 +27,7 @@ export class ReceiptService {
   ) {
     const receiptSessionReply = await this.receiptSessionService.getDetail({
       id: requestData.receiptSessionId,
-    })
+    }, userInfo)
 
     if (receiptSessionReply.isErr()) {
       return err(receiptSessionReply.error)

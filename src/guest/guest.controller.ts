@@ -107,11 +107,12 @@ export class GuestController {
     fields: [],
   })
   async getDetail(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Query() request: GetGuestConditionRequestDto,
   ): Promise<GuestReply> {
     const response = {} as GuestReply
-    const data = await this.service.getDetail(request)
+    const data = await this.service.getDetail(request, req['userInfo']
+    )
 
     if (data.isErr()) {
       throw new CustomException(
@@ -135,11 +136,11 @@ export class GuestController {
     fields: [],
   })
   async getList(
-    // @Req() req: Request,
+    @Req() req: Request,
     @Query() request: GetGuestConditionRequestDto,
   ): Promise<GuestListReply> {
     const response = {} as GuestListReply
-    const listData = await this.service.getList(request)
+    const listData = await this.service.getList(request, req['userInfo'])
 
     if (listData.isErr()) {
       throw new CustomException(

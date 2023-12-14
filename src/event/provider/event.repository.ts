@@ -217,6 +217,12 @@ export class EventRepository extends Repository<EventEntity> {
       })
     }
 
+    if (conditions.clubId !== undefined) {
+      queryBuilder.andWhere(`club_id = :clubId`, {
+        clubId: `${conditions.clubId}`,
+      })
+    }
+
     if (conditions.name !== undefined) {
       queryBuilder.andWhere(`name LIKE :name`, {
         name: `%${conditions.name}%`,
@@ -268,13 +274,13 @@ export class EventRepository extends Repository<EventEntity> {
         place: conditions.isExtraPlace ?? false,
         paymentSession: conditions.isExtraPaymentSession
           ? {
-              payment: conditions.isExtraPayment ?? false,
-            }
+            payment: conditions.isExtraPayment ?? false,
+          }
           : false,
         receiptSession: conditions.isExtraReceiptSession
           ? {
-              receipt: conditions.isExtraReceipt ?? false,
-            }
+            receipt: conditions.isExtraReceipt ?? false,
+          }
           : false,
       },
     })

@@ -19,7 +19,7 @@ export class GuestService {
     private readonly repo: GuestRepository,
     private readonly logService: LogService,
     private readonly clubService: ClubService,
-  ) {}
+  ) { }
 
   async create(
     requestData: CreateGuestRequestDto,
@@ -87,13 +87,19 @@ export class GuestService {
     return createReply
   }
 
-  async getDetail(requestData: GetGuestConditionRequestDto) {
-    const updateReply = await this.repo.getDetail(requestData)
+  async getDetail(requestData: GetGuestConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId === userInfo.club.id
+    }
 
-    return updateReply
+    return await this.repo.getDetail(requestData)
   }
 
-  async getList(requestData: GetGuestConditionRequestDto) {
+  async getList(requestData: GetGuestConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId === userInfo.club.id
+    }
+
     return await this.repo.getList(requestData)
   }
 

@@ -158,6 +158,12 @@ export class ReceiptSessionRepository extends Repository<ReceiptSessionEntity> {
       })
     }
 
+    if (conditions.clubId !== undefined) {
+      queryBuilder.andWhere(`club_id = :clubId`, {
+        clubId: `${conditions.clubId}`,
+      })
+    }
+
     if (conditions.title !== undefined) {
       queryBuilder.andWhere(`title LIKE :title`, {
         title: `%${conditions.title}%`,

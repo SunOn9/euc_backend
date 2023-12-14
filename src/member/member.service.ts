@@ -92,13 +92,20 @@ export class MemberService {
     return createReply
   }
 
-  async getDetail(requestData: GetMemberConditionRequestDto) {
-    const updateReply = await this.repo.getDetail(requestData)
+  async getDetail(requestData: GetMemberConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId = userInfo.club.id
+    }
 
-    return updateReply
+    return await this.repo.getDetail(requestData)
+
   }
 
-  async getList(requestData: GetMemberConditionRequestDto) {
+  async getList(requestData: GetMemberConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId = userInfo.club.id
+    }
+
     return await this.repo.getList(requestData)
   }
 

@@ -57,13 +57,21 @@ export class ReceiptSessionService {
     return createReply
   }
 
-  async getDetail(requestData: GetReceiptSessionConditionRequestDto) {
+  async getDetail(requestData: GetReceiptSessionConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId = userInfo.club.id
+    }
+
     const updateReply = await this.repo.getDetail(requestData)
 
     return updateReply
   }
 
-  async getList(requestData: GetReceiptSessionConditionRequestDto) {
+  async getList(requestData: GetReceiptSessionConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId = userInfo.club.id
+    }
+
     return await this.repo.getList(requestData)
   }
 

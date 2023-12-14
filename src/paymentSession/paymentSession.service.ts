@@ -31,7 +31,7 @@ export class PaymentSessionService {
     private readonly clubService: ClubService,
     @Inject(forwardRef(() => PaymentService))
     private readonly paymentService: PaymentService,
-  ) {}
+  ) { }
 
   async create(
     requestData: CreatePaymentSessionRequestDto,
@@ -56,13 +56,19 @@ export class PaymentSessionService {
     return createReply
   }
 
-  async getDetail(requestData: GetPaymentSessionConditionRequestDto) {
-    const updateReply = await this.repo.getDetail(requestData)
+  async getDetail(requestData: GetPaymentSessionConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId = userInfo.club.id
+    }
 
-    return updateReply
+    return await this.repo.getDetail(requestData)
   }
 
-  async getList(requestData: GetPaymentSessionConditionRequestDto) {
+  async getList(requestData: GetPaymentSessionConditionRequestDto, userInfo: User) {
+    if (userInfo.role !== EnumProto_UserRole.ADMIN && userInfo.role !== EnumProto_UserRole.STAFF) {
+      requestData.clubId = userInfo.club.id
+    }
+
     return await this.repo.getList(requestData)
   }
 

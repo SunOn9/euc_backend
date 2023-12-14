@@ -24,6 +24,7 @@ message GetPaymentSessionConditionRequest {
   optional bool is_extra_event =17;
   optional bool is_extra_payment =18;
   optional bool is_extra_club =19;
+  optional int32 club_id = 20;
 }
 
 message CreatePaymentSessionRequest {

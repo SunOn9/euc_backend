@@ -310,7 +310,7 @@ export class EventService {
           for (const memberId of requestData.memberIdList) {
             const memberReply = await this.memberService.getDetail({
               id: memberId,
-            })
+            }, userInfo)
 
             if (memberReply.isErr()) {
               return err(memberReply.error)
@@ -503,7 +503,7 @@ export class EventService {
           for (const guestId of requestData.guestIdList) {
             const guestReply = await this.guestService.getDetail({
               id: guestId,
-            })
+            }, userInfo)
 
             if (guestReply.isErr()) {
               return err(guestReply.error)

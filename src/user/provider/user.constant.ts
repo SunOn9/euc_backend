@@ -28,6 +28,9 @@ export const STAFF_PERMISSION: Partial<PermissionEntity>[] = [
     id: 7
   },
   {
+    id: 10
+  },
+  {
     id: 11
   }
 ]
@@ -74,6 +77,9 @@ export const CORE_PERMISSION: Partial<PermissionEntity>[] = [
   },
   {
     id: 7
+  },
+  {
+    id: 13
   }
 ]
 

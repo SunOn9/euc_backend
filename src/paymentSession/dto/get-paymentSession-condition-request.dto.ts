@@ -12,13 +12,18 @@ import { GetPaymentSessionConditionRequest } from '/generated/paymentSession/pay
 import { EnumProto_SessionStatus } from '/generated/enumps'
 
 export class GetPaymentSessionConditionRequestDto
-  implements GetPaymentSessionConditionRequest
-{
+  implements GetPaymentSessionConditionRequest {
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   @Type(() => Number)
   id?: number
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  clubId?: number
 
   @ApiPropertyOptional()
   @IsOptional()
