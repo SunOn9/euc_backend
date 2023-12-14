@@ -105,7 +105,7 @@ export class GuestRepository extends Repository<GuestEntity> {
       const queryBuilder = this.setupQueryCondition(conditions)
 
       const [dataReply, total] = await queryBuilder
-        .orderBy(`${GuestEntity.tableName}.id`, 'DESC')
+        .orderBy(`id`, 'DESC')
         .take(limit)
         .skip(skip)
         .getManyAndCount()

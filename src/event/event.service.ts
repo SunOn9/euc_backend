@@ -270,6 +270,7 @@ export class EventService {
     }
 
 
+
     if (eventReply.value.type === EnumProto_EventType.WEEKLY_TRAINING) {
       if (eventReply.value.receiptSession.length !== 0) {
         if (eventReply.value.receiptSession[0].status !== EnumProto_SessionStatus.JUST_CREATE) {
@@ -289,6 +290,8 @@ export class EventService {
     if (clubReply.isErr()) {
       return err(clubReply.error)
     }
+
+
 
     const listAddMember = eventReply.value.member
 
@@ -431,14 +434,14 @@ export class EventService {
             const reply = receipt.find(
               each => each.hiddenId === memberId && each.hiddenType === 0,
             )
-
-            await this.receiptService.remove(
-              {
-                id: reply.id,
-              },
-              sessionId,
-              userInfo,
-            )
+            if (reply)
+              await this.receiptService.remove(
+                {
+                  id: reply.id,
+                },
+                sessionId,
+                userInfo,
+              )
           }
         }
       }
@@ -624,14 +627,14 @@ export class EventService {
             const reply = receipt.find(
               each => each.hiddenId === guestId && each.hiddenType === 1,
             )
-
-            await this.receiptService.remove(
-              {
-                id: reply.id,
-              },
-              sessionId,
-              userInfo,
-            )
+            if (reply)
+              await this.receiptService.remove(
+                {
+                  id: reply.id,
+                },
+                sessionId,
+                userInfo,
+              )
           }
         }
       }

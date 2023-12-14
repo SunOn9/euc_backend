@@ -78,7 +78,7 @@ export class MemberRepository extends Repository<MemberEntity> {
 
       const queryBuilder = this.setupQueryCondition(conditions)
 
-      const dataReply = await queryBuilder.orderBy(`id`, 'DESC').getOne()
+      const dataReply = await queryBuilder.orderBy(`${MemberEntity.tableName}.id`, 'DESC').getOne()
 
       if (!dataReply) {
         return err(
@@ -107,7 +107,7 @@ export class MemberRepository extends Repository<MemberEntity> {
       const queryBuilder = this.setupQueryCondition(conditions)
 
       const [dataReply, total] = await queryBuilder
-        .orderBy(`member.id`, 'DESC')
+        .orderBy(`${MemberEntity.tableName}.id`, 'DESC')
         .take(limit)
         .skip(skip)
         .getManyAndCount()
